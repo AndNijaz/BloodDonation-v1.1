@@ -1,7 +1,7 @@
 import { FlatList, Pressable, StyleSheet } from "react-native";
 
 import { Link, useSegments } from "expo-router";
-import { Text, View } from "../../../components/Themed";
+import { Text, View } from "../../components/Themed";
 import BigContainer from "@/components/BigContainer";
 import SmallContainer from "@/components/SmallContainer";
 
@@ -20,25 +20,17 @@ export default function TabTwoScreen() {
   return (
     // <Link href={`/[$id]`} asChild>
     <View style={styles.container}>
-      <Link href={`./${segments[0]}/donationHistory/0`} asChild>
-        <Pressable>
-          <BigContainer>
-            <Text>Last time you donated</Text>
-            <Text style={styles.bigText}>{donationHistory[0].date}</Text>
-          </BigContainer>
-        </Pressable>
-      </Link>
+      <BigContainer>
+        <Text>Last time you donated</Text>
+        <Text style={styles.bigText}>{donationHistory[0].date}</Text>
+      </BigContainer>
       <FlatList
         data={donationHistory.slice(1)}
         renderItem={({ item }) => (
-          <Link href={`./${segments[0]}/donationHistory/${item.id}`} asChild>
-            <Pressable>
-              <SmallContainer>
-                <Text>Donated at</Text>
-                <Text style={styles.smallText}>{item.date}</Text>
-              </SmallContainer>
-            </Pressable>
-          </Link>
+          <SmallContainer>
+            <Text>Donated at</Text>
+            <Text style={styles.smallText}>{item.date}</Text>
+          </SmallContainer>
         )}
         numColumns={1}
         contentContainerStyle={{ gap: 10 }}

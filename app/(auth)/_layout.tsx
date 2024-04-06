@@ -22,11 +22,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors.light.background,
-        tabBarInactiveBackgroundColor: "gainsboro",
-        tabBarStyle: {
-          backgroundColor: Colors.light.tint,
-        },
+        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),
@@ -35,12 +31,13 @@ export default function TabLayout() {
       <Tabs.Screen name="index" options={{ href: null }} />
 
       <Tabs.Screen
-        name="faq"
+        name="sign-up"
         options={{
-          title: "Faq",
+          title: "Sign Up",
           tabBarIcon: ({ color }) => (
-            <TabBarIcon name="question" color={color} />
+            <TabBarIcon name="sign-in" color={color} />
           ),
+          headerShown: false,
           headerRight: () => (
             <Link href="/logout" asChild>
               <Pressable>
@@ -59,33 +56,12 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="home"
+        name="sign-in"
         options={{
-          title: "Home",
-          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
-          headerRight: () => (
-            <Link href="/logout" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="sign-out"
-                    size={25}
-                    color={Colors[colorScheme ?? "light"].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ),
-        }}
-      />
-
-      <Tabs.Screen
-        name="donation-history"
-        options={{
-          title: "Donation History",
+          title: "Sign In",
+          headerShown: false,
           tabBarIcon: ({ color }) => (
-            <TabBarIcon name="history" color={color} />
+            <TabBarIcon name="sign-in" color={color} />
           ),
           headerRight: () => (
             <Link href="/logout" asChild>

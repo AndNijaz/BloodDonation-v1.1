@@ -77,9 +77,8 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="donationHistory"
+        name="donation-history"
         options={{
-          headerShown: false,
           title: "Donation History",
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="history" color={color} />

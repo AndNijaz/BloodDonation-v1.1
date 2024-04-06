@@ -28,5 +28,5 @@ export default function TabIndex() {
   //   console.log("bibi");
   // }, []);
 
-  return <Redirect href={"../(admin)/home"} />;
+  return <Redirect href={"/(admin)/home"} />;
 }
