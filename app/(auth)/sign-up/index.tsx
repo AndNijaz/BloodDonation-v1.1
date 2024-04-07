@@ -43,7 +43,7 @@ export default function SignUp() {
               style={styles.icon}
               name="at"
               size={24}
-              color="black"
+              color="#D93F33"
             />
           </View>
           <TextInput
@@ -59,7 +59,7 @@ export default function SignUp() {
             <MaterialCommunityIcons
               name="lock-outline"
               size={24}
-              color="black"
+              color="#D93F33"
             />
           </View>
           <TextInput
@@ -76,7 +76,7 @@ export default function SignUp() {
             <MaterialCommunityIcons
               name="lock-outline"
               size={24}
-              color="black"
+              color="#D93F33"
             />
           </View>
           <TextInput
@@ -102,9 +102,11 @@ const styles = StyleSheet.create({
     paddingStart: 48,
     paddingRight: 48,
     alignItems: "center",
+    flex:1,
   },
   iconContainer: {
-    borderWidth: 2,
+    borderWidth: 1.5,
+    borderBlockColor: "#D93F33",
     height: "100%",
     flexDirection: "row",
     alignItems: "center",
