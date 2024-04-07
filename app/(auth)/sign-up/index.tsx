@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   iconContainer: {
-    borderWidth: 2,
+    borderWidth: 1,
     height: "100%",
     flexDirection: "row",
     alignItems: "center",
