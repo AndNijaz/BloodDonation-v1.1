@@ -89,7 +89,7 @@ export default function SignUp() {
         </View>
 
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Sign In</Text>
+          <Text style={styles.buttonText}>Sign Up</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -102,11 +102,13 @@ const styles = StyleSheet.create({
     paddingStart: 48,
     paddingRight: 48,
     alignItems: "center",
-    flex: 1,
+    // flex: 1,
+    // flexDirection: "row",
+    height: "100%",
   },
   iconContainer: {
     borderWidth: 1.5,
-    borderBlockColor: "#D93F33",
+    borderColor: "#D93F33",
     height: "100%",
     flexDirection: "row",
     alignItems: "center",
@@ -149,7 +151,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   button: {
-    marginTop: "auto",
+    // marginTop: "auto",
+    // padding: "20%",
     width: "100%",
     height: 50,
     backgroundColor: "#FF5733",
