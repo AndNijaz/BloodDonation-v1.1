@@ -32,60 +32,11 @@ export default function SignUpHeader({
   );
 }
 
-// const styles = StyleSheet.create({
-//   color: { color: "#fff" },
-//   header: {
-//     borderWidth: 2,
-//     borderColor: "black",
-//     borderRadius: 10,
-//     position: "relative",
-//     // flex: 1,
-//     // justifyContent: "center",
-//   },
-//   headerBackground: {
-//     width: "100%",
-//     aspectRatio: 1,
-//   },
-//   headerHeading: {
-//     width: "100%",
-//     // marginTop: "auto",
-//     position: "absolute",
-//     top: 200,
-//     // left: 50,
-//     color: "#fff",
-//     fontSize: 44,
-//     textAlign: "center",
-//   },
-// });
-
-// const styles = StyleSheet.create({
-//   headerContainer: {
-//     // backgroundColor: "red",
-//     borderBottomRightRadius: 90,
-//     borderBottomLeftRadius: 90,
-//     padding: 20,
-//     alignItems: "center",
-//     justifyContent: "flex-end",
-//     height: 250, // Adjust the height as needed
-//   },
-//   headerHeading: {
-//     color: "#fff",
-//     fontSize: 44,
-//   },
-//   linkText: {
-//     position: "absolute",
-//     top: 10,
-//     left: 10,
-//     color: "white",
-//     fontSize: 16,
-//   },
-// });
-
 const styles = StyleSheet.create({
   headerContainer: {
     borderBottomRightRadius: 90,
     borderBottomLeftRadius: 90,
-    padding: 20,
+    padding: 24,
     alignItems: "center",
     justifyContent: "flex-end",
     height: 250,
@@ -100,6 +51,6 @@ const styles = StyleSheet.create({
   headerText: {
     color: "white",
     fontSize: 44,
-    marginBottom: 10,
+    marginBottom: 12,
   },
 });

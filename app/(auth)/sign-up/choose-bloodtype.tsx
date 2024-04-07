@@ -17,7 +17,7 @@ export default function ChooseBloodtype() {
       <SignUpHeader hasBack={true} path={"/sign-up/"}>
         Step 1/3:
       </SignUpHeader>
-      <Text>ChooseBloodtype</Text>
+      {/* <Text>ChooseBloodtype</Text> */}
       <Link href="/sign-up/donated-before">Choose BloodType</Link>
     </View>
   );
