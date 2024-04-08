@@ -2,7 +2,8 @@ import { StyleSheet, Text, View, TextInput, Button } from "react-native";
 import React, { useState } from "react";
 import { Stack } from "expo-router";
 import { TouchableOpacity } from "react-native";
-import SignUpHeader from "@/components/SignUpHeader";
+import RedHeader from "@/components/RedHeader";
+// import RedHeader from "@/components/RedHeader";
 import { Link } from "expo-router";
 
 export default function inputNameSurname() {
@@ -22,9 +23,9 @@ export default function inputNameSurname() {
           title: "Personal Details",
         }}
       />
-      <SignUpHeader hasBack={true} path={"/sign-up/index"}>
+      <RedHeader hasBack={true} path={"/sign-up/index"}>
         Step 2/5:
-      </SignUpHeader>
+      </RedHeader>
 
       <View style={styles.container}>
         <Text style={styles.title}>Create your account</Text>

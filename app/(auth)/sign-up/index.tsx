@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, TextInput, Button } from "react-native";
 import { Link } from "expo-router";
-import SignUpHeader from "@/components/RedHeader";
+import RedHeader from "@/components/RedHeader";
 import { Stack } from "expo-router";
 import { TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -13,7 +13,7 @@ import { useSignUpContext } from "@/app/context/sign-up-context";
 export default function SignUp() {
   const SignUpContext = useSignUpContext();
   const [email, setEmail] = useState("");
-  const [password, setPassword]= useState("");
+  const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
@@ -48,7 +48,7 @@ export default function SignUp() {
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ headerShown: false }}></Stack.Screen>
-      <SignUpHeader>Register</SignUpHeader>
+      <RedHeader>Register</RedHeader>
       <View style={styles.formContainer}>
         <Subheader>Create Your Account</Subheader>
 

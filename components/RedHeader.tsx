@@ -3,7 +3,7 @@ import React, { PropsWithChildren } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { Link } from "expo-router";
 
-export default function SignUpHeader({
+export default function RedHeader({
   children,
   hasBack,
   path,

@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Stack, Link } from "expo-router";
 // import { Link } from "expo-router";
-import SignUpHeader from "@/components/RedHeader";
+import RedHeader from "@/components/RedHeader";
 
 export default function SelectGender() {
   return (
@@ -13,9 +13,9 @@ export default function SelectGender() {
           title: "",
         }}
       />
-      <SignUpHeader hasBack={true} path={"/sign-up/donated-before"}>
+      <RedHeader hasBack={true} path={"/sign-up/donated-before"}>
         Step 3/3:
-      </SignUpHeader>
+      </RedHeader>
       <Text>SelectGender</Text>
       <Link href="/(user)/home">Select Gender</Link>
     </View>

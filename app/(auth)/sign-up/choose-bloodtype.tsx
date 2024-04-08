@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import RNPickerSelect from "react-native-picker-select";
 import { Link } from "expo-router";
 import { TouchableOpacity } from "react-native";
-import SignUpHeader from "@/components/RedHeader";
+import RedHeader from "@/components/RedHeader";
 
 export default function ChooseBloodtype() {
   const [bloodType, setBloodType] = useState("");
@@ -33,12 +33,11 @@ export default function ChooseBloodtype() {
       />
 
       <Link href={"./donated-before"}>
-          <TouchableOpacity style={styles.button} onPress={handleContinue}>
-            Continue
-          </TouchableOpacity>
-        </Link>
+        <TouchableOpacity style={styles.button} onPress={handleContinue}>
+          Continue
+        </TouchableOpacity>
+      </Link>
     </View>
-
   );
 }
 
