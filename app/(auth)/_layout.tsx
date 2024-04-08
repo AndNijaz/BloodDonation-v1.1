@@ -56,9 +56,9 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="sign-in"
+        name="log-in"
         options={{
-          title: "Sign In",
+          title: "Log In",
           headerShown: false,
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="sign-in" color={color} />

@@ -8,32 +8,33 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import FontAwesome from "@expo/vector-icons";
 
 export default function SignUp() {
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+  const [passwordMatch, setPasswordMatch] = useState(true);
 
   const handleSubmit = () => {
-    // Handle form submission (e.g., send data to server)
-    console.log("Submitted data:", { name, email, password });
-  };
+    const passwordsMatch = password === confirmPassword;
+    setPasswordMatch(passwordsMatch);
 
-  const handleLogin = () => {
-    // Handle login logic (e.g., validate credentials)
-    console.log("Email:", email);
-    console.log("Password:", password);
+    const isEmailEmpty = email.trim() === "";
+    const isPasswordEmpty = password.trim() === "";
+    const isConfirmPasswordEmpty = confirmPassword.trim() === "";
+
+    setEmailError(isEmailEmpty);
+    setPasswordError(isPasswordEmpty);
+    setConfirmPasswordError(isConfirmPasswordEmpty);
+
+    if (passwordsMatch && !isEmailEmpty && !isPasswordEmpty && !isConfirmPasswordEmpty) {
+      console.log("Submitted data:", { email, password });
+    }
   };
 
   return (
     <View>
-      <Stack.Screen
-        options={{
-          headerShown: false,
-          title: "Register",
-        }}
-      />
-      <SignUpHeader>Register</SignUpHeader>
-      {/* <Text>SignUp</Text> */}
-
       <View style={styles.container}>
         <Text style={styles.title}>Create your account</Text>
 
@@ -47,12 +48,13 @@ export default function SignUp() {
             />
           </View>
           <TextInput
-            style={styles.input}
+            style={[styles.input, emailError && styles.errorInput]}
             placeholder="Email"
             value={email}
             onChangeText={setEmail}
           />
         </View>
+        {emailError && <Text style={styles.errorText}>Email is required</Text>}
 
         <View style={styles.inputBlock}>
           <View style={styles.iconContainer}>
@@ -63,13 +65,14 @@ export default function SignUp() {
             />
           </View>
           <TextInput
-            style={styles.input}
+            style={[styles.input, (passwordError || !passwordMatch) && styles.errorInput]}
             placeholder="Password"
             secureTextEntry
             value={password}
             onChangeText={setPassword}
           />
         </View>
+        {passwordError && <Text style={styles.errorText}>Password is required</Text>}
 
         <View style={styles.inputBlock}>
           <View style={styles.iconContainer}>
@@ -79,16 +82,19 @@ export default function SignUp() {
               color="#D93F33"
             />
           </View>
+        
           <TextInput
-            style={styles.input}
+            style={[styles.input, (confirmPasswordError || !passwordMatch) && styles.errorInput]}
             placeholder="Confirm Password"
             secureTextEntry
-            value={password}
-            onChangeText={setPassword}
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
           />
         </View>
-
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+        {!passwordMatch && <Text style={styles.errorText}>Passwords must match</Text>}
+        {confirmPasswordError && <Text style={styles.errorText}>Confirm Password is required</Text>}
+        
+        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
           <Text style={styles.buttonText}>Sign Up</Text>
         </TouchableOpacity>
       </View>
@@ -102,8 +108,6 @@ const styles = StyleSheet.create({
     paddingStart: 48,
     paddingRight: 48,
     alignItems: "center",
-    // flex: 1,
-    // flexDirection: "row",
     height: "100%",
   },
   iconContainer: {
@@ -116,43 +120,38 @@ const styles = StyleSheet.create({
     width: "15%",
     borderTopLeftRadius: 20,
     borderBottomLeftRadius: 20,
-    elevation: 5, // Higher elevation
+    elevation: 5,
   },
-  icon: {
-    // paddingHorizontal: 16,
-  },
+  icon: {},
   title: {
     fontSize: 18,
     marginBottom: 32,
     color: "#161616",
   },
-  // ----------------------------
   inputBlock: {
     width: "100%",
     flexDirection: "row",
     alignItems: "center",
-    // justifyContent: "center",
-    // flex: 1,
-
-    // borderWidth: 2, // Border width
-    // borderColor: "black", // Border color
-    borderRadius: 10, // Border radius (for rounded corners)
+    borderRadius: 10,
     marginBottom: 16,
   },
   input: {
     flex: 1,
-    // width: "80%",
-
     height: 50,
     backgroundColor: "#ECECEC",
     borderTopRightRadius: 20,
     borderBottomRightRadius: 20,
-    // borderRadius: 20,
     paddingHorizontal: 16,
   },
+  errorInput: {
+    borderColor: 'red',
+    borderWidth: 1,
+  },
+  errorText: {
+    color: 'red',
+    marginBottom: 8,
+  },
   button: {
-    // marginTop: "auto",
-    // padding: "20%",
     width: "100%",
     height: 50,
     backgroundColor: "#FF5733",
