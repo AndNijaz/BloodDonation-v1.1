@@ -1,15 +1,17 @@
-import { StyleSheet, Text, View, TextInput, Button } from "react-native";
 import React, { useState } from "react";
+import { StyleSheet, Text, View, TextInput, Button } from "react-native";
 import { Link } from "expo-router";
 import SignUpHeader from "@/components/SignUpHeader";
 import { Stack } from "expo-router";
 import { TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import FontAwesome from "@expo/vector-icons";
+import { useSignUpContext } from "@/app/context/sign-up-context";
 
 export default function SignUp() {
+  const SignUpContext = useSignUpContext();
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [password, setPassword]= useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
@@ -29,7 +31,10 @@ export default function SignUp() {
     setConfirmPasswordError(isConfirmPasswordEmpty);
 
     if (passwordsMatch && !isEmailEmpty && !isPasswordEmpty && !isConfirmPasswordEmpty) {
+      //SignUpContext.Provider({email, password});
       console.log("Submitted data:", { email, password });
+
+      // Nizo skontaj kako da ide dalje navigacija odavde
     }
   };
 
@@ -51,7 +56,10 @@ export default function SignUp() {
             style={[styles.input, emailError && styles.errorInput]}
             placeholder="Email"
             value={email}
-            onChangeText={setEmail}
+            onChangeText={text => {
+              setEmail(text);
+              setEmailError(false);
+            }}
           />
         </View>
         {emailError && <Text style={styles.errorText}>Email is required</Text>}
@@ -69,7 +77,11 @@ export default function SignUp() {
             placeholder="Password"
             secureTextEntry
             value={password}
-            onChangeText={setPassword}
+            onChangeText={text => {
+              setPassword(text);
+              setPasswordError(false);
+              setPasswordMatch(true);
+            }}
           />
         </View>
         {passwordError && <Text style={styles.errorText}>Password is required</Text>}
@@ -82,18 +94,21 @@ export default function SignUp() {
               color="#D93F33"
             />
           </View>
-        
           <TextInput
             style={[styles.input, (confirmPasswordError || !passwordMatch) && styles.errorInput]}
             placeholder="Confirm Password"
             secureTextEntry
             value={confirmPassword}
-            onChangeText={setConfirmPassword}
+            onChangeText={text => {
+              setConfirmPassword(text);
+              setConfirmPasswordError(false);
+              setPasswordMatch(text === password);
+            }}
           />
         </View>
         {!passwordMatch && <Text style={styles.errorText}>Passwords must match</Text>}
         {confirmPasswordError && <Text style={styles.errorText}>Confirm Password is required</Text>}
-        
+
         <TouchableOpacity style={styles.button} onPress={handleSubmit}>
           <Text style={styles.buttonText}>Sign Up</Text>
         </TouchableOpacity>
