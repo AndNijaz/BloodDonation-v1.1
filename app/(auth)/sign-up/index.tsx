@@ -1,11 +1,13 @@
 import { StyleSheet, Text, View, TextInput, Button } from "react-native";
 import React, { useState } from "react";
 import { Link } from "expo-router";
-import SignUpHeader from "@/components/SignUpHeader";
+import SignUpHeader from "@/components/RedHeader";
 import { Stack } from "expo-router";
 import { TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import FontAwesome from "@expo/vector-icons";
+import Subheader from "@/components/Subheader";
+import InputRow from "@/components/InputRow";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -28,133 +30,83 @@ export default function SignUp() {
     setPasswordError(isPasswordEmpty);
     setConfirmPasswordError(isConfirmPasswordEmpty);
 
-    if (passwordsMatch && !isEmailEmpty && !isPasswordEmpty && !isConfirmPasswordEmpty) {
+    if (
+      passwordsMatch &&
+      !isEmailEmpty &&
+      !isPasswordEmpty &&
+      !isConfirmPasswordEmpty
+    ) {
       console.log("Submitted data:", { email, password });
     }
   };
 
   return (
-    <View>
-      <View style={styles.container}>
-        <Text style={styles.title}>Create your account</Text>
+    <View style={styles.container}>
+      <Stack.Screen options={{ headerShown: false }}></Stack.Screen>
+      <SignUpHeader>Register</SignUpHeader>
+      <View style={styles.formContainer}>
+        <Subheader>Create Your Account</Subheader>
 
-        <View style={styles.inputBlock}>
-          <View style={styles.iconContainer}>
-            <MaterialCommunityIcons
-              style={styles.icon}
-              name="at"
-              size={24}
-              color="#D93F33"
-            />
-          </View>
-          <TextInput
-            style={[styles.input, emailError && styles.errorInput]}
-            placeholder="Email"
-            value={email}
-            onChangeText={setEmail}
-          />
-        </View>
+        <InputRow
+          value={email}
+          setValue={setEmail}
+          placeholder="Email"
+          error={emailError}
+          icon="at"
+        />
         {emailError && <Text style={styles.errorText}>Email is required</Text>}
 
-        <View style={styles.inputBlock}>
-          <View style={styles.iconContainer}>
-            <MaterialCommunityIcons
-              name="lock-outline"
-              size={24}
-              color="#D93F33"
-            />
-          </View>
-          <TextInput
-            style={[styles.input, (passwordError || !passwordMatch) && styles.errorInput]}
-            placeholder="Password"
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
-          />
-        </View>
-        {passwordError && <Text style={styles.errorText}>Password is required</Text>}
+        <InputRow
+          value={password}
+          setValue={setPassword}
+          placeholder="Password"
+          error={passwordError}
+          icon="lock-outline"
+        />
+        {passwordError && (
+          <Text style={styles.errorText}>Password is required</Text>
+        )}
 
-        <View style={styles.inputBlock}>
-          <View style={styles.iconContainer}>
-            <MaterialCommunityIcons
-              name="lock-outline"
-              size={24}
-              color="#D93F33"
-            />
-          </View>
-        
-          <TextInput
-            style={[styles.input, (confirmPasswordError || !passwordMatch) && styles.errorInput]}
-            placeholder="Confirm Password"
-            secureTextEntry
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-          />
-        </View>
-        {!passwordMatch && <Text style={styles.errorText}>Passwords must match</Text>}
-        {confirmPasswordError && <Text style={styles.errorText}>Confirm Password is required</Text>}
-        
-        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-          <Text style={styles.buttonText}>Sign Up</Text>
-        </TouchableOpacity>
+        <InputRow
+          value={confirmPassword}
+          setValue={setConfirmPassword}
+          placeholder="Confirm Password"
+          error={confirmPasswordError}
+          icon="lock-outline"
+        />
+        {!passwordMatch && (
+          <Text style={styles.errorText}>Passwords must match</Text>
+        )}
+        {confirmPasswordError && (
+          <Text style={styles.errorText}>Confirm Password is required</Text>
+        )}
       </View>
+
+      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+        <Text style={styles.buttonText}>Sign Up</Text>
+      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 24,
+    flex: 1,
+    paddingBottom: 48,
+  },
+  formContainer: {
+    paddingTop: 48,
+    alignItems: "center",
     paddingStart: 48,
     paddingRight: 48,
-    alignItems: "center",
-    height: "100%",
   },
-  iconContainer: {
-    borderWidth: 1.5,
-    borderColor: "#D93F33",
-    height: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    width: "15%",
-    borderTopLeftRadius: 20,
-    borderBottomLeftRadius: 20,
-    elevation: 5,
-  },
-  icon: {},
-  title: {
-    fontSize: 18,
-    marginBottom: 32,
-    color: "#161616",
-  },
-  inputBlock: {
-    width: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-    borderRadius: 10,
-    marginBottom: 16,
-  },
-  input: {
-    flex: 1,
-    height: 50,
-    backgroundColor: "#ECECEC",
-    borderTopRightRadius: 20,
-    borderBottomRightRadius: 20,
-    paddingHorizontal: 16,
-  },
-  errorInput: {
-    borderColor: 'red',
-    borderWidth: 1,
-  },
-  errorText: {
-    color: 'red',
-    marginBottom: 8,
-  },
+
   button: {
-    width: "100%",
+    marginLeft: 48,
+    marginRight: 48,
+    marginTop: "auto",
     height: 50,
-    backgroundColor: "#FF5733",
+    backgroundColor: "#D61D23",
     borderRadius: 20,
     justifyContent: "center",
     alignItems: "center",
@@ -163,5 +115,9 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 18,
     fontWeight: "bold",
+  },
+  errorText: {
+    color: "red",
+    marginBottom: 8,
   },
 });
