@@ -1,7 +1,15 @@
-import { StyleSheet, Text, View, Image, ImageBackground } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  ImageBackground,
+  Pressable,
+} from "react-native";
 import React, { PropsWithChildren } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { Link } from "expo-router";
+import { useRouter } from "expo-router";
 
 export default function RedHeader({
   children,
@@ -12,6 +20,8 @@ export default function RedHeader({
   hasBack?: boolean;
   path?: string;
 }) {
+  const router = useRouter();
+
   return (
     <LinearGradient
       colors={["#D61D23", "#EB7C83"]}
@@ -20,12 +30,13 @@ export default function RedHeader({
       style={styles.headerContainer}
     >
       {hasBack && (
-        <Link
+        <Pressable
+          onPress={() => router.back()}
           style={styles.linkText}
-          href={!!path ? path : "@/app/(auth)/sign-in"}
+          // href={!!path ? path : "@/app/(auth)/sign-in"}
         >
           Back
-        </Link>
+        </Pressable>
       )}
       <Text style={styles.headerText}>{children}</Text>
     </LinearGradient>

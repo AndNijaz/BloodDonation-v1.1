@@ -9,6 +9,7 @@ import FontAwesome from "@expo/vector-icons";
 import Subheader from "@/components/Subheader";
 import InputRow from "@/components/InputRow";
 import { useSignUpContext } from "@/app/context/sign-up-context";
+import { useRouter } from "expo-router";
 
 export default function SignUp() {
   const SignUpContext = useSignUpContext();
@@ -19,6 +20,8 @@ export default function SignUp() {
   const [passwordError, setPasswordError] = useState(false);
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(true);
+
+  const router = useRouter();
 
   const handleSubmit = () => {
     const passwordsMatch = password === confirmPassword;
@@ -42,6 +45,7 @@ export default function SignUp() {
       console.log("Submitted data:", { email, password });
 
       // Nizo skontaj kako da ide dalje navigacija odavde
+      router.push("/(auth)/sign-up/name-surname");
     }
   };
 

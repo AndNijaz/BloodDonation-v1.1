@@ -5,14 +5,20 @@ import { TouchableOpacity } from "react-native";
 import RedHeader from "@/components/RedHeader";
 // import RedHeader from "@/components/RedHeader";
 import { Link } from "expo-router";
+import InputRow from "@/components/InputRow";
+import { useRouter } from "expo-router";
 
 export default function inputNameSurname() {
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
 
+  const router = useRouter();
+
   const handleContinue = () => {
     console.log("Name:", name);
     console.log("Surname:", surname);
+
+    router.push("/(auth)/sign-up/choose-bloodtype");
   };
 
   return (
@@ -23,38 +29,29 @@ export default function inputNameSurname() {
           title: "Personal Details",
         }}
       />
-      <RedHeader hasBack={true} path={"/sign-up/index"}>
-        Step 2/5:
-      </RedHeader>
+      <RedHeader hasBack={true}>Step 2/5:</RedHeader>
 
       <View style={styles.container}>
         <Text style={styles.title}>Create your account</Text>
 
-        <View style={styles.inputBlock}>
-          <View style={styles.iconContainer}></View>
-          <TextInput
-            style={[styles.input]}
-            placeholder="First Name"
-            value={name}
-            onChangeText={(text) => setName(text)}
-          />
-        </View>
+        <InputRow
+          value={name}
+          setValue={setName}
+          placeholder="Name"
+          icon="account-outline"
+        ></InputRow>
 
-        <View style={styles.inputBlock}>
-          <View style={styles.iconContainer}></View>
-          <TextInput
-            style={[styles.input]}
-            placeholder="Last Name"
-            value={surname}
-            onChangeText={(text) => setSurname(text)}
-          />
-        </View>
+        <InputRow
+          value={surname}
+          setValue={setSurname}
+          placeholder="Last Name"
+          icon="account-circle-outline"
+        ></InputRow>
       </View>
-      <Link href={"./choose-bloodtype"}>
-        <TouchableOpacity style={styles.button} onPress={handleContinue}>
-          Continue
-        </TouchableOpacity>
-      </Link>
+
+      <TouchableOpacity style={styles.button} onPress={handleContinue}>
+        Continue
+      </TouchableOpacity>
     </View>
   );
 }

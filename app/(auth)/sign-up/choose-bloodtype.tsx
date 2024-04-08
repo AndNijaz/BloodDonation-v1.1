@@ -4,16 +4,23 @@ import RNPickerSelect from "react-native-picker-select";
 import { Link } from "expo-router";
 import { TouchableOpacity } from "react-native";
 import RedHeader from "@/components/RedHeader";
+import { useRouter } from "expo-router";
 
 export default function ChooseBloodtype() {
   const [bloodType, setBloodType] = useState("");
 
+  const router = useRouter();
+
   const handleContinue = () => {
     console.log("BloodType:", bloodType);
+
+    router.push("/(auth)/sign-up/donated-before");
   };
 
   return (
     <View style={styles.container}>
+      <RedHeader hasBack={true}>Step 3/5:</RedHeader>
+
       <Text style={styles.title}>Select your blood type:</Text>
       <RNPickerSelect
         onValueChange={(value: string) => setBloodType(value)}
@@ -32,11 +39,9 @@ export default function ChooseBloodtype() {
         placeholder={{ label: "Select blood type...", value: null }}
       />
 
-      <Link href={"./donated-before"}>
-        <TouchableOpacity style={styles.button} onPress={handleContinue}>
-          Continue
-        </TouchableOpacity>
-      </Link>
+      <TouchableOpacity style={styles.button} onPress={handleContinue}>
+        Continue
+      </TouchableOpacity>
     </View>
   );
 }
