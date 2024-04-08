@@ -34,6 +34,10 @@ export default function TabLayout() {
         name="sign-up"
         options={{
           title: "Sign Up",
+          href: null,
+          tabBarStyle: {
+            display: "none",
+          },
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="sign-in" color={color} />
           ),
@@ -59,6 +63,7 @@ export default function TabLayout() {
         name="log-in"
         options={{
           title: "Log In",
+          href: null,
           headerShown: false,
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="sign-in" color={color} />

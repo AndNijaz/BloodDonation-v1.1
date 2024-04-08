@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import RNPickerSelect from "react-native-picker-select";
 import { Link } from "expo-router";
 import { TouchableOpacity } from "react-native";
+import SignUpHeader from "@/components/RedHeader";
 
 export default function ChooseBloodtype() {
   const [bloodType, setBloodType] = useState("");

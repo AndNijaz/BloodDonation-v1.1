@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Stack, Link } from "expo-router";
 // import { Link } from "expo-router";
-import SignUpHeader from "@/components/SignUpHeader";
+import SignUpHeader from "@/components/RedHeader";
 
 export default function SelectGender() {
   return (
