@@ -10,6 +10,7 @@ const DonationHistory = ({}) => {
   const [lastDonationDay, setLastDonationDay] = useState(""); // State for last donation day
   const [lastDonationMonth, setLastDonationMonth] = useState(""); // State for last donation month
   const [lastDonationYear, setLastDonationYear] = useState(""); // State for last donation year
+  const [error, setError] = useState(""); // State for error message
   const router = useRouter();
 
   const handleDonationChange = (value) => {
@@ -19,6 +20,7 @@ const DonationHistory = ({}) => {
       setLastDonationDay("");
       setLastDonationMonth("");
       setLastDonationYear("");
+      setError(""); // Clear error message
     }
   };
 
@@ -45,7 +47,7 @@ const DonationHistory = ({}) => {
 
   const handleProceed = () => {
     if (donated && (!lastDonationDay || !lastDonationMonth || !lastDonationYear)) {
-      alert("Please enter the day, month, and year of your last donation.");
+      setError("Please enter the day, month, and year of your last donation.");
       return;
     }
 
@@ -54,17 +56,17 @@ const DonationHistory = ({}) => {
     const year = parseInt(lastDonationYear, 10);
 
     if (!isValidDay(day, month, year)) {
-      alert("Please enter a valid day for the selected month and year.");
+      setError("Please enter a valid day for the selected month and year.");
       return;
     }
 
     if (!isValidMonth(month)) {
-      alert("Please enter a valid month (1-12).");
+      setError("Please enter a valid month (1-12).");
       return;
     }
 
     if (!isValidYear(year)) {
-      alert("Please enter a valid four-digit year between 1950 and the current year.");
+      setError("Please enter a valid four-digit year between 1950 and the current year.");
       return;
     }
 
@@ -121,6 +123,7 @@ const DonationHistory = ({}) => {
                 maxLength={4}
               />
             </View>
+            {error ? <Text style={styles.errorText}>{error}</Text> : null}
           </View>
         )}
       </View>
@@ -164,6 +167,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     height: 40,
     marginRight: 10,
+  },
+  errorText: {
+    color: "red",
+    marginTop: 5,
+    marginBottom: 10,
   },
 });
 
