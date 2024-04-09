@@ -41,8 +41,8 @@ type SignUpType = {
   firstName: string;
   lastName: string;
   bloodType: string;
-  lastTimeDonated: Date;
-  nextTimeDonated:Date;
+  lastTimeDonated: string;
+  nextTimeDonated: string;
   gender: string;
 };
 
@@ -86,14 +86,14 @@ const SignUpProvider = ({ children }: PropsWithChildren) => {
   const updateLastTimeDonated = (date) => {
     setSignUpData((prevData) => ({
       ...prevData,
-      lastTimeDonated: Date,
+      lastTimeDonated: date,
     }));
   };
 
-    const updateNextTimeDonated = (date) => {
+  const updateNextTimeDonated = (date) => {
     setSignUpData((prevData) => ({
       ...prevData,
-      nextTimeDonated: Date,
+      nextTimeDonated: date,
     }));
   };
 
