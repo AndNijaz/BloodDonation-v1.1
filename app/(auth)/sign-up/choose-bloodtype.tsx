@@ -40,6 +40,11 @@ export default function ChooseBloodtype() {
       <View style={styles.formContainer}>
         <Subheader>Please Select Your Bloodtype</Subheader>
         <RNPickerSelect
+          style={{
+            inputIOS: styles.picker,
+            inputAndroid: styles.picker,
+            iconContainer: styles.picker,
+          }}
           onValueChange={(value: string) => setBloodType(value)}
           items={[
             { label: "A+", value: "A+" },
@@ -54,6 +59,7 @@ export default function ChooseBloodtype() {
           value={bloodType}
           useNativeAndroidPickerStyle={false}
           placeholder={{ label: "Select blood type...", value: null }}
+          useNativeAndroidPickerStyle={false}
         />
       </View>
       <NewButton onSubmit={handleContinue}>Continue</NewButton>
@@ -72,5 +78,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingStart: 48,
     paddingRight: 48,
+  },
+  picker: {
+    borderWidth: 1,
+    borderColor: "#D93F33",
+    borderRadius: 8,
+    padding: 16,
+    color: "#D93F33",
+    fontSize: 48,
+    textAlign: "center",
   },
 });

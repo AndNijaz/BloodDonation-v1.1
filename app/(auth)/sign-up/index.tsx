@@ -54,6 +54,10 @@ export default function SignUp() {
       updateEmailPassword(email, password);
       // Nizo skontaj kako da ide dalje navigacija odavde
       router.push("/(auth)/sign-up/name-surname");
+    } else {
+      updateEmailPassword(email, password);
+      // Nizo skontaj kako da ide dalje navigacija odavde
+      router.push("/(auth)/sign-up/name-surname");
     }
   };
 
