@@ -41,9 +41,8 @@ type SignUpType = {
   firstName: string;
   lastName: string;
   bloodType: string;
-  date: string;
-  donatedBefore: boolean;
-  dateDonatedBefore: string;
+  lastTimeDonated: Date;
+  nextTimeDonated:Date;
   gender: string;
 };
 
@@ -56,8 +55,8 @@ const SignUpProvider = ({ children }: PropsWithChildren) => {
     firstName: "",
     lastName: "",
     bloodType: "",
-    date: "",
-    donatedBefore: "",
+    lastTimeDonated: "",
+    nextTimeDonated: "",
     gender: "",
   });
 
@@ -84,6 +83,20 @@ const SignUpProvider = ({ children }: PropsWithChildren) => {
     }));
   };
 
+  const updateLastTimeDonated = (date) => {
+    setSignUpData((prevData) => ({
+      ...prevData,
+      lastTimeDonated: Date,
+    }));
+  };
+
+    const updateNextTimeDonated = (date) => {
+    setSignUpData((prevData) => ({
+      ...prevData,
+      nextTimeDonated: Date,
+    }));
+  };
+
   const updateGender = (gender: string) => {
     setSignUpData((prevData) => ({
       ...prevData,
@@ -99,6 +112,8 @@ const SignUpProvider = ({ children }: PropsWithChildren) => {
         updateFirstLastName,
         updateBloodType,
         updateGender,
+        updateLastTimeDonated,
+        updateNextTimeDonated,
       }}
     >
       {/* value usvari šaljemo consumeru */}
