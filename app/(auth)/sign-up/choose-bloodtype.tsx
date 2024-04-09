@@ -10,6 +10,7 @@ import NewButton from "@/components/NewButton";
 import { Stack } from "expo-router";
 import InputRow from "@/components/InputRow";
 import Subheader from "@/components/Subheader";
+import SafeArea from "@/components/SafeArea";
 
 export default function ChooseBloodtype() {
   const [bloodType, setBloodType] = useState("");
@@ -30,6 +31,7 @@ export default function ChooseBloodtype() {
 
   return (
     <View style={styles.container}>
+      {/* <SafeArea /> */}
       <Stack.Screen
         options={{
           headerShown: false,

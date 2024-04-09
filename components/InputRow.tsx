@@ -30,6 +30,7 @@ export default function InputRow({
         placeholder={placeholder}
         value={value}
         onChangeText={(e) => handleChange(e)}
+        placeholderTextColor="gray"
       />
     </View>
   );

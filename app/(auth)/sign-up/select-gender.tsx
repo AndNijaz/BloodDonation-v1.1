@@ -9,6 +9,7 @@ import NewButton from "@/components/NewButton";
 import Subheader from "@/components/Subheader";
 import RNPickerSelect from "react-native-picker-select";
 import { useState } from "react";
+import SafeArea from "@/components/SafeArea";
 
 export default function SelectGender() {
   const [gender, setGender] = useState("");
@@ -27,6 +28,7 @@ export default function SelectGender() {
 
   return (
     <View style={styles.container}>
+      {/* <SafeArea /> */}
       <Stack.Screen
         options={{
           headerShown: false,

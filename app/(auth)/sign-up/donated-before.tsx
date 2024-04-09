@@ -11,6 +11,8 @@ import RedHeader from "@/components/RedHeader";
 import Subheader from "@/components/Subheader";
 import NewButton from "@/components/NewButton";
 import { Stack, useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
+import SafeArea from "@/components/SafeArea";
 
 const DonationHistory = ({}) => {
   const [donated, setDonated] = useState(false); // Changed to boolean for toggle state
@@ -100,6 +102,7 @@ const DonationHistory = ({}) => {
 
   return (
     <View style={styles.container}>
+      {/* <SafeArea /> */}
       <Stack.Screen
         options={{
           headerShown: false,

@@ -10,6 +10,8 @@ import React, { PropsWithChildren } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { Link } from "expo-router";
 import { useRouter } from "expo-router";
+import SafeArea from "./SafeArea";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function RedHeader({
   children,
@@ -23,23 +25,31 @@ export default function RedHeader({
   const router = useRouter();
 
   return (
-    <LinearGradient
-      colors={["#D61D23", "#EB7C83"]}
-      start={{ x: 0.5, y: 0 }}
-      end={{ x: 0.5, y: 1 }}
-      style={styles.headerContainer}
-    >
-      {hasBack && (
-        <Pressable
-          onPress={() => router.back()}
-          style={styles.linkText}
-          // href={!!path ? path : "@/app/(auth)/sign-in"}
-        >
-          <Text>Back</Text>
-        </Pressable>
-      )}
-      <Text style={styles.headerText}>{children}</Text>
-    </LinearGradient>
+    <>
+      <SafeArea />
+      <LinearGradient
+        colors={["#D61D23", "#EB7C83"]}
+        start={{ x: 0.5, y: 0 }}
+        end={{ x: 0.5, y: 1 }}
+        style={styles.headerContainer}
+      >
+        {hasBack && (
+          <Pressable
+            onPress={() => router.back()}
+            style={styles.linkText}
+            // href={!!path ? path : "@/app/(auth)/sign-in"}
+          >
+            {/* <MaterialCommunityIcons name="" size={24} color="#D93F33" /> */}
+            <MaterialCommunityIcons
+              name="arrow-left-bold-circle-outline"
+              size={32}
+              color="white"
+            />
+          </Pressable>
+        )}
+        <Text style={styles.headerText}>{children}</Text>
+      </LinearGradient>
+    </>
   );
 }
 
@@ -50,7 +60,7 @@ const styles = StyleSheet.create({
     padding: 24,
     alignItems: "center",
     justifyContent: "flex-end",
-    height: 250,
+    height: 200,
   },
   linkText: {
     position: "absolute",

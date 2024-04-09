@@ -43,7 +43,7 @@ const LoginScreen = () => {
       />
 
       <Button
-        onPress={signInWithEmail}
+        // onPress={signInWithEmail}
         disabled={loading}
         text={loading ? "Loging in..." : "Log in"}
       />

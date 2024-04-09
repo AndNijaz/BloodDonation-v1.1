@@ -10,11 +10,14 @@ import Subheader from "@/components/Subheader";
 import InputRow from "@/components/InputRow";
 // import { useSignUpContext } from "@/app/context/sign-up-context";
 import { useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 // import { useContext } from "react";
 // import { SignUpContext } from "@/app/context/sign-up-context";
 import { useSignUp } from "@/app/context/sign-up-context";
 import NewButton from "@/components/NewButton";
+import SafeArea from "@/components/SafeArea";
+import AlreadyHaveLabelLink from "@/components/AlreadyHaveLabelLink";
 
 export default function SignUp() {
   // const SignUpContext = useSignUpContext();
@@ -65,6 +68,7 @@ export default function SignUp() {
 
   return (
     <View style={styles.container}>
+      {/* <SafeArea /> */}
       <Stack.Screen options={{ headerShown: false }}></Stack.Screen>
       <RedHeader>Register</RedHeader>
       <View style={styles.formContainer}>
@@ -106,6 +110,9 @@ export default function SignUp() {
       </View>
 
       <NewButton onSubmit={handleSubmit}>Sign Up</NewButton>
+      <AlreadyHaveLabelLink path="log-in">
+        Already have an account?
+      </AlreadyHaveLabelLink>
     </View>
   );
 }

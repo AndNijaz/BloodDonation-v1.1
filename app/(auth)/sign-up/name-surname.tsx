@@ -10,7 +10,7 @@ import { useRouter } from "expo-router";
 import { useSignUp } from "@/app/context/sign-up-context";
 import NewButton from "@/components/NewButton";
 import Subheader from "@/components/Subheader";
-import { SafeAreaView } from "react-native";
+import SafeArea from "@/components/SafeArea";
 
 export default function inputNameSurname() {
   const [name, setName] = useState("");
@@ -32,38 +32,36 @@ export default function inputNameSurname() {
   console.log(signUpData);
 
   return (
-    <>
-      <SafeAreaView style={styles.safeArea} />
-      <View style={styles.container}>
-        <Stack.Screen
-          options={{
-            headerShown: false,
-            title: "Name & Surname",
-          }}
-        />
-        <RedHeader hasBack={true}>Step 2/5:</RedHeader>
+    <View style={styles.container}>
+      {/* <SafeArea /> */}
+      <Stack.Screen
+        options={{
+          headerShown: false,
+          title: "Name & Surname",
+        }}
+      />
+      <RedHeader hasBack={true}>Step 2/5:</RedHeader>
 
-        <View style={styles.formContainer}>
-          <Subheader>Please Tell Us Your Name</Subheader>
+      <View style={styles.formContainer}>
+        <Subheader>Please Tell Us Your Name</Subheader>
 
-          <InputRow
-            value={name}
-            setValue={setName}
-            placeholder="Name"
-            icon="account-outline"
-          ></InputRow>
+        <InputRow
+          value={name}
+          setValue={setName}
+          placeholder="Name"
+          icon="account-outline"
+        ></InputRow>
 
-          <InputRow
-            value={surname}
-            setValue={setSurname}
-            placeholder="Last Name"
-            icon="account-circle-outline"
-          ></InputRow>
-        </View>
-
-        <NewButton onSubmit={handleContinue}>Continue</NewButton>
+        <InputRow
+          value={surname}
+          setValue={setSurname}
+          placeholder="Last Name"
+          icon="account-circle-outline"
+        ></InputRow>
       </View>
-    </>
+
+      <NewButton onSubmit={handleContinue}>Continue</NewButton>
+    </View>
   );
 }
 
@@ -78,8 +76,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingStart: 48,
     paddingRight: 48,
-  },
-  safeArea: {
-    backgroundColor: "#D61D23",
   },
 });
