@@ -5,15 +5,17 @@ import { Link } from "expo-router";
 export default function AlreadyHaveLabelLink({
   path,
   children,
+  linkText,
 }: {
   path: string;
   children: string;
+  linkText: string;
 }) {
   return (
     <View style={styles.row}>
       <Text>{children}</Text>
       <Link href={`../${path}`} style={styles.link}>
-        Login
+        {linkText}
       </Link>
     </View>
   );

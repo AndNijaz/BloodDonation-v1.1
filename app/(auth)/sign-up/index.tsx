@@ -64,8 +64,6 @@ export default function SignUp() {
     }
   };
 
-  console.log(signUpData);
-
   return (
     <View style={styles.container}>
       {/* <SafeArea /> */}
@@ -77,7 +75,7 @@ export default function SignUp() {
         <InputRow
           value={email}
           setValue={setEmail}
-          placeholder="Email"
+          placeholder="E-mail"
           error={emailError}
           icon="at"
         />
@@ -110,7 +108,7 @@ export default function SignUp() {
       </View>
 
       <NewButton onSubmit={handleSubmit}>Sign Up</NewButton>
-      <AlreadyHaveLabelLink path="log-in">
+      <AlreadyHaveLabelLink path="log-in" linkText="Login">
         Already have an account?
       </AlreadyHaveLabelLink>
     </View>
