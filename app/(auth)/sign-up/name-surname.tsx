@@ -7,6 +7,9 @@ import RedHeader from "@/components/RedHeader";
 import { Link } from "expo-router";
 import InputRow from "@/components/InputRow";
 import { useRouter } from "expo-router";
+import { useSignUp } from "@/app/context/sign-up-context";
+import NewButton from "@/components/NewButton";
+import Subheader from "@/components/Subheader";
 
 export default function inputNameSurname() {
   const [name, setName] = useState("");
@@ -14,25 +17,31 @@ export default function inputNameSurname() {
 
   const router = useRouter();
 
+  const { signUpData, updateFirstLastName } = useSignUp();
+
   const handleContinue = () => {
-    console.log("Name:", name);
-    console.log("Surname:", surname);
+    // console.log("Name:", name);
+    // console.log("Surname:", surname);
+
+    updateFirstLastName(name, surname);
 
     router.push("/(auth)/sign-up/choose-bloodtype");
   };
 
+  console.log(signUpData);
+
   return (
-    <View>
+    <View style={styles.container}>
       <Stack.Screen
         options={{
           headerShown: false,
-          title: "Personal Details",
+          title: "Name & Surname",
         }}
       />
       <RedHeader hasBack={true}>Step 2/5:</RedHeader>
 
-      <View style={styles.container}>
-        <Text style={styles.title}>Create your account</Text>
+      <View style={styles.formContainer}>
+        <Subheader>Please Tell Us Your Name</Subheader>
 
         <InputRow
           value={name}
@@ -49,64 +58,21 @@ export default function inputNameSurname() {
         ></InputRow>
       </View>
 
-      <TouchableOpacity style={styles.button} onPress={handleContinue}>
-        Continue
-      </TouchableOpacity>
+      <NewButton onSubmit={handleContinue}>Continue</NewButton>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 24,
+    flex: 1,
+    paddingBottom: 48,
+  },
+  formContainer: {
+    paddingTop: 64,
+    // paddingTop: 48,
+    alignItems: "center",
     paddingStart: 48,
     paddingRight: 48,
-    alignItems: "center",
-    height: "100%",
-  },
-  iconContainer: {
-    borderWidth: 1.5,
-    borderColor: "#D93F33",
-    height: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    width: "15%",
-    borderTopLeftRadius: 20,
-    borderBottomLeftRadius: 20,
-    elevation: 5,
-  },
-  title: {
-    fontSize: 18,
-    marginBottom: 32,
-    color: "#161616",
-  },
-  inputBlock: {
-    width: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-    borderRadius: 10,
-    marginBottom: 16,
-  },
-  input: {
-    flex: 1,
-    height: 50,
-    backgroundColor: "#ECECEC",
-    borderTopRightRadius: 20,
-    borderBottomRightRadius: 20,
-    paddingHorizontal: 16,
-  },
-  button: {
-    width: "100%",
-    height: 50,
-    backgroundColor: "#FF5733",
-    borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: "bold",
   },
 });

@@ -35,7 +35,7 @@ export default function RedHeader({
           style={styles.linkText}
           // href={!!path ? path : "@/app/(auth)/sign-in"}
         >
-          Back
+          <Text>Back</Text>
         </Pressable>
       )}
       <Text style={styles.headerText}>{children}</Text>

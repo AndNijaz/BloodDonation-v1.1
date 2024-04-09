@@ -4,16 +4,29 @@ import { Stack, Link } from "expo-router";
 // import { Link } from "expo-router";
 import RedHeader from "@/components/RedHeader";
 import { useRouter } from "expo-router";
+import { useSignUp } from "@/app/context/sign-up-context";
+import NewButton from "@/components/NewButton";
+import Subheader from "@/components/Subheader";
+import RNPickerSelect from "react-native-picker-select";
+import { useState } from "react";
 
 export default function SelectGender() {
+  const [gender, setGender] = useState("");
+
+  const { signUpData, updateGender } = useSignUp();
+
   const router = useRouter();
 
-  function handleProceed() {
+  function handleContinue() {
+    updateGender("musko");
+
     router.push("/(user)/home");
   }
 
+  console.log(signUpData);
+
   return (
-    <View>
+    <View style={styles.container}>
       <Stack.Screen
         options={{
           headerShown: false,
@@ -23,22 +36,41 @@ export default function SelectGender() {
       <RedHeader hasBack={true} path={"/sign-up/donated-before"}>
         Step 5/5:
       </RedHeader>
-      <Text>SelectGender</Text>
-      <Link href="/(user)/home">Select Gender</Link>
-      <TouchableOpacity style={styles.button} onPress={handleProceed}>
-        Proceed
-      </TouchableOpacity>
+      <View style={styles.formContainer}>
+        <Subheader>Select Gender</Subheader>
+        <RNPickerSelect
+          onValueChange={(value: string) => setGender(value)}
+          items={[
+            { label: "A+", value: "A+" },
+            { label: "A-", value: "A-" },
+            { label: "B+", value: "B+" },
+            { label: "B-", value: "B-" },
+            { label: "AB+", value: "AB+" },
+            { label: "AB-", value: "AB-" },
+            { label: "O+", value: "O+" },
+            { label: "O-", value: "O-" },
+          ]}
+          value={gender}
+          useNativeAndroidPickerStyle={false}
+          placeholder={{ label: "Select blood type...", value: null }}
+        />
+        {/* <Link href="/(user)/home">Select Gender</Link> */}
+      </View>
+      <NewButton onSubmit={handleContinue}>Continue</NewButton>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  button: {
-    width: "100%",
-    height: 50,
-    backgroundColor: "#FF5733",
-    borderRadius: 20,
-    justifyContent: "center",
+  container: {
+    flex: 1,
+    paddingBottom: 48,
+  },
+  formContainer: {
+    paddingTop: 64,
+    // paddingTop: 48,
     alignItems: "center",
+    paddingStart: 48,
+    paddingRight: 48,
   },
 });

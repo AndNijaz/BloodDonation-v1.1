@@ -1,15 +1,21 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, TextInput, Button } from "react-native";
-import { RadioButton } from "react-native-paper";
+// import { RadioButton } from "react-native-paper";
 import { useRouter } from "expo-router";
 import RedHeader from "@/components/RedHeader";
 import { TouchableOpacity } from "react-native";
+import { useSignUp } from "@/app/context/sign-up-context";
+import NewButton from "@/components/NewButton";
+import { Stack } from "expo-router";
+import Subheader from "@/components/Subheader";
 
 const DonationHistory = ({}) => {
   const [donated, setDonated] = useState("");
   const [lastDonation, setLastDonation] = useState("");
   const [lastDonationMonth, setLastDonationMonth] = useState("");
   const [lastDonationYear, setLastDonationYear] = useState("");
+
+  const { signUpData, updateLastDonated } = useSignUp();
 
   const router = useRouter();
 
@@ -33,7 +39,16 @@ const DonationHistory = ({}) => {
       setLastDonationMonth("");
       setLastDonationYear("");
     }
+
+    updateLastDonated(
+      donated,
+      lastDonation,
+      lastDonationMonth,
+      lastDonationYear
+    );
   };
+
+  console.log(signUpData);
 
   const handleProceed = () => {
     if (donated === "") {
@@ -54,58 +69,18 @@ const DonationHistory = ({}) => {
 
   return (
     <View style={styles.container}>
+      <Stack.Screen
+        options={{
+          headerShown: false,
+          title: "Donated Before",
+        }}
+      />
       <RedHeader hasBack={true}>Step 4/5</RedHeader>
 
-      <Text style={styles.title}>About yourself</Text>
-      <Text style={styles.question}>Did you donate blood before?</Text>
-      <View style={styles.radioContainer}>
-        <RadioButton.Group onValueChange={handleDonationChange} value={donated}>
-          <View style={styles.radioButton}>
-            <Text style={styles.radioText}>Yes</Text>
-            <RadioButton value="yes" color={"#FF0000"} />
-          </View>
-          <View style={styles.radioButton}>
-            <Text style={styles.radioText}>No</Text>
-            <RadioButton value="no" color={"#FF0000"} />
-          </View>
-        </RadioButton.Group>
+      <View style={styles.formContainer}>
+        <Subheader>Did you donate blood before?</Subheader>
       </View>
-
-      {donated === "yes" && (
-        <>
-          <Text style={styles.question}>If so, when?</Text>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              value={lastDonation}
-              onChangeText={handleLastDonationChange}
-              maxLength={2}
-              keyboardType="number-pad"
-            />
-            <Text style={styles.label}>/</Text>
-            <TextInput
-              style={styles.input}
-              value={lastDonationMonth}
-              onChangeText={(text) => setLastDonationMonth(text.toUpperCase())}
-              maxLength={3}
-              keyboardType="default"
-            />
-            <Text style={styles.label}>/</Text>
-            <TextInput
-              style={styles.input}
-              value={lastDonationYear}
-              onChangeText={handleLastDonationChange}
-              maxLength={2}
-              keyboardType="number-pad"
-            />
-          </View>
-        </>
-      )}
-
-      {/* <Button title="PROCEED" onPress={handleProceed} color="#FF0000" /> */}
-      <TouchableOpacity style={styles.button} onPress={handleProceed}>
-        Proceed
-      </TouchableOpacity>
+      <NewButton onSubmit={handleProceed}>Proceed</NewButton>
     </View>
   );
 };
@@ -113,60 +88,14 @@ const DonationHistory = ({}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFFFFF",
-    padding: 20,
+    paddingBottom: 48,
   },
-  button: {
-    width: "100%",
-    height: 50,
-    backgroundColor: "#FF5733",
-    borderRadius: 20,
-    justifyContent: "center",
+  formContainer: {
+    paddingTop: 64,
+    // paddingTop: 48,
     alignItems: "center",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#FF0000",
-    marginBottom: 20,
-  },
-  question: {
-    fontSize: 16,
-    color: "#000000",
-    marginBottom: 10,
-  },
-  radioContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  radioButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginRight: 20,
-  },
-  radioText: {
-    fontSize: 16,
-    color: "#000000",
-    marginRight: 10,
-  },
-  inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#000000",
-    borderRadius: 5,
-    padding: 5,
-    width: 50,
-    marginRight: 10,
-  },
-  label: {
-    fontSize: 16,
-    color: "#000000",
-    marginHorizontal: 5,
+    paddingStart: 48,
+    paddingRight: 48,
   },
 });
 

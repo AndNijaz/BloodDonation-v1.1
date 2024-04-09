@@ -8,11 +8,16 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import FontAwesome from "@expo/vector-icons";
 import Subheader from "@/components/Subheader";
 import InputRow from "@/components/InputRow";
-import { useSignUpContext } from "@/app/context/sign-up-context";
+// import { useSignUpContext } from "@/app/context/sign-up-context";
 import { useRouter } from "expo-router";
 
+// import { useContext } from "react";
+// import { SignUpContext } from "@/app/context/sign-up-context";
+import { useSignUp } from "@/app/context/sign-up-context";
+import NewButton from "@/components/NewButton";
+
 export default function SignUp() {
-  const SignUpContext = useSignUpContext();
+  // const SignUpContext = useSignUpContext();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -22,6 +27,8 @@ export default function SignUp() {
   const [passwordMatch, setPasswordMatch] = useState(true);
 
   const router = useRouter();
+
+  const { signUpData, updateEmailPassword } = useSignUp();
 
   const handleSubmit = () => {
     const passwordsMatch = password === confirmPassword;
@@ -42,12 +49,15 @@ export default function SignUp() {
       !isConfirmPasswordEmpty
     ) {
       //SignUpContext.Provider({email, password});
-      console.log("Submitted data:", { email, password });
+      // console.log("Submitted data:", { email, password });
 
+      updateEmailPassword(email, password);
       // Nizo skontaj kako da ide dalje navigacija odavde
       router.push("/(auth)/sign-up/name-surname");
     }
   };
+
+  console.log(signUpData);
 
   return (
     <View style={styles.container}>
@@ -91,9 +101,7 @@ export default function SignUp() {
         )}
       </View>
 
-      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>Sign Up</Text>
-      </TouchableOpacity>
+      <NewButton onSubmit={handleSubmit}>Sign Up</NewButton>
     </View>
   );
 }
@@ -104,26 +112,11 @@ const styles = StyleSheet.create({
     paddingBottom: 48,
   },
   formContainer: {
-    paddingTop: 48,
+    paddingTop: 64,
+    // paddingTop: 48,
     alignItems: "center",
     paddingStart: 48,
     paddingRight: 48,
-  },
-
-  button: {
-    marginLeft: 48,
-    marginRight: 48,
-    marginTop: "auto",
-    height: 50,
-    backgroundColor: "#D61D23",
-    borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: "bold",
   },
   errorText: {
     color: "red",

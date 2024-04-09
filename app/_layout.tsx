@@ -9,6 +9,8 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 
+import SignUpProvider from "./context/sign-up-context";
+
 // import { useColorScheme } from "@/components/useColorScheme";
 
 import { useColorScheme } from "../components/useColorScheme.web";
@@ -55,11 +57,13 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(user)" options={{ headerShown: false }} />
-        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-        <Stack.Screen name="logout" options={{ presentation: "modal" }} />
-      </Stack>
+      <SignUpProvider>
+        <Stack>
+          <Stack.Screen name="(user)" options={{ headerShown: false }} />
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+          <Stack.Screen name="logout" options={{ presentation: "modal" }} />
+        </Stack>
+      </SignUpProvider>
     </ThemeProvider>
   );
 }

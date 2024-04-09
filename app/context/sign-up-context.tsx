@@ -1,27 +1,113 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, {
+  PropsWithChildren,
+  createContext,
+  useContext,
+  useState,
+} from "react";
 
-const SignUpContext = createContext({});
+// const SignUpContext = createContext({});
 
-export const Provider = () => {
+// export const Provider = () => {
+//   const [signUpData, setSignUpData] = useState({
+//     email: "",
+//     password: "",
+//     firstName: "",
+//     lastName: "",
+//     bloodType: "",
+//     date: "",
+//     donatedBefore: "",
+//   });
+
+//   const updateEmailPassword = (data: { email: string; password: string }) => {
+//     setSignUpData((prevData) => ({
+//       ...prevData,
+//       email: data.email,
+//       password: data.password,
+//     }));
+//   };
+
+//   return (
+//     <SignUpContext.Provider
+//       value={{ signUpData, updateEmailPassword }}
+//     ></SignUpContext.Provider>
+//   );
+// };
+
+// export const useSignUpContext = () => useContext(SignUpContext);
+
+type SignUpType = {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  bloodType: string;
+  date: string;
+  donatedBefore: boolean;
+  dateDonatedBefore: string;
+  gender: string;
+};
+
+const SignUpContext = createContext({}); //preko useContexta dobijamo datu iz contexta zato ga i exportamo
+
+const SignUpProvider = ({ children }: PropsWithChildren) => {
   const [signUpData, setSignUpData] = useState({
-    email: '',
-    password: '',
-    name:'',
-    surname:'',
+    email: "",
+    password: "",
+    firstName: "",
+    lastName: "",
+    bloodType: "",
+    date: "",
+    donatedBefore: "",
+    gender: "",
   });
 
-  const updateEmailPassword = (data: { email: string; password: string; }) =>{
+  const updateEmailPassword = (email: string, password: string) => {
     setSignUpData((prevData) => ({
-        ...prevData,
-        email: data.email,
-        password: data.password,
-      }));
-    };
+      ...prevData,
+      email: email,
+      password: password,
+    }));
+  };
 
-    return (
-    <SignUpContext.Provider value={{ signUpData, updateEmailPassword }}>
+  const updateFirstLastName = (firstName: string, lastName: string) => {
+    setSignUpData((prevData) => ({
+      ...prevData,
+      firstName: firstName,
+      lastName: lastName,
+    }));
+  };
+
+  const updateBloodType = (bloodType: string) => {
+    setSignUpData((prevData) => ({
+      ...prevData,
+      bloodType,
+    }));
+  };
+
+  const updateGender = (gender: string) => {
+    setSignUpData((prevData) => ({
+      ...prevData,
+      gender,
+    }));
+  };
+
+  return (
+    <SignUpContext.Provider
+      value={{
+        signUpData,
+        updateEmailPassword,
+        updateFirstLastName,
+        updateBloodType,
+        updateGender,
+      }}
+    >
+      {/* value usvari šaljemo consumeru */}
+      {children}
+      {/* svhi childreni će imati accces cart contextu*/}
     </SignUpContext.Provider>
   );
 };
 
-export const useSignUpContext = () => useContext(SignUpContext);
+export default SignUpProvider;
+
+export const useSignUp = () => useContext(SignUpContext);
