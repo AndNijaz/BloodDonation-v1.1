@@ -39,10 +39,10 @@ export default function TabOneScreen() {
 
   return (
     <View style={styles.container}>
-      <RedHeader hasBack={true} />
+      {/* <RedHeader hasBack={true} /> */}
       <BigContainer>
         <Text>Next time you can donate</Text>
-        <Text style={styles.bigText}>05.05.2024</Text>
+        <Text style={styles.bigText}>05.05.2023</Text>
       </BigContainer>
       <SmallContainer>
         <Text>Last time you donated</Text>
