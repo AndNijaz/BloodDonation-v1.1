@@ -10,16 +10,44 @@ import Subheader from "@/components/Subheader";
 import RNPickerSelect from "react-native-picker-select";
 import { useState } from "react";
 import SafeArea from "@/components/SafeArea";
+import { useAuth } from "@/app/context/AuthProvider";
+import { supabase } from "@/lib/supabase";
+import { Alert } from "react-native";
 
 export default function SelectGender() {
   const [gender, setGender] = useState("");
 
   const { signUpData, updateGender } = useSignUp();
 
+  const { session } = useAuth();
+
   const router = useRouter();
 
-  function handleContinue() {
+  async function handleContinue() {
     updateGender("musko");
+
+    if (session) {
+      // Update profile
+      const { data, error } = await supabase
+        .from("profiles")
+        .update({
+          first_name: signUpData.firstName,
+          last_name: signUpData.lastName,
+          bloodtype: signUpData.bloodType,
+          // lastDonationDate: "NewLastDonationDate",
+          gender: signUpData.gender,
+        })
+        .eq("id", session.user.id)
+        .single();
+
+      if (error) {
+        Alert.alert("Error updating profile:", error.message);
+      } else {
+        console.log("Profile updated successfully:", data);
+        Alert.alert("Profile updated successfully:", data);
+        // Optionally, you can update state or perform other actions here
+      }
+    }
 
     router.push("/(user)/home");
   }

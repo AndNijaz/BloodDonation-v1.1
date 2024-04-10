@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, TextInput, Button } from "react-native";
+import { StyleSheet, Text, View, TextInput, Button, Alert } from "react-native";
 import { Link } from "expo-router";
 import RedHeader from "@/components/RedHeader";
 import { Stack } from "expo-router";
@@ -18,6 +18,7 @@ import { useSignUp } from "@/app/context/sign-up-context";
 import NewButton from "@/components/NewButton";
 import SafeArea from "@/components/SafeArea";
 import AlreadyHaveLabelLink from "@/components/AlreadyHaveLabelLink";
+import { supabase } from "@/lib/supabase";
 
 export default function SignUp() {
   // const SignUpContext = useSignUpContext();
@@ -28,12 +29,14 @@ export default function SignUp() {
   const [passwordError, setPasswordError] = useState(false);
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
   const { signUpData, updateEmailPassword } = useSignUp();
 
-  const handleSubmit = () => {
+  async function handleSignUp() {
+    setLoading(true);
     const passwordsMatch = password === confirmPassword;
     setPasswordMatch(passwordsMatch);
 
@@ -44,7 +47,7 @@ export default function SignUp() {
     setEmailError(isEmailEmpty);
     setPasswordError(isPasswordEmpty);
     setConfirmPasswordError(isConfirmPasswordEmpty);
-
+    /*
     if (
       passwordsMatch &&
       !isEmailEmpty &&
@@ -61,14 +64,23 @@ export default function SignUp() {
       updateEmailPassword(email, password);
       // Nizo skontaj kako da ide dalje navigacija odavde
       router.push("/(auth)/sign-up/name-surname");
-    }
-  };
+    }*/
+
+    updateEmailPassword(email, password); //contex
+    console.warn(email, password);
+    const { error } = await supabase.auth.signUp({ email, password });
+    setLoading(false);
+
+    router.push("/(auth)/sign-up/name-surname");
+
+    if (error) Alert.alert(error + "");
+  }
 
   return (
     <View style={styles.container}>
       {/* <SafeArea /> */}
       <Stack.Screen options={{ headerShown: false }}></Stack.Screen>
-      <RedHeader>Register</RedHeader>
+      <RedHeader hasBack={true}>Register</RedHeader>
       <View style={styles.formContainer}>
         <Subheader>Create Your Account</Subheader>
 
@@ -107,7 +119,7 @@ export default function SignUp() {
         )}
       </View>
 
-      <NewButton onSubmit={handleSubmit}>Sign Up</NewButton>
+      <NewButton onSubmit={handleSignUp}>Sign Up</NewButton>
       <AlreadyHaveLabelLink path="log-in" linkText="Login">
         Already have an account?
       </AlreadyHaveLabelLink>

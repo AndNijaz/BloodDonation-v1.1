@@ -18,26 +18,36 @@ const LoginScreen = () => {
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
   const { signUpData, updateEmailPassword } = useSignUp();
 
-  const handleSubmit = () => {
+  async function handleLogin() {
     const isEmailEmpty = email.trim() === "";
     const isPasswordEmpty = password.trim() === "";
 
     setEmailError(isEmailEmpty);
     setPasswordError(isPasswordEmpty);
 
-    if (!isEmailEmpty && !isPasswordEmpty) {
-      router.push("/(user)/home");
-    } else {
-      updateEmailPassword(email, password);
-      // Nizo skontaj kako da ide dalje navigacija odavde
-      router.push("/(user)/home");
-    }
-  };
+    // if (!isEmailEmpty && !isPasswordEmpty) {
+    //   router.push("/(user)/home");
+    // } else {
+    //   updateEmailPassword(email, password);
+    //   // Nizo skontaj kako da ide dalje navigacija odavde
+    //   router.push("/(user)/home");
+    // }
+
+    updateEmailPassword(email, password); //context
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    setLoading(false);
+    router.push("/(user)/home");
+    if (error) Alert.alert(error.message);
+  }
 
   // async function signInWithEmail() {
   //   setLoading(true);
@@ -54,7 +64,7 @@ const LoginScreen = () => {
     <View style={styles.container}>
       {/* <SafeArea /> */}
       <Stack.Screen options={{ headerShown: false }}></Stack.Screen>
-      <RedHeader>Welcome Back!</RedHeader>
+      <RedHeader hasBack={true}>Welcome Back!</RedHeader>
       <View style={styles.formContainer}>
         <Subheader>Login to your account</Subheader>
 
@@ -79,7 +89,7 @@ const LoginScreen = () => {
         )}
       </View>
 
-      <NewButton onSubmit={handleSubmit}>Login</NewButton>
+      <NewButton onSubmit={handleLogin}>Login</NewButton>
       <AlreadyHaveLabelLink path="sign-up" linkText="Sign Up">
         Don't have an account?
       </AlreadyHaveLabelLink>

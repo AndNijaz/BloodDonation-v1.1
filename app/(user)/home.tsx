@@ -6,6 +6,7 @@ import SmallContainer from "../../components/SmallContainer";
 
 import { useEffect } from "react";
 // import { supabase } from "@/src/lib/supabase";
+import RedHeader from "@/components/RedHeader";
 
 import { useState } from "react";
 
@@ -38,6 +39,7 @@ export default function TabOneScreen() {
 
   return (
     <View style={styles.container}>
+      <RedHeader hasBack={true} />
       <BigContainer>
         <Text>Next time you can donate</Text>
         <Text style={styles.bigText}>05.05.2024</Text>
