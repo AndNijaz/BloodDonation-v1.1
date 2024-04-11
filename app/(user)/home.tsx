@@ -41,8 +41,8 @@ export default function TabOneScreen() {
     <View style={styles.container}>
       {/* <RedHeader hasBack={true} /> */}
       <BigContainer>
-        <Text>Next time you can donate</Text>
-        <Text style={styles.bigText}>05.05.2023</Text>
+        <Text style={styles.whiteText}>Next time you can donate</Text>
+        <Text style={[styles.bigText, styles.whiteText]}>05/05/2023</Text>
       </BigContainer>
       <SmallContainer>
         <Text>Last time you donated</Text>
@@ -54,6 +54,9 @@ export default function TabOneScreen() {
 }
 
 const styles = StyleSheet.create({
+  whiteText: {
+    color: "white",
+  },
   container: {
     paddingTop: 32,
     paddingBottom: 32,
@@ -63,6 +66,7 @@ const styles = StyleSheet.create({
   },
   bigText: {
     fontSize: 44,
+    color: "white",
   },
   mediumText: {
     fontSize: 30,

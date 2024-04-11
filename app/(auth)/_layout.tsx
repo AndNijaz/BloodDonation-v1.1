@@ -65,6 +65,9 @@ export default function TabLayout() {
           title: "Log In",
           href: null,
           headerShown: false,
+          tabBarStyle: {
+            display: "none",
+          },
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="sign-in" color={color} />
           ),

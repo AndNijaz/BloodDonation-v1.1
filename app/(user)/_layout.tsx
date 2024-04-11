@@ -40,6 +40,15 @@ export default function TabLayout() {
       <Tabs.Screen
         name="faq"
         options={{
+          headerStyle: {
+            backgroundColor: "#D61D23",
+          },
+          headerTitleAlign: "left",
+          headerTitleStyle: {
+            color: "white",
+          },
+
+          // tabBarActiveBackgroundColor: "#D61D23",
           title: "Faq",
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="question" color={color} />
@@ -51,7 +60,7 @@ export default function TabLayout() {
                   <FontAwesome
                     name="sign-out"
                     size={25}
-                    color={Colors[colorScheme ?? "light"].text}
+                    color="white"
                     style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
                   />
                 )}
@@ -64,6 +73,13 @@ export default function TabLayout() {
       <Tabs.Screen
         name="home"
         options={{
+          headerStyle: {
+            backgroundColor: "#D61D23",
+          },
+          headerTitleAlign: "left",
+          headerTitleStyle: {
+            color: "white",
+          },
           title: "Home",
           tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
           headerRight: () => (
@@ -73,7 +89,7 @@ export default function TabLayout() {
                   <FontAwesome
                     name="sign-out"
                     size={25}
-                    color={Colors[colorScheme ?? "light"].text}
+                    color="white"
                     style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
                   />
                 )}
@@ -86,6 +102,13 @@ export default function TabLayout() {
       <Tabs.Screen
         name="donation-history"
         options={{
+          headerStyle: {
+            backgroundColor: "#D61D23",
+          },
+          headerTitleAlign: "left",
+          headerTitleStyle: {
+            color: "white",
+          },
           title: "Donation History",
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="history" color={color} />
@@ -97,7 +120,7 @@ export default function TabLayout() {
                   <FontAwesome
                     name="sign-out"
                     size={25}
-                    color={Colors[colorScheme ?? "light"].text}
+                    color="white"
                     style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
                   />
                 )}
