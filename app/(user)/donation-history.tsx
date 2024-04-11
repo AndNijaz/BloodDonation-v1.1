@@ -6,6 +6,7 @@ import BigContainer from "@/components/BigContainer";
 import SmallContainer from "@/components/SmallContainer";
 import { useAuth } from "../context/AuthProvider";
 import { Redirect } from "expo-router";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const donationHistory = [
   { id: 0, date: "05.05.2024" },
@@ -28,14 +29,27 @@ export default function TabTwoScreen() {
     // <Link href={`/[$id]`} asChild>
     <View style={styles.container}>
       <BigContainer>
-        <Text>Last time you donated</Text>
-        <Text style={styles.bigText}>{donationHistory[0].date}</Text>
+        <View style={styles.row}>
+          <MaterialCommunityIcons
+            name="arrow-right-drop-circle-outline"
+            size={18}
+            color="white"
+          />
+          <Text style={styles.whiteText}>Last time you donated</Text>
+        </View>
+        <Text style={[styles.bigText, styles.whiteText]}>
+          {donationHistory[0].date}
+        </Text>
       </BigContainer>
+
       <FlatList
         data={donationHistory.slice(1)}
         renderItem={({ item }) => (
           <SmallContainer>
-            <Text>Donated at</Text>
+            <View style={styles.row}>
+              <MaterialCommunityIcons name="history" size={18} color="black" />
+              <Text>Donated at</Text>
+            </View>
             <Text style={styles.smallText}>{item.date}</Text>
           </SmallContainer>
         )}
@@ -48,6 +62,12 @@ export default function TabTwoScreen() {
 }
 
 const styles = StyleSheet.create({
+  row: {
+    backgroundColor: "transparent",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+  },
   container: {
     paddingTop: 32,
     paddingBottom: 32,
@@ -56,12 +76,18 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   bigText: {
+    marginTop: 24,
     fontSize: 44,
+    color: "white",
   },
   mediumText: {
     fontSize: 30,
   },
   smallText: {
+    marginTop: 8,
     fontSize: 24,
+  },
+  whiteText: {
+    color: "white",
   },
 });

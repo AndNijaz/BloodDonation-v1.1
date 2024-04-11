@@ -20,7 +20,7 @@ export default function BigContainer({ children }: PropsWithChildren) {
 const styles = StyleSheet.create({
   bigContainer: {
     paddingTop: 32,
-    paddingBottom: 32,
+    paddingBottom: 16,
     paddingLeft: 16,
     paddingRight: 16,
     // backgroundColor: "#D9D9D9",

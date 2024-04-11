@@ -24,7 +24,7 @@ export default function SelectGender() {
   const router = useRouter();
 
   async function handleFinish() {
-    updateGender("musko");
+    updateGender(gender);
 
     if (session) {
       // Update profile
@@ -34,8 +34,11 @@ export default function SelectGender() {
           first_name: signUpData.firstName,
           last_name: signUpData.lastName,
           blood_type: signUpData.bloodType,
-          // lastDonationDate: "NewLastDonationDate",
           gender: signUpData.gender,
+          last_time_donated: signUpData.lastTimeDonated,
+          next_time_donated: signUpData.nextTimeDonated,
+
+          // lastDonationDate: "NewLastDonationDate",
         })
         .eq("id", session.user.id)
         .single();
@@ -50,6 +53,7 @@ export default function SelectGender() {
     }
 
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!clear context!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
     router.push("/(user)/home");
   }
 
@@ -72,18 +76,12 @@ export default function SelectGender() {
         <RNPickerSelect
           onValueChange={(value: string) => setGender(value)}
           items={[
-            { label: "A+", value: "A+" },
-            { label: "A-", value: "A-" },
-            { label: "B+", value: "B+" },
-            { label: "B-", value: "B-" },
-            { label: "AB+", value: "AB+" },
-            { label: "AB-", value: "AB-" },
-            { label: "O+", value: "O+" },
-            { label: "O-", value: "O-" },
+            { label: "Male", value: "Male" },
+            { label: "Female", value: "Female" },
           ]}
           value={gender}
           useNativeAndroidPickerStyle={false}
-          placeholder={{ label: "Select blood type...", value: null }}
+          placeholder={{ label: "Select Gender...", value: null }}
         />
         {/* <Link href="/(user)/home">Select Gender</Link> */}
       </View>

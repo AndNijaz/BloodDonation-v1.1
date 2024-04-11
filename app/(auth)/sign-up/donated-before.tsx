@@ -13,6 +13,7 @@ import NewButton from "@/components/NewButton";
 import { Stack, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SafeArea from "@/components/SafeArea";
+import { useSignUp } from "@/app/context/sign-up-context";
 
 const DonationHistory = ({}) => {
   const [donated, setDonated] = useState(false); // Changed to boolean for toggle state
@@ -21,6 +22,9 @@ const DonationHistory = ({}) => {
   const [lastDonationYear, setLastDonationYear] = useState(""); // State for last donation year
   const [error, setError] = useState(""); // State for error message
   const router = useRouter();
+
+  const { signUpData, updateLastTimeDonated, updateNextTimeDonated } =
+    useSignUp();
 
   const handleDonationChange = (value) => {
     setDonated(value);
@@ -68,6 +72,10 @@ const DonationHistory = ({}) => {
   };
 
   const handleProceed = () => {
+    if (!donated) {
+      updateLastTimeDonated(new Date(1900, 0, 1));
+    }
+
     if (
       donated &&
       (!lastDonationDay || !lastDonationMonth || !lastDonationYear)
@@ -97,6 +105,16 @@ const DonationHistory = ({}) => {
       return;
     }
 
+    const currentDate = new Date();
+
+    updateNextTimeDonated(
+      new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth() + 2,
+        currentDate.getDate()
+      )
+    );
+
     router.push("/(auth)/sign-up/select-gender");
   };
 
@@ -117,7 +135,6 @@ const DonationHistory = ({}) => {
           <TouchableOpacity
             style={[
               styles.button,
-              styles.buttonYes,
               {
                 backgroundColor: donated ? "white" : "#D9D9D9",
                 borderColor: donated ? "#F8B5BC" : "#D9D9D9",
@@ -139,7 +156,6 @@ const DonationHistory = ({}) => {
           <TouchableOpacity
             style={[
               styles.button,
-              styles.buttonNo,
               {
                 backgroundColor: !donated ? "white" : "#D9D9D9",
                 borderColor: !donated ? "#F8B5BC" : "#D9D9D9",

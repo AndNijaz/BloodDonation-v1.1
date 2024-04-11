@@ -12,6 +12,9 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
     paddingLeft: 16,
     paddingRight: 16,
-    backgroundColor: "#D9D9D9",
+    // backgroundColor: "#D9D9D9",
+    borderWidth: 1,
+    borderColor: "#D2D2D2",
+    borderRadius: 12,
   },
 });

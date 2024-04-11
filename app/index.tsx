@@ -7,6 +7,9 @@ import { ActivityIndicator } from "react-native-paper";
 import { supabase } from "@/lib/supabase";
 import { useState } from "react";
 import * as Notifications from "expo-notifications";
+import { StyleSheet } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import NewButton from "@/components/NewButton";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -48,18 +51,32 @@ const index = () => {
   }
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", padding: 10 }}>
-      {/* <Link href={"/(user)"} asChild>
+    <LinearGradient
+      colors={["#D61D23", "#EB7C83"]}
+      start={{ x: 0.5, y: 0 }}
+      end={{ x: 0.5, y: 1 }}
+      // style={styles.headerContainer}
+      style={[styles.container]}
+    >
+      <View style={{ flex: 1, justifyContent: "center", padding: 10 }}>
+        {/* <Link href={"/(user)"} asChild>
         <Button text="User" />
       </Link> */}
-      <Link href={"/log-in"} asChild>
-        <Button text="Log In" />
-      </Link>
-      <Link href={"/sign-up/"} asChild>
-        <Button text="Sign Up" />
-      </Link>
-    </View>
+        <Link href={"/log-in"} asChild>
+          <Button text="Log In" />
+        </Link>
+        <Link href={"/sign-up/"} asChild>
+          <Button text="Sign Up" />
+        </Link>
+      </View>
+    </LinearGradient>
   );
 };
 
 export default index;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

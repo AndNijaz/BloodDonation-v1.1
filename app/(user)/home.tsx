@@ -11,6 +11,7 @@ import { useState } from "react";
 import { useAuth } from "../context/AuthProvider";
 import { Alert } from "react-native";
 import { Redirect } from "expo-router";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 function parseDate(date: any) {
   return date.split("-").reverse().join("/");
@@ -68,13 +69,23 @@ export default function TabOneScreen() {
     <View style={styles.container}>
       {/* <RedHeader hasBack={true} /> */}
       <BigContainer>
-        <Text style={styles.whiteText}>Next time you can donate</Text>
+        <View style={styles.row}>
+          <MaterialCommunityIcons
+            name="arrow-right-drop-circle-outline"
+            size={18}
+            color="white"
+          />
+          <Text style={styles.whiteText}>Next time you can donate</Text>
+        </View>
         <Text style={[styles.bigText, styles.whiteText]}>
           {nextTimeDonated}
         </Text>
       </BigContainer>
       <SmallContainer>
-        <Text>Last time you donated</Text>
+        <View style={styles.row}>
+          <MaterialCommunityIcons name="history" size={18} color="black" />
+          <Text>Last time you donated</Text>
+        </View>
         <Text style={styles.smallText}>{lastDonation}</Text>
       </SmallContainer>
       <Text>{user}</Text>
@@ -83,6 +94,12 @@ export default function TabOneScreen() {
 }
 
 const styles = StyleSheet.create({
+  row: {
+    backgroundColor: "transparent",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+  },
   whiteText: {
     color: "white",
   },
@@ -94,6 +111,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   bigText: {
+    marginTop: 24,
     fontSize: 44,
     color: "white",
   },
@@ -101,6 +119,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
   },
   smallText: {
+    marginTop: 8,
     fontSize: 24,
   },
   marginBottomSm: {
