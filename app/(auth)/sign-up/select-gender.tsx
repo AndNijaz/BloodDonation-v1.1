@@ -23,7 +23,7 @@ export default function SelectGender() {
 
   const router = useRouter();
 
-  async function handleContinue() {
+  async function handleFinish() {
     updateGender("musko");
 
     if (session) {
@@ -33,7 +33,7 @@ export default function SelectGender() {
         .update({
           first_name: signUpData.firstName,
           last_name: signUpData.lastName,
-          bloodtype: signUpData.bloodType,
+          blood_type: signUpData.bloodType,
           // lastDonationDate: "NewLastDonationDate",
           gender: signUpData.gender,
         })
@@ -49,6 +49,7 @@ export default function SelectGender() {
       }
     }
 
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!clear context!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     router.push("/(user)/home");
   }
 
@@ -86,7 +87,7 @@ export default function SelectGender() {
         />
         {/* <Link href="/(user)/home">Select Gender</Link> */}
       </View>
-      <NewButton onSubmit={handleContinue}>Continue</NewButton>
+      <NewButton onSubmit={handleFinish}>Finish</NewButton>
     </View>
   );
 }

@@ -6,8 +6,14 @@ import BigContainer from "../../components/BigContainer";
 import SmallContainer from "../../components/SmallContainer";
 // import { supabase } from "@/src/lib/supabase";
 import { useEffect } from "react";
+import { useAuth } from "../context/AuthProvider";
 
 export default function TabIndex() {
+  const { session } = useAuth();
+
+  if (!session) {
+    return <Redirect href="/" />;
+  }
   // useEffect(() => {
   //   const fetchUserData = async () => {
   //     try {

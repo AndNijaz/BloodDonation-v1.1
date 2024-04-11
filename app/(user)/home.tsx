@@ -5,32 +5,59 @@ import BigContainer from "../../components/BigContainer";
 import SmallContainer from "../../components/SmallContainer";
 
 import { useEffect } from "react";
-// import { supabase } from "@/src/lib/supabase";
+import { supabase } from "@/lib/supabase";
 import RedHeader from "@/components/RedHeader";
-
 import { useState } from "react";
+import { useAuth } from "../context/AuthProvider";
+import { Alert } from "react-native";
+import { Redirect } from "expo-router";
+
+function parseDate(date: any) {
+  return date.split("-").reverse().join("/");
+}
 
 export default function TabOneScreen() {
   const [user, setUser] = useState();
+  const [firstName, setFirstName] = useState();
+  const [lastName, setLastName] = useState();
+  const [lastDonation, setLastDonation] = useState();
+  const [nextTimeDonated, setNextTimeDonated] = useState();
+  const [bloodtype, setBloodtype] = useState();
+  const [gender, setGender] = useState();
 
+  const { session } = useAuth();
+
+  if (!session) {
+    return <Redirect href="/" />;
+  }
   useEffect(() => {
     const fetchUserData = async () => {
-      // console.log("zed");
-      // try {
-      //   const { data, error } = await supabase
-      //     .from("users")
-      //     .select("*")
-      //     .eq("id", 1);
-      //   if (error) {
-      //     throw error;
-      //   }
-      //   console.log("User data:", data[0]["email"]);
-      //   setUser(data[0].email);
-      // } catch (error) {
-      //   console.log("Error fetching user data:");
-      // } finally {
-      //   console.log("muhamed");
-      // }
+      console.log("zed");
+      try {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", session?.user.id);
+
+        if (error) {
+          throw error;
+        }
+        // console.log("User data:", data[0]["email"]);
+        console.log(data);
+
+        setFirstName(data[0].first_name);
+        setLastName(data[0].last_name);
+        setBloodtype(data[0].blood_type);
+        setGender(data[0].gender);
+        setLastDonation(parseDate(data[0].last_time_donated));
+        setNextTimeDonated(parseDate(data[0].next_time_donated));
+        // Alert.alert(data + "");
+        setUser(data[0].email);
+      } catch (error) {
+        console.log("Error fetching user data:");
+      } finally {
+        console.log("muhamed");
+      }
     };
     //   // console.log("lala");
     fetchUserData();
@@ -42,11 +69,13 @@ export default function TabOneScreen() {
       {/* <RedHeader hasBack={true} /> */}
       <BigContainer>
         <Text style={styles.whiteText}>Next time you can donate</Text>
-        <Text style={[styles.bigText, styles.whiteText]}>05/05/2023</Text>
+        <Text style={[styles.bigText, styles.whiteText]}>
+          {nextTimeDonated}
+        </Text>
       </BigContainer>
       <SmallContainer>
         <Text>Last time you donated</Text>
-        <Text style={styles.smallText}>05.02.2024</Text>
+        <Text style={styles.smallText}>{lastDonation}</Text>
       </SmallContainer>
       <Text>{user}</Text>
     </View>

@@ -4,6 +4,8 @@ import { Link, useSegments } from "expo-router";
 import { Text, View } from "../../components/Themed";
 import BigContainer from "@/components/BigContainer";
 import SmallContainer from "@/components/SmallContainer";
+import { useAuth } from "../context/AuthProvider";
+import { Redirect } from "expo-router";
 
 const donationHistory = [
   { id: 0, date: "05.05.2024" },
@@ -14,6 +16,11 @@ const donationHistory = [
 ];
 
 export default function TabTwoScreen() {
+  const { session } = useAuth();
+
+  if (!session) {
+    return <Redirect href="/" />;
+  }
   const segments = useSegments();
   console.log(segments);
 
