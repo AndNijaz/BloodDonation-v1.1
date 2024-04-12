@@ -1,5 +1,6 @@
 import { FlatList, Pressable, StyleSheet } from "react-native";
 
+import { supabase } from "@/lib/supabase";
 import { Link, useSegments } from "expo-router";
 import { Text, View } from "../../components/Themed";
 import BigContainer from "@/components/BigContainer";
@@ -7,24 +8,32 @@ import SmallContainer from "@/components/SmallContainer";
 import { useAuth } from "../context/AuthProvider";
 import { Redirect } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-
-const donationHistory = [
-  { id: 0, date: "05.05.2024" },
-  { id: 1, date: "05.02.2024" },
-  { id: 2, date: "05.10.2023" },
-  { id: 3, date: "05.08.2023" },
-  { id: 4, date: "05.06.2023" },
-];
+import { useState } from "react";
 
 export default function TabTwoScreen() {
   const { session } = useAuth();
+  const [donationHistory, setDonationHistory] = useState([]);
 
-  if (!session) {
-    return <Redirect href="/" />;
-  }
-  const segments = useSegments();
-  console.log(segments);
+  const fetchDonationHistory = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("blood_donation")
+        .select("*")
+        .eq("donator", session?.user.id);
 
+      if (error) {
+        throw new Error(`Failed to fetch donation history: ${error.message}`);
+      }
+      setDonationHistory(data);
+    } catch (error) {
+      console.error(error.message);
+    }
+    if (!session) {
+      return <Redirect href="/" />;
+    }
+    const segments = useSegments();
+    console.log(segments);
+  };
   return (
     // <Link href={`/[$id]`} asChild>
     <View style={styles.container}>
@@ -50,9 +59,10 @@ export default function TabTwoScreen() {
               <MaterialCommunityIcons name="history" size={18} color="black" />
               <Text>Donated at</Text>
             </View>
-            <Text style={styles.smallText}>{item.date}</Text>
+            <Text style={styles.smallText}>{item.donation_date}</Text>
           </SmallContainer>
         )}
+        keyExtractor={(item, index) => index.toString()} // Add a key extractor
         numColumns={1}
         contentContainerStyle={{ gap: 10 }}
       />

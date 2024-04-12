@@ -39,14 +39,16 @@ const LoginScreen = () => {
     //   router.push("/(user)/home");
     // }
 
-    updateEmailPassword(email, password); //context
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    setLoading(false);
-    router.push("/(user)/home");
-    if (error) Alert.alert(error.message);
+
+    //!!! ovo je bilo odkomentarisano
+    // updateEmailPassword(email, password); //context
+    // const { error } = await supabase.auth.signInWithPassword({
+    //   email,
+    //   password,
+    // });
+    // setLoading(false);
+    // router.push("/(user)/home");
+    // if (error) Alert.alert(error.message);
   }
 
   // async function signInWithEmail() {
