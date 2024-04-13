@@ -10,6 +10,7 @@ import * as Notifications from "expo-notifications";
 import { StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import NewButton from "@/components/NewButton";
+import { useFonts } from "expo-font";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -40,6 +41,10 @@ async function sendPushNotification(expoPushToken: string) {
 }
 
 const index = () => {
+  const [fontsLoaded, fontError] = useFonts({
+    moj: require("../assets/fonts/VarelaRound-Regular.ttf"),
+  });
+
   const { session, loading } = useAuth();
 
   if (loading) {

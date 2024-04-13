@@ -12,28 +12,39 @@ import { useState } from "react";
 
 export default function TabTwoScreen() {
   const { session } = useAuth();
-  const [donationHistory, setDonationHistory] = useState([]);
+  const [donationHistory, setDonationHistory] = useState([
+    { date: "12/12/2023" },
+    { date: "4/5/2023" },
+    { date: "3/01/2023" },
+    { date: "12/10/2022" },
+    { date: "8/5/2022" },
+    { date: "31/1/2022" },
+    { date: "31/1/2022" },
+    { date: "31/1/2022" },
+    { date: "31/1/2022" },
+  ]);
 
-  const fetchDonationHistory = async () => {
-    try {
-      const { data, error } = await supabase
-        .from("blood_donation")
-        .select("*")
-        .eq("donator", session?.user.id);
+  // const fetchDonationHistory = async () => {
+  //   try {
+  //     const { data, error } = await supabase
+  //       .from("blood_donation")
+  //       .select("*")
+  //       .eq("donator", session?.user.id);
 
-      if (error) {
-        throw new Error(`Failed to fetch donation history: ${error.message}`);
-      }
-      setDonationHistory(data);
-    } catch (error) {
-      console.error(error.message);
-    }
-    if (!session) {
-      return <Redirect href="/" />;
-    }
-    const segments = useSegments();
-    console.log(segments);
-  };
+  //     if (error) {
+  //       throw new Error(`Failed to fetch donation history: ${error.message}`);
+  //     }
+  //     setDonationHistory(data);
+  //   } catch (error) {
+  //     console.error(error.message);
+  //   }
+  //   if (!session) {
+  //     return <Redirect href="/" />;
+  //   }
+  //   const segments = useSegments();
+  //   console.log(segments);
+  // };
+
   return (
     // <Link href={`/[$id]`} asChild>
     <View style={styles.container}>
@@ -59,7 +70,7 @@ export default function TabTwoScreen() {
               <MaterialCommunityIcons name="history" size={18} color="black" />
               <Text>Donated at</Text>
             </View>
-            <Text style={styles.smallText}>{item.donation_date}</Text>
+            <Text style={styles.smallText}>{item.date}</Text>
           </SmallContainer>
         )}
         keyExtractor={(item, index) => index.toString()} // Add a key extractor
