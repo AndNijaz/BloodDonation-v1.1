@@ -7,12 +7,7 @@ import { ActivityIndicator } from "react-native-paper";
 import * as Notifications from "expo-notifications";
 import { StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-<<<<<<< HEAD
-import NewButton from "@/components/NewButton";
-import { useFonts } from "expo-font";
-=======
 import { Image } from "react-native-elements";
->>>>>>> dfd5882fa066e8da0c39ee1dc5080aea62a69ad9
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -43,10 +38,6 @@ async function sendPushNotification(expoPushToken: string) {
 }
 
 const index = () => {
-  const [fontsLoaded, fontError] = useFonts({
-    moj: require("../assets/fonts/VarelaRound-Regular.ttf"),
-  });
-
   const { session, loading } = useAuth();
 
   if (loading) {
