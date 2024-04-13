@@ -31,16 +31,9 @@ const LoginScreen = () => {
     setEmailError(isEmailEmpty);
     setPasswordError(isPasswordEmpty);
 
-    // if (!isEmailEmpty && !isPasswordEmpty) {
-    //   router.push("/(user)/home");
-    // } else {
-    //   updateEmailPassword(email, password);
-    //   // Nizo skontaj kako da ide dalje navigacija odavde
-    //   router.push("/(user)/home");
-    // }
+    
 
-    //!!! ovo je bilo odkomentarisano
-    updateEmailPassword(email, password); //context
+    // updateEmailPassword(email, password); //context
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -50,20 +43,8 @@ const LoginScreen = () => {
     if (error) Alert.alert(error.message);
   }
 
-  async function signInWithEmail() {
-    setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) Alert.alert(error.message);
-    setLoading(false);
-  }
-
   return (
     <View style={styles.container}>
-      {/* <SafeArea /> */}
       <Stack.Screen options={{ headerShown: false }}></Stack.Screen>
       <RedHeader hasBack={true}>Welcome Back!</RedHeader>
       <View style={styles.formContainer}>

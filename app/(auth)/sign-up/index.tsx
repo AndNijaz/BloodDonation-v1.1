@@ -1,27 +1,16 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, TextInput, Button, Alert } from "react-native";
-import { Link } from "expo-router";
 import RedHeader from "@/components/RedHeader";
 import { Stack } from "expo-router";
-import { TouchableOpacity } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import FontAwesome from "@expo/vector-icons";
 import Subheader from "@/components/Subheader";
 import InputRow from "@/components/InputRow";
-// import { useSignUpContext } from "@/app/context/sign-up-context";
 import { useRouter } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
-
-// import { useContext } from "react";
-// import { SignUpContext } from "@/app/context/sign-up-context";
 import { useSignUp } from "@/app/context/sign-up-context";
 import NewButton from "@/components/NewButton";
-import SafeArea from "@/components/SafeArea";
 import AlreadyHaveLabelLink from "@/components/AlreadyHaveLabelLink";
 import { supabase } from "@/lib/supabase";
 
 export default function SignUp() {
-  // const SignUpContext = useSignUpContext();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -29,58 +18,69 @@ export default function SignUp() {
   const [passwordError, setPasswordError] = useState(false);
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(true);
+
+  const [error, setError] = useState({
+    error: false,
+    errorType: "",
+    errorText: "",
+  });
+
+  const [supabaseError, setSupabaseError] = useState<boolean | string>(false);
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
   const { signUpData, updateEmailPassword } = useSignUp();
 
+  const checkPasswordMatch = () => {
+    setPasswordMatch(password === confirmPassword);
+  };
+
+  const checkIsEmpty = () => {
+    setEmailError(email.trim() === "");
+    setPasswordError(password.trim() === "");
+    setConfirmPasswordError(confirmPassword.trim() === "");
+  };
+
+  function validateRegisterForm() {
+    checkPasswordMatch();
+    checkIsEmpty();
+  }
+
+  function setErrorsFalse() {
+    setEmailError(false);
+    setConfirmPasswordError(false);
+    setConfirmPasswordError(false);
+    setPasswordMatch(true);
+    setSupabaseError(false);
+  }
+
   async function handleSignUp() {
     setLoading(true);
-    const passwordsMatch = password === confirmPassword;
-    setPasswordMatch(passwordsMatch);
+    setErrorsFalse();
+    validateRegisterForm();
 
-    const isEmailEmpty = email.trim() === "";
-    const isPasswordEmpty = password.trim() === "";
-    const isConfirmPasswordEmpty = confirmPassword.trim() === "";
-
-    setEmailError(isEmailEmpty);
-    setPasswordError(isPasswordEmpty);
-    setConfirmPasswordError(isConfirmPasswordEmpty);
-    /*
-    if (
-      passwordsMatch &&
-      !isEmailEmpty &&
-      !isPasswordEmpty &&
-      !isConfirmPasswordEmpty
-    ) {
-      //SignUpContext.Provider({email, password});
-      // console.log("Submitted data:", { email, password });
-
-      updateEmailPassword(email, password);
-      // Nizo skontaj kako da ide dalje navigacija odavde
-      router.push("/(auth)/sign-up/name-surname");
-    } else {
-      updateEmailPassword(email, password);
-      // Nizo skontaj kako da ide dalje navigacija odavde
-      router.push("/(auth)/sign-up/name-surname");
-    }*/
+    if (emailError && passwordError && confirmPasswordError && !passwordMatch)
+      return;
 
     updateEmailPassword(email, password); //contex
-    console.warn(email, password);
     const { error } = await supabase.auth.signUp({ email, password });
     setLoading(false);
 
-    router.push("/(auth)/sign-up/name-surname");
+    if (error) {
+      setSupabaseError(error.message);
+      return;
+    }
 
-    if (error) Alert.alert(error + "");
+    router.push("/(auth)/sign-up/name-surname");
   }
 
   return (
     <View style={styles.container}>
-      {/* <SafeArea /> */}
       <Stack.Screen options={{ headerShown: false }}></Stack.Screen>
+
       <RedHeader hasBack={true}>Register</RedHeader>
+
       <View style={styles.formContainer}>
         <Subheader>Create Your Account</Subheader>
 
@@ -117,6 +117,7 @@ export default function SignUp() {
         {confirmPasswordError && (
           <Text style={styles.errorText}>Confirm Password is required</Text>
         )}
+        {supabaseError && <Text style={styles.errorText}>{supabaseError}</Text>}
       </View>
 
       <NewButton onSubmit={handleSignUp}>Sign Up</NewButton>

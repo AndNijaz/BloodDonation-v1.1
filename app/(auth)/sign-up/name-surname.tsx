@@ -15,31 +15,43 @@ import SafeArea from "@/components/SafeArea";
 export default function inputNameSurname() {
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
+  const [nameError, setNameError] = useState(false);
+  const [surnameError, setSurnameError] = useState(false);
 
   const router = useRouter();
 
   const { signUpData, updateFirstLastName } = useSignUp();
 
+  function checkIsEmpty() {
+    if (name.trim() === "") setNameError(true);
+
+    if (surname.trim() === "") setSurnameError(true);
+  }
+
+  function resetErrors() {
+    setNameError(false);
+    setSurnameError(false);
+  }
+
   const handleContinue = () => {
-    // console.log("Name:", name);
-    // console.log("Surname:", surname);
+    checkIsEmpty();
+    resetErrors();
+
+    if (name.trim() === "" || surname.trim() === "") return;
 
     updateFirstLastName(name, surname);
-
     router.push("/(auth)/sign-up/choose-bloodtype");
   };
 
-  console.log(signUpData);
-
   return (
     <View style={styles.container}>
-      {/* <SafeArea /> */}
       <Stack.Screen
         options={{
           headerShown: false,
           title: "Name & Surname",
         }}
       />
+
       <RedHeader hasBack={true}>Step 2/5:</RedHeader>
 
       <View style={styles.formContainer}>
@@ -50,14 +62,20 @@ export default function inputNameSurname() {
           setValue={setName}
           placeholder="Name"
           icon="account-outline"
+          error={!!nameError}
         ></InputRow>
+        {nameError && <Text style={styles.errorText}>Name is required</Text>}
 
         <InputRow
           value={surname}
           setValue={setSurname}
           placeholder="Last Name"
           icon="account-circle-outline"
+          error={!!surnameError}
         ></InputRow>
+        {surnameError && (
+          <Text style={styles.errorText}>Surname is required</Text>
+        )}
       </View>
 
       <NewButton onSubmit={handleContinue}>Continue</NewButton>
@@ -76,5 +94,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingStart: 48,
     paddingRight: 48,
+  },
+  errorText: {
+    color: "red",
+    marginBottom: 8,
   },
 });
