@@ -1,15 +1,13 @@
-import { View, Text, Alert } from "react-native";
+import { View, Text } from "react-native";
 import React from "react";
 import Button from "../components/Button";
 import { Link, Redirect } from "expo-router";
 import { useAuth } from "./context/AuthProvider";
 import { ActivityIndicator } from "react-native-paper";
-import { supabase } from "@/lib/supabase";
-import { useState } from "react";
 import * as Notifications from "expo-notifications";
 import { StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import NewButton from "@/components/NewButton";
+import { Image } from "react-native-elements";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -55,20 +53,37 @@ const index = () => {
       colors={["#D61D23", "#EB7C83"]}
       start={{ x: 0.5, y: 0 }}
       end={{ x: 0.5, y: 1 }}
-      // style={styles.headerContainer}
       style={[styles.container]}
     >
-      <View style={{ flex: 1, justifyContent: "center", padding: 10 }}>
-        {/* <Link href={"/(user)"} asChild>
-        <Button text="User" />
-      </Link> */}
+      <Image
+        source={require("../assets/images/DonoInitial.png")}
+        style={styles.image}
+      />
+      <Text style={styles.heading}>DONO</Text>
+      <View style={styles.formContainer}>
         <Link href={"/log-in"} asChild>
-          <Button text="Log In" />
+          <Button
+            text="Log In"
+            style={{
+              marginBottom: 16,
+              backgroundColor: "#fff",
+            }}
+            textColor="#D61D23"
+          />
         </Link>
         <Link href={"/sign-up/"} asChild>
-          <Button text="Sign Up" />
+          <Button
+            text="Sign Up"
+            style={{
+              marginBottom: 16,
+              backgroundColor: "#fff",
+            }}
+            textColor="#D61D23"
+          />
         </Link>
       </View>
+
+      <Text style={styles.footer}>Dono @ {new Date().getFullYear()}</Text>
     </LinearGradient>
   );
 };
@@ -78,5 +93,35 @@ export default index;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: 128,
+  },
+  formContainer: {
+    justifyContent: "center",
+    padding: 10,
+  },
+  image: {
+    width: "auto",
+    marginLeft: 96,
+    marginEnd: 96,
+    aspectRatio: 1,
+  },
+  heading: {
+    color: "#fff",
+    fontSize: 52,
+    textAlign: "center",
+    fontWeight: "300",
+    paddingTop: 16,
+    marginBottom: 64,
+    letterSpacing: -1,
+  },
+  button: {
+    backgroundColor: "#fff",
+    marginBottom: 16,
+  },
+  footer: {
+    marginTop: "auto",
+    color: "#fff",
+    textAlign: "center",
+    marginBottom: 24,
   },
 });
