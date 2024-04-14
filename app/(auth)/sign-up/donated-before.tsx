@@ -115,7 +115,13 @@ const DonationHistory = ({}) => {
     const currentDate = new Date();
 
     updateLastTimeDonated(`${year}-${month}-${day}`);
+    console.log(`${year}-${month}-${day}`);
     updateNextTimeDonated(
+      `${month < 10 ? year : year + 1}-${
+        month == 10 ? 1 : month == 11 ? 2 : month + 2
+      }-${day}`
+    );
+    console.log(
       `${month < 10 ? year : year + 1}-${
         month == 10 ? 1 : month == 11 ? 2 : month + 2
       }-${day}`

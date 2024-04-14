@@ -9,9 +9,6 @@ import { StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Image } from "react-native-elements";
 
-const items = generateItemsArray(2000, new Date().getFullYear());
-console.log(items);
-
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
