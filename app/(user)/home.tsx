@@ -12,6 +12,7 @@ import { useAuth } from "../context/AuthProvider";
 import { Alert } from "react-native";
 import { Redirect } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import Notificaiton from "@/components/notificaiton";
 
 function parseDate(date: any) {
   return date.split("-").reverse().join("/");
@@ -68,6 +69,7 @@ export default function TabOneScreen() {
   return (
     <View style={styles.container}>
       {/* <RedHeader hasBack={true} /> */}
+      <Notificaiton />
       <BigContainer>
         <View style={styles.row}>
           <MaterialCommunityIcons

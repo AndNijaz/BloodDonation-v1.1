@@ -1,5 +1,5 @@
 import { View, Text } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import Button from "../components/Button";
 import { Link, Redirect } from "expo-router";
 import { useAuth } from "./context/AuthProvider";
@@ -8,6 +8,7 @@ import * as Notifications from "expo-notifications";
 import { StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Image } from "react-native-elements";
+import { supabase } from "@/lib/supabase";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
