@@ -6,14 +6,26 @@ import {
   Switch,
   TextInput,
   TouchableOpacity,
+  Platform,
+  Pressable,
+  Modal,
+  TouchableHighlight,
 } from "react-native";
 import RedHeader from "@/components/RedHeader";
 import Subheader from "@/components/Subheader";
 import NewButton from "@/components/NewButton";
 import { Stack, useRouter } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
-import SafeArea from "@/components/SafeArea";
 import { useSignUp } from "@/app/context/sign-up-context";
+import Button from "@/components/Button";
+import RNPickerSelect from "react-native-picker-select";
+
+function generateItemsArray(start: number, end: number) {
+  const items = [];
+  for (let i = start; i <= end; i++) {
+    items.push({ label: `${i}`, value: `${i}` });
+  }
+  return items;
+}
 
 const DonationHistory = ({}) => {
   const [donated, setDonated] = useState(false); // Changed to boolean for toggle state
@@ -25,17 +37,6 @@ const DonationHistory = ({}) => {
 
   const { signUpData, updateLastTimeDonated, updateNextTimeDonated } =
     useSignUp();
-
-  const handleDonationChange = (value) => {
-    setDonated(value);
-    if (!value) {
-      // Reset last donation date if the toggle is set to "No"
-      setLastDonationDay("");
-      setLastDonationMonth("");
-      setLastDonationYear("");
-      setError(""); // Clear error message
-    }
-  };
 
   const isLeapYear = (year) => {
     return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
@@ -72,8 +73,14 @@ const DonationHistory = ({}) => {
   };
 
   const handleProceed = () => {
+    setError("");
+    const initialDate = new Date(1900, 0, 1);
     if (!donated) {
-      updateLastTimeDonated(new Date(1900, 0, 1));
+      updateLastTimeDonated(
+        `${initialDate.getFullYear()}-${
+          initialDate.getMonth() + 1
+        }-${initialDate.getDate()}`
+      );
     }
 
     if (
@@ -100,19 +107,18 @@ const DonationHistory = ({}) => {
 
     if (!isValidYear(year)) {
       setError(
-        "Please enter a valid four-digit year between 1950 and the current year."
+        "Please enter a valid four-digit year between 1900 and the current year."
       );
       return;
     }
 
     const currentDate = new Date();
 
+    updateLastTimeDonated(`${year}-${month}-${day}`);
     updateNextTimeDonated(
-      new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth() + 2,
-        currentDate.getDate()
-      )
+      `${month < 10 ? year : year + 1}-${
+        month == 10 ? 1 : month == 11 ? 2 : month + 2
+      }-${day}`
     );
 
     router.push("/(auth)/sign-up/select-gender");
@@ -132,14 +138,13 @@ const DonationHistory = ({}) => {
       <View style={styles.formContainer}>
         <Subheader>Did you donate blood before?</Subheader>
         <View style={styles.buttonsContainer}>
-          <TouchableOpacity
+          <Pressable
             style={[
               styles.button,
               {
                 backgroundColor: donated ? "white" : "#D9D9D9",
                 borderColor: donated ? "#F8B5BC" : "#D9D9D9",
                 borderWidth: donated ? 2 : 0,
-                // text: donated ? "white" : "#D61D23",
               },
             ]}
             onPress={() => setDonated(true)}
@@ -152,15 +157,15 @@ const DonationHistory = ({}) => {
             >
               Yes
             </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
+          </Pressable>
+
+          <Pressable
             style={[
               styles.button,
               {
                 backgroundColor: !donated ? "white" : "#D9D9D9",
                 borderColor: !donated ? "#F8B5BC" : "#D9D9D9",
                 borderWidth: !donated ? 2 : 0,
-                // text: donated ? "white" : "#D61D23",
               },
             ]}
             onPress={() => setDonated(false)}
@@ -173,68 +178,57 @@ const DonationHistory = ({}) => {
             >
               No
             </Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
 
         {donated && <Subheader>If so, when?</Subheader>}
         {donated && (
-          <View style={styles.inputContainer}>
-            <View style={styles.inputRow}>
-              <TextInput
-                style={[
-                  styles.input,
-                  {
-                    width: 50,
-                    borderColor: isValidDay(
-                      lastDonationDay,
-                      lastDonationMonth,
-                      lastDonationYear
-                    )
-                      ? "#ccc"
-                      : "red",
-                  },
-                ]}
-                placeholder="DD"
-                value={lastDonationDay}
-                onChangeText={setLastDonationDay}
-                keyboardType="numeric"
-                maxLength={2}
-              />
-              <TextInput
-                style={[
-                  styles.input,
-                  {
-                    width: 50,
-                    borderColor: isValidMonth(lastDonationMonth)
-                      ? "#ccc"
-                      : "red",
-                  },
-                ]}
-                placeholder="MM"
-                value={lastDonationMonth}
-                onChangeText={setLastDonationMonth}
-                keyboardType="numeric"
-                maxLength={2}
-              />
-              <TextInput
-                style={[
-                  styles.input,
-                  {
-                    width: 100,
-                    borderColor: isValidYear(lastDonationYear) ? "#ccc" : "red",
-                  },
-                ]}
-                placeholder="YYYY"
-                value={lastDonationYear}
-                onChangeText={setLastDonationYear}
-                keyboardType="numeric"
-                maxLength={4}
-              />
-            </View>
-            {error ? <Text style={styles.errorText}>{error}</Text> : null}
+          <View style={styles.datePicker}>
+            <RNPickerSelect
+              style={{
+                inputIOS: styles.picker,
+                inputAndroid: styles.picker,
+                iconContainer: styles.picker,
+              }}
+              onValueChange={(value: string) => setLastDonationMonth(value)}
+              items={generateItemsArray(1, 12)}
+              value={lastDonationMonth}
+              useNativeAndroidPickerStyle={false}
+              placeholder={{ label: "Month", value: null }}
+            />
+
+            <RNPickerSelect
+              style={{
+                inputIOS: styles.picker,
+                inputAndroid: styles.picker,
+                iconContainer: styles.picker,
+              }}
+              onValueChange={(value: string) => setLastDonationDay(value)}
+              items={generateItemsArray(1, 31)}
+              value={lastDonationDay}
+              useNativeAndroidPickerStyle={false}
+              placeholder={{ label: "Day", value: null }}
+            />
+            <RNPickerSelect
+              style={{
+                inputIOS: styles.picker,
+                inputAndroid: styles.picker,
+                iconContainer: styles.picker,
+              }}
+              onValueChange={(value: string) => setLastDonationYear(value)}
+              items={generateItemsArray(
+                1900,
+                new Date().getFullYear()
+              ).reverse()}
+              value={lastDonationYear}
+              useNativeAndroidPickerStyle={false}
+              placeholder={{ label: "Year", value: null }}
+            />
           </View>
         )}
+        {donated && <Subheader>(Provide at least month and year)</Subheader>}
       </View>
+      {error && <Text style={styles.errorText}>{error}</Text>}
       <NewButton onSubmit={handleProceed}>Proceed</NewButton>
     </View>
   );
@@ -301,7 +295,30 @@ const styles = StyleSheet.create({
     color: "red",
     marginTop: 5,
     marginBottom: 10,
+    textAlign: "center",
+  },
+  datePicker: {
+    flexDirection: "row",
+    gap: 12,
+    marginEnd: 48,
+    marginLeft: 48,
+    marginBottom: 24,
+  },
+  picker: {
+    borderWidth: 1,
+    borderColor: "#D93F33",
+    borderRadius: 8,
+    padding: 16,
+    color: "#D93F33",
+    fontSize: 24,
+    textAlign: "center",
   },
 });
 
 export default DonationHistory;
+
+// Text Style
+// style={[
+//   styles.buttonText,
+//   { color: donated ? "#D61D23" : "black" },
+// ]}

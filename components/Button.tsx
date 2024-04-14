@@ -6,6 +6,7 @@ type ButtonProps = {
   text: string;
   style?: any;
   textColor?: any;
+  textStyle?: any;
 } & React.ComponentPropsWithoutRef<typeof Pressable>;
 
 const Button = forwardRef<View | null, ButtonProps>(
@@ -17,7 +18,11 @@ const Button = forwardRef<View | null, ButtonProps>(
         style={[styles.container, pressableProps?.style]}
       >
         <Text
-          style={[styles.text, { color: pressableProps.textColor || "#fff" }]}
+          style={[
+            styles.text,
+            { color: pressableProps.textColor || "#fff" },
+            pressableProps.textStyle,
+          ]}
         >
           {text}
         </Text>

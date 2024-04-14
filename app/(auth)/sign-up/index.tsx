@@ -135,7 +135,6 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     paddingTop: 64,
-    // paddingTop: 48,
     alignItems: "center",
     paddingStart: 48,
     paddingRight: 48,

@@ -68,11 +68,14 @@ export default function SelectGender() {
           title: "",
         }}
       />
+
       <RedHeader hasBack={true} path={"/sign-up/donated-before"}>
         Step 5/5:
       </RedHeader>
+
       <View style={styles.formContainer}>
         <Subheader>Select Gender</Subheader>
+
         <RNPickerSelect
           onValueChange={(value: string) => setGender(value)}
           items={[

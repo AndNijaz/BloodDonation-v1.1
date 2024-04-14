@@ -38,9 +38,12 @@ export default function ChooseBloodtype() {
           title: "Bloodtype",
         }}
       />
+
       <RedHeader hasBack={true}>Step 3/5:</RedHeader>
+
       <View style={styles.formContainer}>
         <Subheader>Please Select Your Bloodtype</Subheader>
+
         <RNPickerSelect
           style={{
             inputIOS: styles.picker,
@@ -64,6 +67,7 @@ export default function ChooseBloodtype() {
           useNativeAndroidPickerStyle={false}
         />
       </View>
+
       <NewButton onSubmit={handleContinue}>Continue</NewButton>
     </View>
   );

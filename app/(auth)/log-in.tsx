@@ -31,9 +31,7 @@ const LoginScreen = () => {
     setEmailError(isEmailEmpty);
     setPasswordError(isPasswordEmpty);
 
-    
-
-    // updateEmailPassword(email, password); //context
+    updateEmailPassword(email, password); //context
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -72,6 +70,7 @@ const LoginScreen = () => {
       </View>
 
       <NewButton onSubmit={handleLogin}>Login</NewButton>
+
       <AlreadyHaveLabelLink path="sign-up" linkText="Sign Up">
         Don't have an account?
       </AlreadyHaveLabelLink>
