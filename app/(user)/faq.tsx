@@ -1,4 +1,3 @@
-import { View, Text } from "@/components/Themed";
 import { FlatList, StyleSheet } from "react-native";
 import { useAuth } from "../context/AuthProvider";
 import { Redirect } from "expo-router";
@@ -69,6 +68,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 32,
-    // paddingTop: 32,
   },
 });

@@ -24,7 +24,6 @@ const Accordion = ({ title, content }) => {
         {expanded && (
           <MaterialCommunityIcons name="chevron-up" size={24} color="#D61D23" />
         )}
-        {/* <Text style={styles.icon}>{expanded ? "-" : "+"}</Text> */}
       </Pressable>
       {expanded && <Text style={styles.content}>{content}</Text>}
     </View>
@@ -33,30 +32,26 @@ const Accordion = ({ title, content }) => {
 
 const styles = StyleSheet.create({
   container: {
-    // borderBottomWidth: 2,
     borderBottomWidth: 2,
     borderBottomColor: "#D61D23",
     marginBottom: 8,
-    // borderRadius: 16,
-    // backgroundColor: "#ccc",
-    // borderRadius: 24,
-    // overflow: "hidden",
     backgroundColor: "#EB7C83",
   },
   titleContainer: {
-    backgroundColor: "#F0F0F0",
-    // borderRadius: 12,
-    flexDirection: "row",
     justifyContent: "space-between",
+    backgroundColor: "#F0F0F0",
+    flexDirection: "row",
     alignItems: "center",
     paddingBottom: 18,
     paddingTop: 18,
-    // backgroundColor: "#EB7C83",
+    paddingLeft: 18,
+    paddingEnd: 18,
   },
   title: {
     color: "#D61D23",
     fontWeight: "600",
     fontSize: 18,
+    width: "90%",
   },
   icon: {
     fontSize: 18,
