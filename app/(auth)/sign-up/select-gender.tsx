@@ -1,13 +1,6 @@
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
-import { Stack, Link } from "expo-router";
-// import { Link } from "expo-router";
+import { Stack } from "expo-router";
 import RedHeader from "@/components/RedHeader";
 import { useRouter } from "expo-router";
 import { useSignUp } from "@/app/context/sign-up-context";
@@ -15,12 +8,9 @@ import NewButton from "@/components/NewButton";
 import Subheader from "@/components/Subheader";
 import RNPickerSelect from "react-native-picker-select";
 import { useState } from "react";
-import SafeArea from "@/components/SafeArea";
 import { useAuth } from "@/app/context/AuthProvider";
 import { supabase } from "@/lib/supabase";
 import { Alert } from "react-native";
-import { ScrollView } from "react-native";
-import { FlatList } from "react-native";
 
 function generateItemsArray(start: number, end: number) {
   const items = [];
@@ -68,8 +58,6 @@ export default function SelectGender() {
           gender: signUpData.gender,
           last_time_donated: signUpData.lastTimeDonated,
           next_time_donated: signUpData.nextTimeDonated,
-
-          // lastDonationDate: "NewLastDonationDate",
         })
         .eq("id", session.user.id)
         .single();
@@ -79,7 +67,6 @@ export default function SelectGender() {
       } else {
         console.log("Profile updated successfully:", data);
         Alert.alert("Profile updated successfully:", data);
-        // Optionally, you can update state or perform other actions here
       }
     }
 

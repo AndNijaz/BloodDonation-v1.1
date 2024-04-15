@@ -1,16 +1,12 @@
-import { StyleSheet, Text, View, TextInput, Button } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import { Stack } from "expo-router";
-import { TouchableOpacity } from "react-native";
 import RedHeader from "@/components/RedHeader";
-// import RedHeader from "@/components/RedHeader";
-import { Link } from "expo-router";
 import InputRow from "@/components/InputRow";
 import { useRouter } from "expo-router";
 import { useSignUp } from "@/app/context/sign-up-context";
 import NewButton from "@/components/NewButton";
 import Subheader from "@/components/Subheader";
-import SafeArea from "@/components/SafeArea";
 
 export default function inputNameSurname() {
   const [name, setName] = useState("");

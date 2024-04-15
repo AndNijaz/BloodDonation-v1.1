@@ -20,8 +20,6 @@ export default function ChooseBloodtype() {
   const router = useRouter();
 
   const handleContinue = () => {
-    // console.log("BloodType:", bloodType);
-
     updateBloodType(bloodType);
 
     router.push("/(auth)/sign-up/donated-before");
@@ -31,7 +29,6 @@ export default function ChooseBloodtype() {
 
   return (
     <View style={styles.container}>
-      {/* <SafeArea /> */}
       <Stack.Screen
         options={{
           headerShown: false,

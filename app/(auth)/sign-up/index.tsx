@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, TextInput, Button, Alert } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import RedHeader from "@/components/RedHeader";
 import { Stack } from "expo-router";
 import Subheader from "@/components/Subheader";
@@ -18,12 +18,6 @@ export default function SignUp() {
   const [passwordError, setPasswordError] = useState(false);
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(true);
-
-  const [error, setError] = useState({
-    error: false,
-    errorType: "",
-    errorText: "",
-  });
 
   const [supabaseError, setSupabaseError] = useState<boolean | string>(false);
   const [loading, setLoading] = useState(false);

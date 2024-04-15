@@ -1,8 +1,6 @@
 import { View, Text, TextInput, StyleSheet, Alert } from "react-native";
 import React, { useState } from "react";
-import Button from "../../components/Button";
-import Colors from "../../constants/Colors";
-import { Link, Stack } from "expo-router";
+import { Stack } from "expo-router";
 import { supabase } from "@/lib/supabase";
 import RedHeader from "@/components/RedHeader";
 import InputRow from "@/components/InputRow";
@@ -13,7 +11,6 @@ import { useRouter } from "expo-router";
 import { useSignUp } from "../context/sign-up-context";
 
 const LoginScreen = () => {
-  // const SignUpContext = useSignUpContext();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState(false);
@@ -85,7 +82,6 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     paddingTop: 64,
-    // paddingTop: 48,
     alignItems: "center",
     paddingStart: 48,
     paddingRight: 48,

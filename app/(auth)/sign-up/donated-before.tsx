@@ -1,22 +1,10 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Switch,
-  TextInput,
-  TouchableOpacity,
-  Platform,
-  Pressable,
-  Modal,
-  TouchableHighlight,
-} from "react-native";
+import { StyleSheet, Text, View, Pressable } from "react-native";
 import RedHeader from "@/components/RedHeader";
 import Subheader from "@/components/Subheader";
 import NewButton from "@/components/NewButton";
 import { Stack, useRouter } from "expo-router";
 import { useSignUp } from "@/app/context/sign-up-context";
-import Button from "@/components/Button";
 import RNPickerSelect from "react-native-picker-select";
 
 function generateItemsArray(start: number, end: number) {
@@ -132,7 +120,6 @@ const DonationHistory = ({}) => {
 
   return (
     <View style={styles.container}>
-      {/* <SafeArea /> */}
       <Stack.Screen
         options={{
           headerShown: false,
@@ -248,7 +235,6 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
     paddingLeft: 24,
     paddingEnd: 24,
-    // borderTopLeftRadius: 0,
     borderRadius: 18,
   },
   buttonText: {
@@ -256,7 +242,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   buttonsContainer: {
-    // width: "100%",
     flexDirection: "row",
     backgroundColor: "#D9D9D9",
     borderRadius: 18,
@@ -322,9 +307,3 @@ const styles = StyleSheet.create({
 });
 
 export default DonationHistory;
-
-// Text Style
-// style={[
-//   styles.buttonText,
-//   { color: donated ? "#D61D23" : "black" },
-// ]}
