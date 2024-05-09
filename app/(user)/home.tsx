@@ -13,6 +13,7 @@ import { Alert } from "react-native";
 import { Redirect } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Notificaiton from "@/components/notificaiton";
+import { Linking } from "react-native";
 
 function parseDate(date: any) {
   return date.split("-").reverse().join("/");
@@ -32,6 +33,7 @@ export default function TabOneScreen() {
   if (!session) {
     return <Redirect href="/" />;
   }
+
   useEffect(() => {
     const fetchUserData = async () => {
       console.log("zed");
@@ -44,6 +46,7 @@ export default function TabOneScreen() {
         if (error) {
           throw error;
         }
+
         // console.log("User data:", data[0]["email"]);
         console.log(data);
 
@@ -55,8 +58,11 @@ export default function TabOneScreen() {
         setNextTimeDonated(parseDate(data[0].next_time_donated));
         // Alert.alert(data + "");
         setUser(data[0].email);
+
+        // if(!gender) router.
       } catch (error) {
         console.log("Error fetching user data:");
+        console.error(error);
       } finally {
         console.log("muhamed");
       }

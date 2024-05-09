@@ -92,7 +92,7 @@ export default function SelectGender() {
       </RedHeader>
 
       <View style={styles.formContainer}>
-        <Subheader>Select Gender</Subheader>
+        <Subheader marginBottom={32}>Select Gender</Subheader>
 
         <View style={styles.buttonsContainer}>
           <Pressable
@@ -140,7 +140,9 @@ export default function SelectGender() {
 
         {gender !== "" && (
           <>
-            <Subheader>Have you had surgery recently?</Subheader>
+            <Subheader marginBottom={32}>
+              Have you had surgery recently?
+            </Subheader>
             <View style={styles.buttonsContainer}>
               <Pressable
                 style={[
@@ -184,7 +186,11 @@ export default function SelectGender() {
                 </Text>
               </Pressable>
             </View>
-            {surgery && <Subheader>If so, approximately when?</Subheader>}
+            {surgery && (
+              <Subheader marginBottom={32}>
+                If so, approximately when?
+              </Subheader>
+            )}
             {surgery && (
               <View style={styles.datePicker}>
                 <RNPickerSelect
@@ -229,7 +235,7 @@ export default function SelectGender() {
                 />
               </View>
             )}
-            <Subheader>
+            <Subheader marginBottom={32}>
               Have you consumed alcohol in the last eight hours?
             </Subheader>
             <View style={styles.buttonsContainer}>
@@ -280,7 +286,7 @@ export default function SelectGender() {
 
         {gender === "Female" && (
           <>
-            <Subheader>Have you given recently?</Subheader>
+            <Subheader marginBottom={32}>Have you given recently?</Subheader>
             <View style={styles.buttonsContainer}>
               <Pressable
                 style={[
@@ -324,7 +330,11 @@ export default function SelectGender() {
                 </Text>
               </Pressable>
             </View>
-            {birth && <Subheader>If so, approximately when?</Subheader>}
+            {birth && (
+              <Subheader marginBottom={32}>
+                If so, approximately when?
+              </Subheader>
+            )}
             {birth && (
               <View style={styles.datePicker}>
                 <RNPickerSelect

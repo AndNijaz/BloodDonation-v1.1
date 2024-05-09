@@ -16,7 +16,7 @@ export default function inputNameSurname() {
 
   const router = useRouter();
 
-  const { signUpData, updateFirstLastName } = useSignUp();
+  const { signUpData, updateFirstLastName }: any = useSignUp();
 
   function checkIsEmpty() {
     if (name.trim() === "") setNameError(true);
@@ -51,7 +51,7 @@ export default function inputNameSurname() {
       <RedHeader hasBack={true}>Step 2/5:</RedHeader>
 
       <View style={styles.formContainer}>
-        <Subheader>Please Tell Us Your Name</Subheader>
+        <Subheader marginBottom={32}>Please Tell Us Your Name</Subheader>
 
         <InputRow
           value={name}

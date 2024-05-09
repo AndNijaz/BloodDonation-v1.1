@@ -24,7 +24,7 @@ export default function SignUp() {
 
   const router = useRouter();
 
-  const { signUpData, updateEmailPassword } = useSignUp();
+  const { signUpData, updateEmailPassword }: any = useSignUp();
 
   const checkPasswordMatch = () => {
     setPasswordMatch(password === confirmPassword);
@@ -74,10 +74,10 @@ export default function SignUp() {
     <View style={styles.container}>
       <Stack.Screen options={{ headerShown: false }}></Stack.Screen>
 
-      <RedHeader hasBack={true}>Register</RedHeader>
+      <RedHeader>Register</RedHeader>
 
       <View style={styles.formContainer}>
-        <Subheader>Create Your Account</Subheader>
+        <Subheader marginBottom={32}>Create Your Account</Subheader>
 
         <InputRow
           value={email}

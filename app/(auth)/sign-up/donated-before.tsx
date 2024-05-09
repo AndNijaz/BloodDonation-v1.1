@@ -1,11 +1,30 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Pressable } from "react-native";
+import { StyleSheet, Text, View, Pressable, Picker } from "react-native";
 import RedHeader from "@/components/RedHeader";
 import Subheader from "@/components/Subheader";
 import NewButton from "@/components/NewButton";
 import { Stack, useRouter } from "expo-router";
 import { useSignUp } from "@/app/context/sign-up-context";
 import RNPickerSelect from "react-native-picker-select";
+import DatePicker from "react-native-date-picker";
+import RNDateTimePicker from "@react-native-community/datetimepicker";
+
+import DateTimePicker from "@react-native-community/datetimepicker";
+
+var months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
 function generateItemsArray(start: number, end: number) {
   const items = [];
@@ -23,42 +42,8 @@ const DonationHistory = ({}) => {
   const [error, setError] = useState(""); // State for error message
   const router = useRouter();
 
-  const { signUpData, updateLastTimeDonated, updateNextTimeDonated } =
+  const { signUpData, updateLastTimeDonated, updateNextTimeDonated }: any =
     useSignUp();
-
-  const isLeapYear = (year) => {
-    return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
-  };
-
-  const isValidDay = (day, month, year) => {
-    if (!day || !month || !year) return true; // Allow empty fields
-    const maxDays = [
-      31,
-      isLeapYear(year) ? 29 : 28,
-      31,
-      30,
-      31,
-      30,
-      31,
-      31,
-      30,
-      31,
-      30,
-      31,
-    ];
-    return day >= 1 && day <= maxDays[month - 1];
-  };
-
-  const isValidMonth = (month) => {
-    if (!month) return true; // Allow empty field
-    return month >= 1 && month <= 12;
-  };
-
-  const isValidYear = (year) => {
-    if (!year) return true; // Allow empty field
-    const currentYear = new Date().getFullYear();
-    return /^\d{4}$/.test(year) && year >= 1950 && year <= currentYear;
-  };
 
   const handleProceed = () => {
     setError("");
@@ -83,39 +68,27 @@ const DonationHistory = ({}) => {
     const month = parseInt(lastDonationMonth, 10);
     const year = parseInt(lastDonationYear, 10);
 
-    if (!isValidDay(day, month, year)) {
-      setError("Please enter a valid day for the selected month and year.");
-      return;
-    }
-
-    if (!isValidMonth(month)) {
-      setError("Please enter a valid month (1-12).");
-      return;
-    }
-
-    if (!isValidYear(year)) {
-      setError(
-        "Please enter a valid four-digit year between 1900 and the current year."
-      );
-      return;
-    }
-
-    const currentDate = new Date();
-
     updateLastTimeDonated(`${year}-${month}-${day}`);
-    console.log(`${year}-${month}-${day}`);
+
     updateNextTimeDonated(
-      `${month < 10 ? year : year + 1}-${
-        month == 10 ? 1 : month == 11 ? 2 : month + 2
-      }-${day}`
-    );
-    console.log(
       `${month < 10 ? year : year + 1}-${
         month == 10 ? 1 : month == 11 ? 2 : month + 2
       }-${day}`
     );
 
     router.push("/(auth)/sign-up/select-gender");
+  };
+
+  const [date, setDate] = useState(new Date());
+  const [open, setOpen] = useState(false);
+
+  const [mode, setMode] = useState("date");
+  const [show, setShow] = useState(false);
+
+  const onChange = (event, selectedDate) => {
+    console.log(event);
+    setDate(selectedDate);
+    setShow(false);
   };
 
   return (
@@ -129,7 +102,7 @@ const DonationHistory = ({}) => {
       <RedHeader hasBack={true}>Step 4/5</RedHeader>
 
       <View style={styles.formContainer}>
-        <Subheader>Did you donate blood before?</Subheader>
+        <Subheader marginBottom={32}>Did you donate blood before?</Subheader>
         <View style={styles.buttonsContainer}>
           <Pressable
             style={[
@@ -140,7 +113,10 @@ const DonationHistory = ({}) => {
                 borderWidth: donated ? 2 : 0,
               },
             ]}
-            onPress={() => setDonated(true)}
+            onPress={() => {
+              setDonated(true);
+              setShow(true);
+            }}
           >
             <Text
               style={[
@@ -161,7 +137,10 @@ const DonationHistory = ({}) => {
                 borderWidth: !donated ? 2 : 0,
               },
             ]}
-            onPress={() => setDonated(false)}
+            onPress={() => {
+              setDonated(false);
+              setShow: false;
+            }}
           >
             <Text
               style={[
@@ -174,52 +153,105 @@ const DonationHistory = ({}) => {
           </Pressable>
         </View>
 
-        {donated && <Subheader>If so, when?</Subheader>}
+        {donated && <Subheader marginBottom={0}>If so, when?</Subheader>}
         {donated && (
-          <View style={styles.datePicker}>
-            <RNPickerSelect
-              style={{
-                inputIOS: styles.picker,
-                inputAndroid: styles.picker,
-                iconContainer: styles.picker,
-              }}
-              onValueChange={(value: string) => setLastDonationMonth(value)}
-              items={generateItemsArray(1, 12)}
-              value={lastDonationMonth}
-              useNativeAndroidPickerStyle={false}
-              placeholder={{ label: "Month", value: null }}
-            />
+          <>
+            <View
+              style={[
+                styles.dateRow,
+                styles.grayedDateRowTop,
+                styles.grayedDateRowTopTop,
+              ]}
+            >
+              <Text style={[styles.dateLabel, styles.dateLabelNonFocus]}>
+                {new Date().getDay()}
+              </Text>
+              <Text style={[styles.dateLabel, styles.dateLabelNonFocus]}>
+                {months[new Date().getMonth()]}
+              </Text>
+              <Text style={[styles.dateLabel, styles.dateLabelNonFocus]}>
+                {new Date().getFullYear()}
+              </Text>
+            </View>
 
-            <RNPickerSelect
-              style={{
-                inputIOS: styles.picker,
-                inputAndroid: styles.picker,
-                iconContainer: styles.picker,
-              }}
-              onValueChange={(value: string) => setLastDonationDay(value)}
-              items={generateItemsArray(1, 31)}
-              value={lastDonationDay}
-              useNativeAndroidPickerStyle={false}
-              placeholder={{ label: "Day", value: null }}
-            />
-            <RNPickerSelect
-              style={{
-                inputIOS: styles.picker,
-                inputAndroid: styles.picker,
-                iconContainer: styles.picker,
-              }}
-              onValueChange={(value: string) => setLastDonationYear(value)}
-              items={generateItemsArray(
-                1900,
-                new Date().getFullYear()
-              ).reverse()}
-              value={lastDonationYear}
-              useNativeAndroidPickerStyle={false}
-              placeholder={{ label: "Year", value: null }}
-            />
-          </View>
+            <View style={[styles.dateRow, styles.grayedDateRowTop]}>
+              <Text style={[styles.dateLabel, styles.dateLabelNonFocus]}>
+                {new Date().getDay()}
+              </Text>
+              <Text style={[styles.dateLabel, styles.dateLabelNonFocus]}>
+                {months[new Date().getMonth()]}
+              </Text>
+              <Text style={[styles.dateLabel, styles.dateLabelNonFocus]}>
+                {new Date().getFullYear()}
+              </Text>
+            </View>
+
+            <View style={styles.dateRow}>
+              <Text style={styles.dateLabel}>{new Date().getDay()}</Text>
+              <Text style={styles.dateLabel}>
+                {months[new Date().getMonth()]}
+              </Text>
+              <Text style={styles.dateLabel}>{new Date().getFullYear()}</Text>
+            </View>
+
+            <View style={[styles.dateRow, styles.grayedDateRowBottom]}>
+              <Text style={[styles.dateLabel, styles.dateLabelNonFocus]}>
+                {new Date().getDay()}
+              </Text>
+              <Text style={[styles.dateLabel, styles.dateLabelNonFocus]}>
+                {months[new Date().getMonth()]}
+              </Text>
+              <Text style={[styles.dateLabel, styles.dateLabelNonFocus]}>
+                {new Date().getFullYear()}
+              </Text>
+            </View>
+
+            <View
+              style={[
+                styles.dateRow,
+                styles.grayedDateRowBottom,
+                styles.grayedDateRowBottomBottom,
+              ]}
+            >
+              <Text style={[styles.dateLabel, styles.dateLabelNonFocus]}>
+                {new Date().getDay()}
+              </Text>
+              <Text style={[styles.dateLabel, styles.dateLabelNonFocus]}>
+                {months[new Date().getMonth()]}
+              </Text>
+              <Text style={[styles.dateLabel, styles.dateLabelNonFocus]}>
+                {new Date().getFullYear()}
+              </Text>
+            </View>
+          </>
         )}
-        {donated && <Subheader>(Provide at least month and year)</Subheader>}
+
+        {donated && (
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={date}
+            mode={"date"}
+            // is24Hour={true}
+            onChange={() => onChange}
+            display="spinner"
+            style={{ borderRadius: 12 }}
+            // dateFormat="day month year"
+            // maximumDate={new Date(new Date().getDate() + 1)}
+          />
+        )}
+        {donated && (
+          <Subheader marginBottom={32}>
+            (Provide at least month and year)
+          </Subheader>
+        )}
+
+        {/* ANDROID */}
+
+        {/* ------------- */}
+
+        {/* IOS */}
+
+        {/* ------------- */}
       </View>
       {error && <Text style={styles.errorText}>{error}</Text>}
       <NewButton onSubmit={handleProceed}>Proceed</NewButton>
@@ -269,19 +301,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     marginTop: 20,
   },
-  inputRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginVertical: 10,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    height: 40,
-    marginRight: 10,
-  },
+
   errorText: {
     color: "red",
     marginTop: 5,
@@ -295,14 +315,52 @@ const styles = StyleSheet.create({
     marginLeft: 48,
     marginBottom: 24,
   },
-  picker: {
-    borderWidth: 1,
-    borderColor: "#D93F33",
-    borderRadius: 8,
-    padding: 16,
-    color: "#D93F33",
+
+  dateRow: {
+    position: "relative",
+    flexDirection: "row",
+    width: "80%",
+    justifyContent: "space-around",
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    padding: 8,
+    borderColor: "#DBDBDB",
+    backgroundColor: "#f3f3f3",
+    zIndex: 10,
+  },
+  dateLabel: {
     fontSize: 24,
-    textAlign: "center",
+    fontWeight: "bold",
+  },
+  dateLabelNonFocus: {
+    fontSize: 24,
+    fontWeight: "normal",
+  },
+  grayedDateRowTop: {
+    position: "relative",
+    top: 10,
+    transform: [{ scale: 0.9 }],
+    opacity: 0.7,
+    zIndex: 5,
+  },
+  grayedDateRowTopTop: {
+    top: 30,
+    transform: [{ scale: 0.8 }],
+    opacity: 0.5,
+    zIndex: 1,
+  },
+  grayedDateRowBottom: {
+    position: "relative",
+    top: -10,
+    transform: [{ scale: 0.9 }],
+    opacity: 0.7,
+    zIndex: 5,
+  },
+  grayedDateRowBottomBottom: {
+    top: -30,
+    transform: [{ scale: 0.8 }],
+    opacity: 0.5,
+    zIndex: 1,
   },
 });
 

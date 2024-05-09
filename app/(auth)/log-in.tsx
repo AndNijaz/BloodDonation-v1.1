@@ -19,7 +19,7 @@ const LoginScreen = () => {
 
   const router = useRouter();
 
-  const { signUpData, updateEmailPassword } = useSignUp();
+  const { signUpData, updateEmailPassword }: any = useSignUp();
 
   async function handleLogin() {
     const isEmailEmpty = email.trim() === "";
@@ -43,7 +43,7 @@ const LoginScreen = () => {
       <Stack.Screen options={{ headerShown: false }}></Stack.Screen>
       <RedHeader hasBack={true}>Welcome Back!</RedHeader>
       <View style={styles.formContainer}>
-        <Subheader>Login to your account</Subheader>
+        <Subheader marginBottom={32}>Login to your account</Subheader>
 
         <InputRow
           value={email}

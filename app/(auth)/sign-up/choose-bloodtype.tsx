@@ -39,7 +39,7 @@ export default function ChooseBloodtype() {
       <RedHeader hasBack={true}>Step 3/5:</RedHeader>
 
       <View style={styles.formContainer}>
-        <Subheader>Please Select Your Bloodtype</Subheader>
+        <Subheader marginBottom={32}>Please Select Your Bloodtype</Subheader>
 
         <RNPickerSelect
           style={{
