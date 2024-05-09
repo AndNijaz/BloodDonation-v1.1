@@ -48,7 +48,7 @@ export default function inputNameSurname() {
         }}
       />
 
-      <RedHeader hasBack={true}>Step 2/5:</RedHeader>
+      <RedHeader>Step 2/5:</RedHeader>
 
       <View style={styles.formContainer}>
         <Subheader marginBottom={32}>Please Tell Us Your Name</Subheader>
