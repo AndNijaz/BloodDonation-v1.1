@@ -55,7 +55,9 @@ export default function TabOneScreen() {
         setBloodtype(data[0].blood_type);
         setGender(data[0].gender);
         setLastDonation(parseDate(data[0].last_time_donated));
-        setNextTimeDonated(parseDate(data[0].next_time_donated));
+        //setNextTimeDonated(parseDate(data[0].next_time_donated));
+        const nextDonationDate = parseDate(data[0].next_time_donated);
+        setNextTimeDonated(nextDonationDate < new Date() ? "Today" : nextDonationDate);
         // Alert.alert(data + "");
         setUser(data[0].email);
 
@@ -89,6 +91,7 @@ export default function TabOneScreen() {
           {nextTimeDonated}
         </Text>
       </BigContainer>
+      {lastDonation && (
       <SmallContainer>
         <View style={styles.row}>
           <MaterialCommunityIcons name="history" size={18} color="black" />
@@ -96,6 +99,7 @@ export default function TabOneScreen() {
         </View>
         <Text style={styles.smallText}>{lastDonation}</Text>
       </SmallContainer>
+)}
       <Text>{user}</Text>
     </View>
   );
