@@ -6,5 +6,5 @@ export default function TabIndex() {
 
   if (!session) return <Redirect href="/" />;
 
-  return <Redirect href={"/(auth)/"} />;
+  return <Redirect href={"/home"} />;
 }

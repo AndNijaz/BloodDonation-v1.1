@@ -7,14 +7,28 @@ import { useRouter } from "expo-router";
 import { useSignUp } from "@/app/context/sign-up-context";
 import NewButton from "@/components/NewButton";
 import Subheader from "@/components/Subheader";
+import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/app/context/AuthProvider";
+import { useFetch } from "@/app/Hooks/useFetch";
 
 export default function inputNameSurname() {
-  const [name, setName] = useState("");
+  // console.log("muhameeeeeeeedeeeeeeeeeeeeeeeee");
+  // console.log(dataa ? dataa[0].first_name : "kurac");
+  // console.log("a");
+  // console.log(dataa[0]);
+  // console.log("muhameeeeeeeedeeeeeeeeeeeeeeeee");
+
+  const [name, setName] = useState();
+
+  const { dataa } = useFetch(setName);
+
   const [surname, setSurname] = useState("");
   const [nameError, setNameError] = useState(false);
   const [surnameError, setSurnameError] = useState(false);
 
   const router = useRouter();
+
+  const { session, loading } = useAuth();
 
   const { signUpData, updateFirstLastName }: any = useSignUp();
 
@@ -36,6 +50,30 @@ export default function inputNameSurname() {
     if (name.trim() === "" || surname.trim() === "") return;
 
     updateFirstLastName(name, surname);
+
+    async function updateNames() {
+      if (session) {
+        // Update profile
+        const { data, error } = await supabase
+          .from("profiles")
+          .update({
+            first_name: name,
+            last_name: surname,
+          })
+          .eq("id", session.user.id)
+          .single();
+
+        if (error) {
+          // Alert.alert("Error updating profile:", error.message);
+        } else {
+          console.log("Profile updated successfully:", data);
+          // Alert.alert("Profile updated successfully:", data);
+        }
+      }
+    }
+
+    updateNames();
+    console.log("zizonizo");
     router.push("/(auth)/sign-up/choose-bloodtype");
   };
 

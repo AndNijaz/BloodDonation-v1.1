@@ -1,5 +1,5 @@
 import { View, Text } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../components/Button";
 import { Link, Redirect } from "expo-router";
 import { useAuth } from "./context/AuthProvider";
@@ -39,15 +39,71 @@ async function sendPushNotification(expoPushToken: string) {
 }
 
 const index = () => {
+  console.log("ismira");
   const { session, loading } = useAuth();
+  const [userData, setUserData] = useState([
+    {
+      first_name: null,
+      last_name: null,
+      blood_type: null,
+      last_time_donated: null,
+      gender: null,
+    },
+  ]);
+
+  useEffect(() => {
+    console.log("mora se prvo executeati");
+    if (session) {
+      const fetchUserData = async () => {
+        try {
+          const { data, error } = await supabase
+            .from("profiles")
+            .select("*")
+            .eq("id", session?.user.id);
+
+          if (error) {
+            throw error;
+          }
+
+          console.log("App data loaded");
+          console.log(data);
+          console.log("App data loaded");
+          setUserData(data);
+        } catch (error) {
+          // console.log("Error fetching user data:");
+          // console.error(error);
+        } finally {
+          // console.log("muhamed");
+        }
+      };
+      fetchUserData();
+    }
+    console.log("mora se prvo zavrsiti");
+  }, [session, supabase, loading]);
 
   if (loading) {
     return <ActivityIndicator />;
   }
 
   if (session) {
+    if (!userData[0].first_name || !userData[0].last_name)
+      return <Redirect href="./sign-up/name-surname" />;
+
+    if (!userData[0].last_name)
+      return <Redirect href="./sign-up/name-surname" />;
+
+    if (!userData[0].blood_type)
+      return <Redirect href="./sign-up/choose-bloodtype" />;
+
+    if (!userData[0].last_time_donated)
+      return <Redirect href="./sign-up/donated-before" />;
+
+    if (!userData[0].gender) return <Redirect href="./sign-up/select-gender" />;
+
     return <Redirect href="/(user)/home" />;
   }
+  // return <Redirect href="/(user)/home" />;
+  // }
 
   return (
     <LinearGradient

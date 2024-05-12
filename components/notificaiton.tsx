@@ -11,7 +11,7 @@ export default function Notificaiton() {
         <Text style={styles.text}>Attention</Text>
       </View>
       <Text style={[styles.text, styles.heading]}>Time to donate!</Text>
-      <View style={styles.buttons}>
+      {/* <View style={styles.buttons}>
         <Button
           text={"Accept"}
           style={[
@@ -24,7 +24,7 @@ export default function Notificaiton() {
             { marginLeft: 8, marginRight: 8, paddingLeft: 32, paddingEnd: 32 },
           ]}
         />
-      </View>
+      </View> */}
     </View>
   );
 }
