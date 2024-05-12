@@ -49,7 +49,12 @@ export default function TabOneScreen() {
         setBloodtype(data[0].blood_type);
         setGender(data[0].gender);
         setLastDonation(parseDate(data[0].last_time_donated));
-        setNextTimeDonated(parseDate(data[0].next_time_donated));
+        //setNextTimeDonated(parseDate(data[0].next_time_donated));
+        const nextDonationDate = parseDate(data[0].next_time_donated);
+        setNextTimeDonated(
+          nextDonationDate < new Date() ? "Today" : nextDonationDate
+        );
+        // Alert.alert(data + "");
         setUser(data[0].email);
       } catch (error) {
         // console.log("Error fetching user data:");
@@ -80,13 +85,15 @@ export default function TabOneScreen() {
           {nextTimeDonated}
         </Text>
       </BigContainer>
-      <SmallContainer>
-        <View style={styles.row}>
-          <MaterialCommunityIcons name="history" size={18} color="black" />
-          <Text>Last time you donated</Text>
-        </View>
-        <Text style={styles.smallText}>{lastDonation}</Text>
-      </SmallContainer>
+      {lastDonation && (
+        <SmallContainer>
+          <View style={styles.row}>
+            <MaterialCommunityIcons name="history" size={18} color="black" />
+            <Text>Last time you donated</Text>
+          </View>
+          <Text style={styles.smallText}>{lastDonation}</Text>
+        </SmallContainer>
+      )}
       <Text>{user}</Text>
     </View>
   );
