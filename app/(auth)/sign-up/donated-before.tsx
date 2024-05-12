@@ -14,11 +14,12 @@ import RedHeader from "@/components/RedHeader";
 import Subheader from "@/components/Subheader";
 import NewButton from "@/components/NewButton";
 import DatePicker from "@/components/DatePicker";
+import BinaryButtons from "@/components/BinaryButtons";
 
 import { parseDateToDatabase } from "../../../Utils/parseDateToDatabase";
 
 const DonationHistory = ({}) => {
-  const { data } = useFetch();
+  // const { data } = useFetch();
 
   const { session, loading } = useAuth();
 
@@ -35,6 +36,16 @@ const DonationHistory = ({}) => {
     // console.log(selectedDate);
     setDate(selectedDate);
     setShow(false);
+  };
+
+  const handleYes = () => {
+    setShow(true);
+    setDonated(true);
+  };
+
+  const handleNo = () => {
+    setShow(false);
+    setDonated(false);
   };
 
   const handleProceed = () => {
@@ -87,55 +98,13 @@ const DonationHistory = ({}) => {
       <View style={styles.formContainer}>
         <Subheader marginBottom={32}>Did you donate blood before?</Subheader>
 
-        <View style={styles.buttonsContainer}>
-          <Pressable
-            style={[
-              styles.button,
-              {
-                backgroundColor: donated ? "white" : "#D9D9D9",
-                borderColor: donated ? "#F8B5BC" : "#D9D9D9",
-                borderWidth: donated ? 2 : 0,
-              },
-            ]}
-            onPress={() => {
-              setDonated(true);
-              setShow(true);
-            }}
-          >
-            <Text
-              style={[
-                styles.buttonText,
-                { color: donated ? "#D61D23" : "black" },
-              ]}
-            >
-              Yes
-            </Text>
-          </Pressable>
-
-          <Pressable
-            style={[
-              styles.button,
-              {
-                backgroundColor: !donated ? "white" : "#D9D9D9",
-                borderColor: !donated ? "#F8B5BC" : "#D9D9D9",
-                borderWidth: !donated ? 2 : 0,
-              },
-            ]}
-            onPress={() => {
-              setDonated(false);
-              setShow(false);
-            }}
-          >
-            <Text
-              style={[
-                styles.buttonText,
-                { color: !donated ? "#D61D23" : "black" },
-              ]}
-            >
-              No
-            </Text>
-          </Pressable>
-        </View>
+        <BinaryButtons
+          stateVariable={donated}
+          onPressFunctionOne={handleYes}
+          onPressFunctionTwo={handleNo}
+          textOne="Yes"
+          textTwo="No"
+        />
 
         {donated && (
           <>
@@ -174,26 +143,6 @@ const DonationHistory = ({}) => {
 };
 
 const styles = StyleSheet.create({
-  button: {
-    borderWidth: 0,
-    backgroundColor: "#D9D9D9",
-    paddingTop: 12,
-    paddingBottom: 12,
-    paddingLeft: 24,
-    paddingEnd: 24,
-    borderRadius: 18,
-  },
-  buttonText: {
-    color: "black",
-    fontWeight: "bold",
-  },
-  buttonsContainer: {
-    flexDirection: "row",
-    backgroundColor: "#D9D9D9",
-    borderRadius: 18,
-    marginBottom: 32,
-  },
-
   container: {
     flex: 1,
     paddingBottom: 48,

@@ -17,7 +17,7 @@ import Subheader from "@/components/Subheader";
 import { isEmpty } from "../../../Utils/checkEmpty";
 
 export default function inputNameSurname() {
-  const { data } = useFetch();
+  // const { data } = useFetch();
 
   const { session, loading } = useAuth();
 
@@ -30,17 +30,17 @@ export default function inputNameSurname() {
   const [nameError, setNameError] = useState(false);
   const [surnameError, setSurnameError] = useState(false);
 
-  useEffect(() => {
-    if (
-      data &&
-      data.length > 0 &&
-      !isEmpty(data[0].first_name) &&
-      !isEmpty(data[0].last_name)
-    ) {
-      setName(data[0].first_name);
-      setSurname(data[0].last_name);
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if (
+  //     data &&
+  //     data.length > 0 &&
+  //     !isEmpty(data[0].first_name) &&
+  //     !isEmpty(data[0].last_name)
+  //   ) {
+  //     setName(data[0].first_name);
+  //     setSurname(data[0].last_name);
+  //   }
+  // }, [data]);
 
   function checkIsEmpty() {
     if (isEmpty(name)) setNameError(true);

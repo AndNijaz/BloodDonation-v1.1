@@ -28,7 +28,7 @@ const BLOODTYPES = [
 ];
 
 export default function ChooseBloodtype() {
-  const { data } = useFetch();
+  // const { data } = useFetch();
 
   const { session, loading } = useAuth();
 
@@ -38,10 +38,10 @@ export default function ChooseBloodtype() {
 
   const [bloodType, setBloodType] = useState(BLOODTYPES[0].value);
 
-  useEffect(() => {
-    if (data && data.length > 0 && !isEmpty(data[0].blood_type))
-      setBloodType(data[0].blood_type);
-  }, [data]);
+  // useEffect(() => {
+  //   if (data && data.length > 0 && !isEmpty(data[0].blood_type))
+  //     setBloodType(data[0].blood_type);
+  // }, [data]);
 
   const handleContinue = () => {
     // updateBloodType(bloodType);
