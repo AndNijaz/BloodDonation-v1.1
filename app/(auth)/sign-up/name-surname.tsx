@@ -1,41 +1,50 @@
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
-import { Stack } from "expo-router";
-import RedHeader from "@/components/RedHeader";
-import InputRow from "@/components/InputRow";
-import { useRouter } from "expo-router";
-import { useSignUp } from "@/app/context/sign-up-context";
-import NewButton from "@/components/NewButton";
-import Subheader from "@/components/Subheader";
+import { Stack, useRouter } from "expo-router";
+
 import { supabase } from "@/lib/supabase";
+
+// import { useSignUp } from "@/app/context/sign-up-context";
 import { useAuth } from "@/app/context/AuthProvider";
+
 import { useFetch } from "@/app/Hooks/useFetch";
 
+import RedHeader from "@/components/RedHeader";
+import InputRow from "@/components/InputRow";
+import NewButton from "@/components/NewButton";
+import Subheader from "@/components/Subheader";
+
+import { isEmpty } from "../../../Utils/checkEmpty";
+
 export default function inputNameSurname() {
-  // console.log("muhameeeeeeeedeeeeeeeeeeeeeeeee");
-  // console.log(dataa ? dataa[0].first_name : "kurac");
-  // console.log("a");
-  // console.log(dataa[0]);
-  // console.log("muhameeeeeeeedeeeeeeeeeeeeeeeee");
+  const { data } = useFetch();
 
-  const [name, setName] = useState();
+  const { session, loading } = useAuth();
 
-  const { dataa } = useFetch(setName);
+  // const { signUpData, updateFirstLastName }: any = useSignUp();
 
+  const router = useRouter();
+
+  const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [nameError, setNameError] = useState(false);
   const [surnameError, setSurnameError] = useState(false);
 
-  const router = useRouter();
-
-  const { session, loading } = useAuth();
-
-  const { signUpData, updateFirstLastName }: any = useSignUp();
+  useEffect(() => {
+    if (
+      data &&
+      data.length > 0 &&
+      !isEmpty(data[0].first_name) &&
+      !isEmpty(data[0].last_name)
+    ) {
+      setName(data[0].first_name);
+      setSurname(data[0].last_name);
+    }
+  }, [data]);
 
   function checkIsEmpty() {
-    if (name.trim() === "") setNameError(true);
-
-    if (surname.trim() === "") setSurnameError(true);
+    if (isEmpty(name)) setNameError(true);
+    if (isEmpty(surname)) setSurnameError(true);
   }
 
   function resetErrors() {
@@ -47,9 +56,7 @@ export default function inputNameSurname() {
     checkIsEmpty();
     resetErrors();
 
-    if (name.trim() === "" || surname.trim() === "") return;
-
-    updateFirstLastName(name, surname);
+    // updateFirstLastName(name, surname);
 
     async function updateNames() {
       if (session) {
@@ -64,7 +71,7 @@ export default function inputNameSurname() {
           .single();
 
         if (error) {
-          // Alert.alert("Error updating profile:", error.message);
+          console.log("Error updating profile:", error.message);
         } else {
           console.log("Profile updated successfully:", data);
           // Alert.alert("Profile updated successfully:", data);
@@ -73,7 +80,7 @@ export default function inputNameSurname() {
     }
 
     updateNames();
-    console.log("zizonizo");
+
     router.push("/(auth)/sign-up/choose-bloodtype");
   };
 
@@ -97,7 +104,7 @@ export default function inputNameSurname() {
           placeholder="Name"
           icon="account-outline"
           error={!!nameError}
-        ></InputRow>
+        />
         {nameError && <Text style={styles.errorText}>Name is required</Text>}
 
         <InputRow
@@ -106,7 +113,7 @@ export default function inputNameSurname() {
           placeholder="Last Name"
           icon="account-circle-outline"
           error={!!surnameError}
-        ></InputRow>
+        />
         {surnameError && (
           <Text style={styles.errorText}>Surname is required</Text>
         )}

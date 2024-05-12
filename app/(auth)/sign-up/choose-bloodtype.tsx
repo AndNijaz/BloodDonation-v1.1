@@ -1,31 +1,78 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
-import RNPickerSelect from "react-native-picker-select";
-import { Link } from "expo-router";
-import { TouchableOpacity } from "react-native";
-import RedHeader from "@/components/RedHeader";
-import { useRouter } from "expo-router";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, View } from "react-native";
+import { useRouter, Stack } from "expo-router";
+
+import { supabase } from "@/lib/supabase";
+
+import { useAuth } from "@/app/context/AuthProvider";
 import { useSignUp } from "@/app/context/sign-up-context";
+
+import { useFetch } from "@/app/Hooks/useFetch";
+
+import { Picker } from "@react-native-picker/picker";
+import RedHeader from "@/components/RedHeader";
 import NewButton from "@/components/NewButton";
-import { Stack } from "expo-router";
-import InputRow from "@/components/InputRow";
 import Subheader from "@/components/Subheader";
-import SafeArea from "@/components/SafeArea";
+
+import { isEmpty } from "../../../Utils/checkEmpty";
+
+const BLOODTYPES = [
+  { label: "A+", value: "A+" },
+  { label: "A-", value: "A-" },
+  { label: "B+", value: "B+" },
+  { label: "B-", value: "B-" },
+  { label: "AB+", value: "AB+" },
+  { label: "AB-", value: "AB-" },
+  { label: "O+", value: "O+" },
+  { label: "O-", value: "O-" },
+];
 
 export default function ChooseBloodtype() {
-  const [bloodType, setBloodType] = useState("");
+  const { data } = useFetch();
 
-  const { signUpData, updateBloodType } = useSignUp();
+  const { session, loading } = useAuth();
+
+  // const { signUpData, updateBloodType } = useSignUp();
 
   const router = useRouter();
 
+  const [bloodType, setBloodType] = useState(BLOODTYPES[0].value);
+
+  useEffect(() => {
+    if (data && data.length > 0 && !isEmpty(data[0].blood_type))
+      setBloodType(data[0].blood_type);
+  }, [data]);
+
   const handleContinue = () => {
-    updateBloodType(bloodType);
+    // updateBloodType(bloodType);
+
+    async function updateBloodType() {
+      console.log(bloodType);
+      if (session) {
+        // Update profile
+        const { data, error } = await supabase
+          .from("profiles")
+          .update({
+            blood_type: bloodType,
+          })
+          .eq("id", session.user.id)
+          .single();
+
+        if (error) {
+          console.log("Error updating profile:", error.message);
+        } else {
+          console.log("Profile updated successfully:", data);
+          // Alert.alert("Profile updated successfully:", data);
+        }
+      }
+    }
+
+    updateBloodType();
 
     router.push("/(auth)/sign-up/donated-before");
   };
 
-  console.log(signUpData);
+  // console.log(signUpData);
 
   return (
     <View style={styles.container}>
@@ -41,28 +88,20 @@ export default function ChooseBloodtype() {
       <View style={styles.formContainer}>
         <Subheader marginBottom={32}>Please Select Your Bloodtype</Subheader>
 
-        <RNPickerSelect
-          style={{
-            inputIOS: styles.picker,
-            inputAndroid: styles.picker,
-            iconContainer: styles.picker,
-          }}
-          onValueChange={(value: string) => setBloodType(value)}
-          items={[
-            { label: "A+", value: "A+" },
-            { label: "A-", value: "A-" },
-            { label: "B+", value: "B+" },
-            { label: "B-", value: "B-" },
-            { label: "AB+", value: "AB+" },
-            { label: "AB-", value: "AB-" },
-            { label: "O+", value: "O+" },
-            { label: "O-", value: "O-" },
-          ]}
-          value={bloodType}
-          useNativeAndroidPickerStyle={false}
-          placeholder={{ label: "Select blood type...", value: null }}
-          useNativeAndroidPickerStyle={false}
-        />
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={bloodType}
+            onValueChange={(itemValue, itemIndex) => setBloodType(itemValue)}
+          >
+            {BLOODTYPES.map((bloodtype) => (
+              <Picker.Item
+                label={bloodtype.label}
+                value={bloodtype.value}
+                key={bloodtype.value}
+              />
+            ))}
+          </Picker>
+        </View>
       </View>
 
       <NewButton onSubmit={handleContinue}>Continue</NewButton>
@@ -77,18 +116,15 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     paddingTop: 64,
-    // paddingTop: 48,
     alignItems: "center",
     paddingStart: 48,
     paddingRight: 48,
   },
-  picker: {
-    borderWidth: 1,
+  pickerContainer: {
+    borderWidth: 2,
     borderColor: "#D93F33",
     borderRadius: 8,
-    padding: 16,
-    color: "#D93F33",
-    fontSize: 48,
-    textAlign: "center",
+    padding: 8,
+    width: "70%",
   },
 });

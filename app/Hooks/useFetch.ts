@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthProvider";
 import { supabase } from "@/lib/supabase";
 
-export const useFetch = (setName: any) => {
+export const useFetch = () => {
   const { session } = useAuth();
 
-  const [dataa, setDataa] = useState<any>();
+  const [data, setData] = useState<any>();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -19,9 +19,7 @@ export const useFetch = (setName: any) => {
           throw error;
         }
 
-        setDataa(data);
-        setName(data[0].first_name);
-        // return dataa;
+        setData(data);
       } catch (error) {
         // console.log("Error fetching user data:");
         // console.error(error);
@@ -35,8 +33,5 @@ export const useFetch = (setName: any) => {
     //   // console.log("bibi");
   }, [session]);
 
-  // console.log("daty");
-  // console.log(dataa);
-  // console.log("daty");
-  return { dataa };
+  return { data };
 };

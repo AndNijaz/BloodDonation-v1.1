@@ -50,10 +50,12 @@ const index = () => {
       gender: null,
     },
   ]);
+  const [loadingUserData, setLoadingUserData] = useState(false);
 
   useEffect(() => {
     console.log("mora se prvo executeati");
     if (session) {
+      setLoadingUserData(true);
       const fetchUserData = async () => {
         try {
           const { data, error } = await supabase
@@ -74,6 +76,7 @@ const index = () => {
           // console.error(error);
         } finally {
           // console.log("muhamed");
+          setLoadingUserData(false);
         }
       };
       fetchUserData();
@@ -86,6 +89,10 @@ const index = () => {
   }
 
   if (session) {
+    if (loadingUserData) {
+      return <ActivityIndicator />;
+    }
+
     if (!userData[0].first_name || !userData[0].last_name)
       return <Redirect href="./sign-up/name-surname" />;
 
