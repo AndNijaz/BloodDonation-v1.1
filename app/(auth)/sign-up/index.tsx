@@ -57,7 +57,7 @@ export default function SignUp() {
     if (emailError && passwordError && confirmPasswordError && !passwordMatch)
       return;
 
-    updateEmailPassword(email, password); //contex
+    // updateEmailPassword(email, password); //contex
     const { error } = await supabase.auth.signUp({ email, password });
     setLoading(false);
 

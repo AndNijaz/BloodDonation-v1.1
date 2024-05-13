@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Pressable } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { Stack, useRouter } from "expo-router";
 
 import { supabase } from "@/lib/supabase";
@@ -16,7 +16,7 @@ import NewButton from "@/components/NewButton";
 import DatePicker from "@/components/DatePicker";
 import BinaryButtons from "@/components/BinaryButtons";
 
-import { parseDateToDatabase } from "../../../Utils/parseDateToDatabase";
+import { parseDateToDatabase } from "../../../Utils/dates";
 
 const DonationHistory = ({}) => {
   // const { data } = useFetch();
@@ -56,6 +56,8 @@ const DonationHistory = ({}) => {
     let toDatabaseDate: any;
     if (!donated) toDatabaseDate = parseDateToDatabase(initialDate);
     else toDatabaseDate = parseDateToDatabase(date);
+
+    // updateLastTimeDonated(toDatabaseDate);
     // if (!donated) updateLastTimeDonated(parseDateToDatabase(initialDate));
     // else updateLastTimeDonated(parseDateToDatabase(date));
 

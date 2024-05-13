@@ -28,7 +28,7 @@ const LoginScreen = () => {
     setEmailError(isEmailEmpty);
     setPasswordError(isPasswordEmpty);
 
-    updateEmailPassword(email, password); //context
+    // updateEmailPassword(email, password); //context
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,

@@ -59,6 +59,9 @@ const styles = StyleSheet.create({
   content: {
     padding: 18,
     textAlign: "justify",
+    color: "#fff",
+    lineHeight: 20,
+    fontWeight: "500",
   },
 });
 

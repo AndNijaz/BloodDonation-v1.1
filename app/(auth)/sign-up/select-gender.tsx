@@ -1,85 +1,127 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import React from "react";
-import { Stack } from "expo-router";
-import RedHeader from "@/components/RedHeader";
-import { useRouter } from "expo-router";
+import React, { useEffect, useReducer, useRef, useState } from "react";
+import { Pressable, StyleSheet, Text, View, ScrollView } from "react-native";
+import { Stack, useRouter } from "expo-router";
+
+import { useFetch } from "@/app/Hooks/useFetch";
+
+import { supabase } from "@/lib/supabase";
+
 import { useSignUp } from "@/app/context/sign-up-context";
+import { useAuth } from "@/app/context/AuthProvider";
+
+import { Picker } from "@react-native-picker/picker";
+import RedHeader from "@/components/RedHeader";
 import NewButton from "@/components/NewButton";
 import Subheader from "@/components/Subheader";
-import RNPickerSelect from "react-native-picker-select";
-import { useState } from "react";
-import { useAuth } from "@/app/context/AuthProvider";
-import { supabase } from "@/lib/supabase";
-import { Alert } from "react-native";
 
-function generateItemsArray(start: number, end: number) {
-  const items = [];
-  for (let i = start; i <= end; i++) {
-    items.push({ label: `${i}`, value: `${i}` });
-  }
-  return items;
-}
+import { GENDER } from "../../../constants/Constats";
+import { IMPEDIMENTS } from "../../../constants/Constats";
+
+import { parseDateToDatabase } from "../../../Utils/dates";
+import { calculateNextTimeDonate } from "../../../Utils/dates";
+import { checkCanDonatedNow } from "../../../Utils/dates";
 
 export default function SelectGender() {
+  const { data } = useFetch();
+
   const [gender, setGender] = useState("");
-  const [surgery, setSurgery] = useState(false);
-  const [alcohol, setAlcohol] = useState(false);
-  const [birth, setBirth] = useState(false);
+  const [lastDonationDate, setLastDonationDate] = useState("");
 
-  const [lastSurgeryDay, setLastSurgeryDay] = useState(""); // State for last donation day
-  const [lastSurgeryMonth, setLastSurgeryMonth] = useState(""); // State for last donation month
-  const [lastSurgeryYear, setLastSurgeryYear] = useState(""); // State for last donation year
-
-  const [lastAlcoholDay, setLastAlcoholDay] = useState(""); // State for last donation day
-  const [lastAlcoholMonth, setLastAlcoholMonth] = useState(""); // State for last donation month
-  const [lastAlcoholYear, setLastAlcoholYear] = useState(""); // State for last donation year
-
-  const [lastBirthDay, setLastBirthDay] = useState(""); // State for last donation day
-  const [lastBirthMonth, setLastBirthMonth] = useState(""); // State for last donation month
-  const [lastBirthYear, setLastBirthYear] = useState(""); // State for last donation year
-
-  const { signUpData, updateGender } = useSignUp();
+  const [impedimentsList, setImpedimentsList] = useState(IMPEDIMENTS);
+  const [selectedImpediments, setSelectedImpediments] = useState<any>([]);
 
   const { session } = useAuth();
 
+  const { signUpData, updateLastTimeDonated }: any = useSignUp();
+
   const router = useRouter();
 
+  useEffect(() => {
+    // console.log(data[0].last_time_donated);
+    setLastDonationDate(data ? data[0].last_time_donated : "");
+    // console.log(data.last_time_donated);
+  }, [data]);
+  // console.log(lastDonationDate);
+  // console.log(signUpData["last_time_donated"]);
   async function handleFinish() {
-    updateGender(gender);
+    // updateGender(gender);
+    // console.log(lastDonationDate);
+
+    let currentDate = new Date();
+    let next_time_donated: any = new Date(lastDonationDate);
+
+    // console.log(
+    //   currentDate.getFullYear() === next_time_donated.getFullYear() ||
+    //     Math.abs(currentDate.getMonth() - next_time_donated.getMonth()) > 3
+    // );
+
+    if (checkCanDonatedNow(next_time_donated, gender === "Female" ? 3 : 2)) {
+      next_time_donated = parseDateToDatabase(new Date());
+    } else {
+      if (gender === "Female")
+        next_time_donated = parseDateToDatabase(
+          calculateNextTimeDonate(next_time_donated, 3)
+        );
+      else
+        next_time_donated = parseDateToDatabase(
+          calculateNextTimeDonate(next_time_donated, 2)
+        );
+    }
+
+    // console.log(next_time_donated);
+
+    // if (next_time_donated.getMonth())
+    // if()
+    // return;
 
     if (session) {
       // Update profile
       const { data, error } = await supabase
         .from("profiles")
         .update({
-          first_name: signUpData.firstName,
-          last_name: signUpData.lastName,
-          blood_type: signUpData.bloodType,
-          gender: signUpData.gender,
-          last_time_donated: signUpData.lastTimeDonated,
-          next_time_donated: signUpData.nextTimeDonated,
+          gender: gender,
+          next_time_donated: next_time_donated,
         })
         .eq("id", session.user.id)
         .single();
 
       if (error) {
-        Alert.alert("Error updating profile:", error.message);
+        // Alert.alert("Error updating profile:", error.message);
       } else {
-        console.log("Profile updated successfully:", data);
-        Alert.alert("Profile updated successfully:", data);
+        // console.log("Profile updated successfully:", data);
+        // Alert.alert("Profile updated successfully:", data);
       }
     }
-
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!clear context!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     router.push("/(user)/home");
   }
 
-  console.log(signUpData);
+  function handleSetGender(gender: any) {
+    setGender(gender);
+  }
+
+  function handleSetImpediment(impediment: any) {
+    // console.log(impedimentsList[0].value === impediment);
+    setImpedimentsList((list) =>
+      list.filter((imp) => imp.value !== impediment)
+    );
+    // console.log(impedimentsList);
+    setSelectedImpediments((imp: any) => [...imp, impediment]);
+  }
+
+  function handleRemoveImpediment(impediment: any) {
+    setSelectedImpediments((imp: any) =>
+      imp.filter((imped: any) => imped !== impediment)
+    );
+
+    setImpedimentsList((list) => [
+      ...list,
+      IMPEDIMENTS.filter((imp: any) => imp.value === impediment)[0],
+    ]);
+  }
 
   return (
     <View style={styles.container}>
-      {/* <SafeArea /> */}
       <Stack.Screen
         options={{
           headerShown: false,
@@ -92,291 +134,71 @@ export default function SelectGender() {
       </RedHeader>
 
       <View style={styles.formContainer}>
-        <Subheader marginBottom={32}>Select Gender</Subheader>
+        <Subheader marginBottom={16}>Select Gender</Subheader>
 
-        <View style={styles.buttonsContainer}>
-          <Pressable
-            style={[
-              styles.button,
-              {
-                backgroundColor: gender === "Male" ? "white" : "#D9D9D9",
-                borderColor: gender === "Male" ? "#F8B5BC" : "#D9D9D9",
-                borderWidth: gender === "Male" ? 2 : 0,
-              },
-            ]}
-            onPress={() => setGender("Male")}
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={gender}
+            onValueChange={(itemValue, itemIndex) => handleSetGender(itemValue)}
           >
-            <Text
-              style={[
-                styles.buttonText,
-                { color: gender === "Male" ? "#D61D23" : "black" },
-              ]}
-            >
-              Male
-            </Text>
-          </Pressable>
-
-          <Pressable
-            style={[
-              styles.button,
-              {
-                backgroundColor: gender === "Female" ? "white" : "#D9D9D9",
-                borderColor: gender === "Female" ? "#F8B5BC" : "#D9D9D9",
-                borderWidth: gender === "Female" ? 2 : 0,
-              },
-            ]}
-            onPress={() => setGender("Female")}
-          >
-            <Text
-              style={[
-                styles.buttonText,
-                { color: gender === "Female" ? "#D61D23" : "black" },
-              ]}
-            >
-              Female
-            </Text>
-          </Pressable>
+            <Picker.Item value="" label="Gender" enabled={false} />
+            {GENDER.map((gender) => (
+              <Picker.Item
+                label={gender.label}
+                value={gender.value}
+                key={gender.value}
+              />
+            ))}
+          </Picker>
         </View>
 
-        {gender !== "" && (
+        {gender && impedimentsList.length > 0 && (
           <>
-            <Subheader marginBottom={32}>
-              Have you had surgery recently?
-            </Subheader>
-            <View style={styles.buttonsContainer}>
-              <Pressable
-                style={[
-                  styles.button,
-                  {
-                    backgroundColor: surgery ? "white" : "#D9D9D9",
-                    borderColor: surgery ? "#F8B5BC" : "#D9D9D9",
-                    borderWidth: surgery ? 2 : 0,
-                  },
-                ]}
-                onPress={() => setSurgery(true)}
-              >
-                <Text
-                  style={[
-                    styles.buttonText,
-                    { color: surgery ? "#D61D23" : "black" },
-                  ]}
-                >
-                  Yes
-                </Text>
-              </Pressable>
-
-              <Pressable
-                style={[
-                  styles.button,
-                  {
-                    backgroundColor: !surgery ? "white" : "#D9D9D9",
-                    borderColor: !surgery ? "#F8B5BC" : "#D9D9D9",
-                    borderWidth: !surgery ? 2 : 0,
-                  },
-                ]}
-                onPress={() => setSurgery(false)}
-              >
-                <Text
-                  style={[
-                    styles.buttonText,
-                    { color: surgery ? "#D61D23" : "black" },
-                  ]}
-                >
-                  No
-                </Text>
-              </Pressable>
-            </View>
-            {surgery && (
-              <Subheader marginBottom={32}>
-                If so, approximately when?
+            <>
+              <Subheader marginBottom={16} textAlign={"center"}>
+                Do any of these apply in the last six months
               </Subheader>
-            )}
-            {surgery && (
-              <View style={styles.datePicker}>
-                <RNPickerSelect
-                  style={{
-                    inputIOS: styles.picker,
-                    inputAndroid: styles.picker,
-                    iconContainer: styles.picker,
-                  }}
-                  onValueChange={(value: string) => setLastSurgeryMonth(value)}
-                  items={generateItemsArray(1, 12)}
-                  value={lastSurgeryMonth}
-                  useNativeAndroidPickerStyle={false}
-                  placeholder={{ label: "Month", value: null }}
-                />
 
-                <RNPickerSelect
-                  style={{
-                    inputIOS: styles.picker,
-                    inputAndroid: styles.picker,
-                    iconContainer: styles.picker,
-                  }}
-                  onValueChange={(value: string) => setLastSurgeryDay(value)}
-                  items={generateItemsArray(1, 31)}
-                  value={lastSurgeryDay}
-                  useNativeAndroidPickerStyle={false}
-                  placeholder={{ label: "Day", value: null }}
-                />
-                <RNPickerSelect
-                  style={{
-                    inputIOS: styles.picker,
-                    inputAndroid: styles.picker,
-                    iconContainer: styles.picker,
-                  }}
-                  onValueChange={(value: string) => setLastSurgeryYear(value)}
-                  items={generateItemsArray(
-                    1900,
-                    new Date().getFullYear()
-                  ).reverse()}
-                  value={lastSurgeryYear}
-                  useNativeAndroidPickerStyle={false}
-                  placeholder={{ label: "Year", value: null }}
-                />
+              <View style={styles.pickerContainer}>
+                <Picker
+                  selectedValue={gender}
+                  onValueChange={(itemValue, itemIndex) =>
+                    handleSetImpediment(itemValue)
+                  }
+                >
+                  <Picker.Item
+                    value=""
+                    label="Choose Which Applies"
+                    enabled={false}
+                  />
+                  {impedimentsList.map((gender) => (
+                    <Picker.Item
+                      label={gender.label}
+                      value={gender.value}
+                      key={gender.value}
+                    />
+                  ))}
+                </Picker>
               </View>
-            )}
-            <Subheader marginBottom={32}>
-              Have you consumed alcohol in the last eight hours?
-            </Subheader>
-            <View style={styles.buttonsContainer}>
-              <Pressable
-                style={[
-                  styles.button,
-                  {
-                    backgroundColor: alcohol ? "white" : "#D9D9D9",
-                    borderColor: alcohol ? "#F8B5BC" : "#D9D9D9",
-                    borderWidth: alcohol ? 2 : 0,
-                  },
-                ]}
-                onPress={() => setAlcohol(true)}
-              >
-                <Text
-                  style={[
-                    styles.buttonText,
-                    { color: alcohol ? "#D61D23" : "black" },
-                  ]}
-                >
-                  Yes
-                </Text>
-              </Pressable>
+            </>
 
-              <Pressable
-                style={[
-                  styles.button,
-                  {
-                    backgroundColor: !alcohol ? "white" : "#D9D9D9",
-                    borderColor: !alcohol ? "#F8B5BC" : "#D9D9D9",
-                    borderWidth: !alcohol ? 2 : 0,
-                  },
-                ]}
-                onPress={() => setAlcohol(false)}
-              >
-                <Text
-                  style={[
-                    styles.buttonText,
-                    { color: alcohol ? "#D61D23" : "black" },
-                  ]}
-                >
-                  No
-                </Text>
-              </Pressable>
-            </View>
-          </>
-        )}
+            {selectedImpediments.length > 0 && (
+              <View style={styles.impedimentContainer}>
+                <View style={styles.impedimentHeader}>
+                  <Text>Applies:</Text>
+                </View>
 
-        {gender === "Female" && (
-          <>
-            <Subheader marginBottom={32}>Have you given recently?</Subheader>
-            <View style={styles.buttonsContainer}>
-              <Pressable
-                style={[
-                  styles.button,
-                  {
-                    backgroundColor: birth ? "white" : "#D9D9D9",
-                    borderColor: birth ? "#F8B5BC" : "#D9D9D9",
-                    borderWidth: birth ? 2 : 0,
-                  },
-                ]}
-                onPress={() => setBirth(true)}
-              >
-                <Text
-                  style={[
-                    styles.buttonText,
-                    { color: birth ? "#D61D23" : "black" },
-                  ]}
-                >
-                  Yes
-                </Text>
-              </Pressable>
-
-              <Pressable
-                style={[
-                  styles.button,
-                  {
-                    backgroundColor: !birth ? "white" : "#D9D9D9",
-                    borderColor: !birth ? "#F8B5BC" : "#D9D9D9",
-                    borderWidth: !birth ? 2 : 0,
-                  },
-                ]}
-                onPress={() => setBirth(false)}
-              >
-                <Text
-                  style={[
-                    styles.buttonText,
-                    { color: birth ? "#D61D23" : "black" },
-                  ]}
-                >
-                  No
-                </Text>
-              </Pressable>
-            </View>
-            {birth && (
-              <Subheader marginBottom={32}>
-                If so, approximately when?
-              </Subheader>
-            )}
-            {birth && (
-              <View style={styles.datePicker}>
-                <RNPickerSelect
-                  style={{
-                    inputIOS: styles.picker,
-                    inputAndroid: styles.picker,
-                    iconContainer: styles.picker,
-                  }}
-                  onValueChange={(value: string) => setLastBirthMonth(value)}
-                  items={generateItemsArray(1, 12)}
-                  value={setLastBirthMonth}
-                  useNativeAndroidPickerStyle={false}
-                  placeholder={{ label: "Month", value: null }}
-                />
-
-                <RNPickerSelect
-                  style={{
-                    inputIOS: styles.picker,
-                    inputAndroid: styles.picker,
-                    iconContainer: styles.picker,
-                  }}
-                  onValueChange={(value: string) => setLastBirthDay(value)}
-                  items={generateItemsArray(1, 31)}
-                  value={lastBirthDay}
-                  useNativeAndroidPickerStyle={false}
-                  placeholder={{ label: "Day", value: null }}
-                />
-                <RNPickerSelect
-                  style={{
-                    inputIOS: styles.picker,
-                    inputAndroid: styles.picker,
-                    iconContainer: styles.picker,
-                  }}
-                  onValueChange={(value: string) => setLastBirthDay(value)}
-                  items={generateItemsArray(
-                    1900,
-                    new Date().getFullYear()
-                  ).reverse()}
-                  value={lastBirthYear}
-                  useNativeAndroidPickerStyle={false}
-                  placeholder={{ label: "Year", value: null }}
-                />
+                {selectedImpediments.map((impediment: any) => (
+                  <View style={styles.impedimentRow} key={impediment}>
+                    <Text>{impediment}</Text>
+                    <Pressable
+                      onPress={() => handleRemoveImpediment(impediment)}
+                      style={styles.removeButton}
+                    >
+                      <Text style={{ color: "#fff" }}>Remove</Text>
+                    </Pressable>
+                  </View>
+                ))}
               </View>
             )}
           </>
@@ -389,45 +211,50 @@ export default function SelectGender() {
 }
 
 const styles = StyleSheet.create({
-  button: {
-    borderWidth: 0,
-    backgroundColor: "#D9D9D9",
-    paddingTop: 12,
-    paddingBottom: 12,
-    paddingLeft: 24,
-    paddingEnd: 24,
-    // borderTopLeftRadius: 0,
-    borderRadius: 18,
-  },
-  buttonText: {
-    color: "black",
-    fontWeight: "bold",
-  },
-  buttonsContainer: {
-    // width: "100%",
+  impedimentRow: {
     flexDirection: "row",
-    backgroundColor: "#D9D9D9",
-    borderRadius: 18,
-    marginBottom: 32,
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 8,
   },
+  removeButton: {
+    backgroundColor: "#D93F33",
+    padding: 8,
+    borderRadius: 8,
+  },
+  impedimentHeader: {
+    borderBottomWidth: 2,
+    paddingBottom: 8,
+    flexDirection: "row",
+    marginBottom: 8,
+  },
+  impedimentDateHeading: {
+    paddingLeft: 16,
+  },
+
+  impedimentContainer: {
+    width: "100%",
+    padding: 16,
+  },
+  pickerContainer: {
+    borderWidth: 2,
+    borderColor: "#D93F33",
+    borderRadius: 8,
+    padding: 8,
+    width: "100%",
+    marginBottom: 16,
+  },
+
   container: {
     flex: 1,
     paddingBottom: 48,
   },
 
   formContainer: {
-    // flex: 1,
-    // backgroundColor: "red",
-    // overflow: "scroll",
-    // flex: 1,
     paddingTop: 64,
-    // paddingTop: 48,
     alignItems: "center",
     paddingStart: 48,
     paddingRight: 48,
-    // marginBottom: 48,
-    // paddingBottom: 148,
-    // borderWidth: 2,
   },
   errorText: {
     color: "red",
@@ -435,21 +262,4 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: "center",
   },
-  datePicker: {
-    flexDirection: "row",
-    gap: 12,
-    marginEnd: 48,
-    marginLeft: 48,
-    marginBottom: 24,
-  },
-  picker: {
-    borderWidth: 1,
-    borderColor: "#D93F33",
-    borderRadius: 8,
-    padding: 16,
-    color: "#D93F33",
-    fontSize: 24,
-    textAlign: "center",
-  },
-  //
 });

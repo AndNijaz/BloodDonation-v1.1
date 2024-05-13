@@ -13,6 +13,7 @@ import SignUpProvider from "./context/sign-up-context";
 import AuthProvider from "./context/AuthProvider";
 
 // import { useColorScheme } from "@/components/useColorScheme";
+import "react-native-reanimated";
 
 import { useColorScheme } from "../components/useColorScheme.web";
 

@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 
 import { Text, View } from "../../components/Themed";
 import BigContainer from "../../components/BigContainer";
@@ -13,18 +13,16 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Notificaiton from "@/components/notificaiton";
 import React from "react";
 
-function parseDate(date: any) {
-  return date.split("-").reverse().join("/");
-}
+import { parseDateToFrontend } from "../../Utils/dates";
+import { useFetch } from "../Hooks/useFetch";
 
 export default function TabOneScreen() {
+  const { data } = useFetch();
+
   const [user, setUser] = useState();
-  const [firstName, setFirstName] = useState();
-  const [lastName, setLastName] = useState();
-  const [lastDonation, setLastDonation] = useState();
-  const [nextTimeDonated, setNextTimeDonated] = useState();
-  const [bloodtype, setBloodtype] = useState();
-  const [gender, setGender] = useState();
+  const [lastDonation, setLastDonation] = useState("");
+  const [nextTimeDonated, setNextTimeDonated] = useState("");
+  const [activeNotification, setActiveNotification] = useState(false);
 
   const { session } = useAuth();
 
@@ -33,45 +31,31 @@ export default function TabOneScreen() {
   }
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("id", session?.user.id);
+    if (!data) return;
 
-        if (error) {
-          throw error;
-        }
+    if (data[0].activeNotification) setActiveNotification(true);
 
-        setFirstName(data[0].first_name);
-        setLastName(data[0].last_name);
-        setBloodtype(data[0].blood_type);
-        setGender(data[0].gender);
-        setLastDonation(parseDate(data[0].last_time_donated));
-        //setNextTimeDonated(parseDate(data[0].next_time_donated));
-        const nextDonationDate = parseDate(data[0].next_time_donated);
-        setNextTimeDonated(
-          nextDonationDate < new Date() ? "Today" : nextDonationDate
-        );
-        // Alert.alert(data + "");
-        setUser(data[0].email);
-      } catch (error) {
-        // console.log("Error fetching user data:");
-        // console.error(error);
-      } finally {
-        // console.log("muhamed");
-      }
-    };
-    //   // console.log("lala");
-    fetchUserData();
-    //   // console.log("bibi");
-  }, []);
+    // console.log(parseDateToFrontend(data[0].last_time_donated));
+    setLastDonation(parseDateToFrontend(data[0].last_time_donated));
+
+    // console.log("dino merlin " + data[0].next_time_donated);
+    const nextDonationDate = data[0].next_time_donated;
+    const nextDonationDateDateFormat = new Date(data[0].next_time_donated);
+    // console.log(parseDateToFrontend(nextDonationDate));
+    const currentDate = new Date();
+
+    setNextTimeDonated(
+      nextDonationDateDateFormat.getFullYear() <= currentDate.getFullYear() &&
+        nextDonationDateDateFormat.getMonth() <= currentDate.getMonth() &&
+        nextDonationDateDateFormat.getDate() <= currentDate.getDate()
+        ? "Today"
+        : parseDateToFrontend(nextDonationDate)
+    );
+  }, [data]);
 
   return (
     <View style={styles.container}>
-      {/* <RedHeader hasBack={true} /> */}
-      <Notificaiton />
+      {activeNotification && <Notificaiton />}
       <BigContainer>
         <View style={styles.row}>
           <MaterialCommunityIcons
@@ -85,7 +69,7 @@ export default function TabOneScreen() {
           {nextTimeDonated}
         </Text>
       </BigContainer>
-      {lastDonation && (
+      {!lastDonation.includes("1900") && (
         <SmallContainer>
           <View style={styles.row}>
             <MaterialCommunityIcons name="history" size={18} color="black" />
@@ -94,6 +78,7 @@ export default function TabOneScreen() {
           <Text style={styles.smallText}>{lastDonation}</Text>
         </SmallContainer>
       )}
+
       <Text>{user}</Text>
     </View>
   );
@@ -121,14 +106,8 @@ const styles = StyleSheet.create({
     fontSize: 44,
     color: "white",
   },
-  mediumText: {
-    fontSize: 30,
-  },
   smallText: {
     marginTop: 8,
     fontSize: 24,
-  },
-  marginBottomSm: {
-    marginBottom: 16,
   },
 });

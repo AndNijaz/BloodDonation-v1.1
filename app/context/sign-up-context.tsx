@@ -50,38 +50,38 @@ const SignUpContext = createContext({}); //preko useContexta dobijamo datu iz co
 
 const SignUpProvider = ({ children }: PropsWithChildren) => {
   const [signUpData, setSignUpData] = useState({
-    email: "",
-    password: "",
-    firstName: "",
-    lastName: "",
-    bloodType: "",
+    // email: "",
+    // password: "",
+    // firstName: "",
+    // lastName: "",
+    // bloodType: "",
     lastTimeDonated: "",
-    nextTimeDonated: "",
-    gender: "",
+    // nextTimeDonated: "",
+    // gender: "",
   });
 
-  const updateEmailPassword = (email: string, password: string) => {
-    setSignUpData((prevData) => ({
-      ...prevData,
-      email: email,
-      password: password,
-    }));
-  };
+  // const updateEmailPassword = (email: string, password: string) => {
+  //   setSignUpData((prevData) => ({
+  //     ...prevData,
+  //     email: email,
+  //     password: password,
+  //   }));
+  // };
 
-  const updateFirstLastName = (firstName: string, lastName: string) => {
-    setSignUpData((prevData) => ({
-      ...prevData,
-      firstName: firstName,
-      lastName: lastName,
-    }));
-  };
+  // const updateFirstLastName = (firstName: string, lastName: string) => {
+  //   setSignUpData((prevData) => ({
+  //     ...prevData,
+  //     firstName: firstName,
+  //     lastName: lastName,
+  //   }));
+  // };
 
-  const updateBloodType = (bloodType: string) => {
-    setSignUpData((prevData) => ({
-      ...prevData,
-      bloodType,
-    }));
-  };
+  // const updateBloodType = (bloodType: string) => {
+  //   setSignUpData((prevData) => ({
+  //     ...prevData,
+  //     bloodType,
+  //   }));
+  // };
 
   const updateLastTimeDonated = (date) => {
     setSignUpData((prevData) => ({
@@ -90,30 +90,30 @@ const SignUpProvider = ({ children }: PropsWithChildren) => {
     }));
   };
 
-  const updateNextTimeDonated = (date) => {
-    setSignUpData((prevData) => ({
-      ...prevData,
-      nextTimeDonated: date,
-    }));
-  };
+  // const updateNextTimeDonated = (date) => {
+  //   setSignUpData((prevData) => ({
+  //     ...prevData,
+  //     nextTimeDonated: date,
+  //   }));
+  // };
 
-  const updateGender = (gender: string) => {
-    setSignUpData((prevData) => ({
-      ...prevData,
-      gender,
-    }));
-  };
+  // const updateGender = (gender: string) => {
+  //   setSignUpData((prevData) => ({
+  //     ...prevData,
+  //     gender,
+  //   }));
+  // };
 
   return (
     <SignUpContext.Provider
       value={{
         signUpData,
-        updateEmailPassword,
-        updateFirstLastName,
-        updateBloodType,
-        updateGender,
+        // updateEmailPassword,
+        // updateFirstLastName,
+        // updateBloodType,
+        // updateGender,
         updateLastTimeDonated,
-        updateNextTimeDonated,
+        // updateNextTimeDonated,
       }}
     >
       {/* value usvari šaljemo consumeru */}

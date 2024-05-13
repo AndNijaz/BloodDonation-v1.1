@@ -4,12 +4,20 @@ import React from "react";
 export default function Subheader({
   children,
   marginBottom,
+  textAlign,
 }: {
   children: string;
   marginBottom?: any;
+  textAlign?: any;
 }) {
   return (
-    <Text style={[styles.subheader, { marginBottom: marginBottom }]}>
+    <Text
+      style={[
+        styles.subheader,
+        { marginBottom: marginBottom },
+        { textAlign: textAlign },
+      ]}
+    >
       {children}
     </Text>
   );

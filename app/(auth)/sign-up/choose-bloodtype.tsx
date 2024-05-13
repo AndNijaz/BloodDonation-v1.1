@@ -14,18 +14,9 @@ import RedHeader from "@/components/RedHeader";
 import NewButton from "@/components/NewButton";
 import Subheader from "@/components/Subheader";
 
-import { isEmpty } from "../../../Utils/checkEmpty";
+import { BLOODTYPES } from "../../../constants/Constats";
 
-const BLOODTYPES = [
-  { label: "A+", value: "A+" },
-  { label: "A-", value: "A-" },
-  { label: "B+", value: "B+" },
-  { label: "B-", value: "B-" },
-  { label: "AB+", value: "AB+" },
-  { label: "AB-", value: "AB-" },
-  { label: "O+", value: "O+" },
-  { label: "O-", value: "O-" },
-];
+import { isEmpty } from "../../../Utils/checkEmpty";
 
 export default function ChooseBloodtype() {
   // const { data } = useFetch();
