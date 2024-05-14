@@ -17,7 +17,7 @@ export default function TabTwoScreen() {
   // const { data } = useFetch();
 
   const { session } = useAuth();
-  const [donationHistory, setDonationHistory] = useState<any>([]);
+  const [donationHistory, setDonationHistory] = useState<any>([{}]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -28,6 +28,11 @@ export default function TabTwoScreen() {
           .eq("donator", session?.user.id);
 
         console.log(session?.user.id);
+
+        console.log("gazenje po mrvama " + donationDates);
+        console.log(donationDates);
+        if (donationDates?.length === 0) return;
+        console.log("gazenje po kurcu " + donationDates);
 
         setDonationHistory(donationDates);
 
@@ -54,7 +59,7 @@ export default function TabTwoScreen() {
           <Text style={styles.whiteText}>Last time you donated</Text>
         </View>
         <Text style={[styles.bigText, styles.whiteText]}>
-          {parseDateToFrontend(donationHistory[0].donation_date)}
+          {parseDateToFrontend(donationHistory[0].donation_date || "")}
         </Text>
       </BigContainer>
 
@@ -67,7 +72,7 @@ export default function TabTwoScreen() {
               <Text>Donated at</Text>
             </View>
             <Text style={styles.smallText}>
-              {parseDateToFrontend(item.donation_date)}
+              {/* {parseDateToFrontend(item.donation_date) || ""} */}
             </Text>
           </SmallContainer>
         )}
