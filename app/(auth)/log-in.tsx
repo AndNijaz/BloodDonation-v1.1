@@ -16,6 +16,7 @@ const LoginScreen = () => {
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [credentialsError, setCredentialsError] = useState(false);
 
   const router = useRouter();
 
@@ -33,9 +34,15 @@ const LoginScreen = () => {
       email,
       password,
     });
+
     setLoading(false);
-    router.push("/(user)/home");
-    if (error) Alert.alert(error.message);
+    setCredentialsError(true);
+
+    console.log("erorrrrrrrr " + error);
+    if (error) return;
+    // if (credentialsError) return;
+    router.push("/");
+    // if (error) Alert.alert(error.message);
   }
 
   return (
@@ -63,6 +70,10 @@ const LoginScreen = () => {
         />
         {passwordError && (
           <Text style={styles.errorText}>Password is required</Text>
+        )}
+
+        {credentialsError && (
+          <Text style={styles.errorText}>Invalid Email or Password</Text>
         )}
       </View>
 

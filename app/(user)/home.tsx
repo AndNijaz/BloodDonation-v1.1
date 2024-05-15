@@ -32,7 +32,9 @@ export default function TabOneScreen() {
 
   useEffect(() => {
     if (!data) return;
+    if (!data[0]) return;
 
+    console.log(data[0]);
     if (data[0].activeNotification) setActiveNotification(true);
 
     // console.log(parseDateToFrontend(data[0].last_time_donated));

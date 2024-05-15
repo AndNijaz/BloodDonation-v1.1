@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Platform, StyleSheet, Text, View } from "react-native";
 import { Stack, useRouter } from "expo-router";
 
 import { supabase } from "@/lib/supabase";
@@ -108,7 +108,7 @@ const DonationHistory = ({}) => {
           textTwo="No"
         />
 
-        {donated && (
+        {donated && Platform.OS !== "ios" && (
           <>
             <Subheader marginBottom={16}>If so, when?</Subheader>
             <DatePicker
@@ -120,7 +120,7 @@ const DonationHistory = ({}) => {
           </>
         )}
 
-        {show && (
+        {(Platform.OS === "ios" || show) && donated && (
           <DateTimePicker
             testID="dateTimePicker"
             value={date}

@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, Platform, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import Button from "../components/Button";
 import { Link, Redirect } from "expo-router";
@@ -39,23 +39,28 @@ async function sendPushNotification(expoPushToken: string) {
 }
 
 const index = () => {
-  console.log("ismira");
   const { session, loading } = useAuth();
   const [userData, setUserData] = useState([
     {
-      first_name: null,
-      last_name: null,
-      blood_type: null,
-      last_time_donated: null,
-      gender: null,
+      first_name: "",
+      last_name: "",
+      blood_type: "",
+      last_time_donated: "",
+      gender: "",
     },
   ]);
+
   const [loadingUserData, setLoadingUserData] = useState(false);
 
   useEffect(() => {
-    console.log("mora se prvo executeati");
     if (session) {
       setLoadingUserData(true);
+      console.log("'__________'");
+      console.log(session.user);
+      console.log("'__________'");
+
+      // supabase.auth.signOut();
+
       const fetchUserData = async () => {
         try {
           const { data, error } = await supabase
@@ -64,16 +69,15 @@ const index = () => {
             .eq("id", session?.user.id);
 
           if (error) {
-            throw error;
+            console.log("imas ovjde error " + error);
           }
 
-          console.log("App data loaded");
           console.log(data);
-          console.log("App data loaded");
           setUserData(data);
         } catch (error) {
-          // console.log("Error fetching user data:");
-          // console.error(error);
+          console.log("Error fetching user data:");
+          Alert.alert(error + "");
+          console.error(error);
         } finally {
           // console.log("muhamed");
           setLoadingUserData(false);
@@ -81,7 +85,6 @@ const index = () => {
       };
       fetchUserData();
     }
-    console.log("mora se prvo zavrsiti");
   }, [session, supabase, loading]);
 
   if (loading) {
@@ -89,7 +92,7 @@ const index = () => {
   }
 
   if (session) {
-    if (loadingUserData) {
+    if (loadingUserData || userData.length === 0) {
       return <ActivityIndicator />;
     }
 

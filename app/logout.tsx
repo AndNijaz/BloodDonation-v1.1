@@ -7,8 +7,11 @@ import { supabase } from "@/lib/supabase";
 import Button from "@/components/Button";
 import { StyleSheet } from "react-native";
 import { Pressable } from "react-native";
+import { useRouter } from "expo-router";
 
 export default function Logout() {
+  const router = useRouter();
+
   return (
     <View style={styles.container}>
       {/* ?!!! figure out logout */}
@@ -17,6 +20,7 @@ export default function Logout() {
         style={styles.button}
         onPressIn={() => {
           supabase.auth.signOut();
+          router.back();
         }}
         // text="Sign Out"
       >

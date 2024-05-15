@@ -1,5 +1,12 @@
 import React, { useEffect, useReducer, useRef, useState } from "react";
-import { Pressable, StyleSheet, Text, View, ScrollView } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Platform,
+} from "react-native";
 import { Stack, useRouter } from "expo-router";
 
 import { useFetch } from "@/app/Hooks/useFetch";
@@ -121,7 +128,7 @@ export default function SelectGender() {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Stack.Screen
         options={{
           headerShown: false,
@@ -134,9 +141,16 @@ export default function SelectGender() {
       </RedHeader>
 
       <View style={styles.formContainer}>
-        <Subheader marginBottom={16}>Select Gender</Subheader>
+        <Subheader marginBottom={Platform.OS === "ios" ? 8 : 16}>
+          Select Gender
+        </Subheader>
 
-        <View style={styles.pickerContainer}>
+        <View
+          style={[
+            styles.pickerContainer,
+            Platform.OS === "ios" && styles.containerIOS,
+          ]}
+        >
           <Picker
             selectedValue={gender}
             onValueChange={(itemValue, itemIndex) => handleSetGender(itemValue)}
@@ -154,63 +168,67 @@ export default function SelectGender() {
 
         {gender && impedimentsList.length > 0 && (
           <>
-            <>
-              <Subheader marginBottom={16} textAlign={"center"}>
-                Do any of these apply in the last six months
-              </Subheader>
+            <Subheader marginBottom={16} textAlign={"center"}>
+              Do any of these apply in the last six months
+            </Subheader>
 
-              <View style={styles.pickerContainer}>
-                <Picker
-                  selectedValue={gender}
-                  onValueChange={(itemValue, itemIndex) =>
-                    handleSetImpediment(itemValue)
-                  }
-                >
+            <View style={styles.pickerContainer}>
+              <Picker
+                selectedValue={gender}
+                onValueChange={(itemValue, itemIndex) =>
+                  handleSetImpediment(itemValue)
+                }
+              >
+                <Picker.Item
+                  value=""
+                  label="Choose Which Applies"
+                  enabled={false}
+                />
+                {impedimentsList.map((gender) => (
                   <Picker.Item
-                    value=""
-                    label="Choose Which Applies"
-                    enabled={false}
+                    label={gender.label}
+                    value={gender.value}
+                    key={gender.value}
                   />
-                  {impedimentsList.map((gender) => (
-                    <Picker.Item
-                      label={gender.label}
-                      value={gender.value}
-                      key={gender.value}
-                    />
-                  ))}
-                </Picker>
-              </View>
-            </>
-
-            {selectedImpediments.length > 0 && (
-              <View style={styles.impedimentContainer}>
-                <View style={styles.impedimentHeader}>
-                  <Text>Applies:</Text>
-                </View>
-
-                {selectedImpediments.map((impediment: any) => (
-                  <View style={styles.impedimentRow} key={impediment}>
-                    <Text>{impediment}</Text>
-                    <Pressable
-                      onPress={() => handleRemoveImpediment(impediment)}
-                      style={styles.removeButton}
-                    >
-                      <Text style={{ color: "#fff" }}>Remove</Text>
-                    </Pressable>
-                  </View>
                 ))}
+              </Picker>
+            </View>
+          </>
+        )}
+        {selectedImpediments.length > 0 && (
+          <>
+            <View style={styles.impedimentContainer}>
+              <View style={styles.impedimentHeader}>
+                <Text>Applies:</Text>
               </View>
-            )}
+
+              {selectedImpediments.map((impediment: any) => (
+                <View style={styles.impedimentRow} key={impediment}>
+                  <Text>{impediment}</Text>
+                  <Pressable
+                    onPress={() => handleRemoveImpediment(impediment)}
+                    style={styles.removeButton}
+                  >
+                    <Text style={{ color: "#fff" }}>Remove</Text>
+                  </Pressable>
+                </View>
+              ))}
+            </View>
           </>
         )}
       </View>
 
       <NewButton onSubmit={handleFinish}>Finish</NewButton>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  containerIOS: {
+    borderWidth: 2,
+    width: "100%",
+    // height: "50%",
+  },
   impedimentRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -248,6 +266,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingBottom: 48,
+    marginBottom: 48,
+    // paddingBottom: 48,
   },
 
   formContainer: {

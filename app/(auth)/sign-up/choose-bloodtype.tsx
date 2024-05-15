@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 import { useRouter, Stack } from "expo-router";
 
 import { supabase } from "@/lib/supabase";
@@ -77,12 +77,20 @@ export default function ChooseBloodtype() {
       <RedHeader hasBack={true}>Step 3/5:</RedHeader>
 
       <View style={styles.formContainer}>
-        <Subheader marginBottom={32}>Please Select Your Bloodtype</Subheader>
+        <Subheader marginBottom={Platform.OS === "ios" ? 0 : 32}>
+          Please Select Your Bloodtype
+        </Subheader>
 
-        <View style={styles.pickerContainer}>
+        <View
+          style={[
+            styles.pickerContainer,
+            Platform.OS === "ios" && styles.containerIOS,
+          ]}
+        >
           <Picker
             selectedValue={bloodType}
             onValueChange={(itemValue, itemIndex) => setBloodType(itemValue)}
+            // {Platform.OS === "ios" ? mode=}
           >
             {BLOODTYPES.map((bloodtype) => (
               <Picker.Item
@@ -101,6 +109,16 @@ export default function ChooseBloodtype() {
 }
 
 const styles = StyleSheet.create({
+  pickerItemIOS: {
+    backgroundColor: "#D93F33",
+    borderWidth: 2,
+  },
+  containerIOS: {
+    borderWidth: 0,
+    width: "100%",
+    // padding: 0,
+    // backgroundColor: "black",
+  },
   container: {
     flex: 1,
     paddingBottom: 48,
