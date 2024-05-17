@@ -1,20 +1,18 @@
-import { Pressable, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { Redirect } from "expo-router";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-import { Text, View } from "../../components/Themed";
+import { useAuth } from "../context/AuthProvider";
+
+import Notificaiton from "@/components/notificaiton";
+
+import { useFetch } from "../Hooks/useFetch";
+
 import BigContainer from "../../components/Containers/BigContainer";
 import SmallContainer from "../../components/Containers/SmallContainer";
 
-import { useEffect } from "react";
-import { supabase } from "@/lib/supabase";
-import { useState } from "react";
-import { useAuth } from "../context/AuthProvider";
-import { Redirect } from "expo-router";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import Notificaiton from "@/components/notificaiton";
-import React from "react";
-
 import { parseDateToFrontend } from "../../Utils/dates";
-import { useFetch } from "../Hooks/useFetch";
 
 export default function TabOneScreen() {
   const { data } = useFetch();
@@ -26,24 +24,18 @@ export default function TabOneScreen() {
 
   const { session } = useAuth();
 
-  if (!session) {
-    return <Redirect href="/" />;
-  }
+  if (!session) return <Redirect href="/" />;
 
   useEffect(() => {
     if (!data) return;
     if (!data[0]) return;
 
-    console.log(data[0]);
     if (data[0].activeNotification) setActiveNotification(true);
 
-    // console.log(parseDateToFrontend(data[0].last_time_donated));
     setLastDonation(parseDateToFrontend(data[0].last_time_donated));
 
-    // console.log("dino merlin " + data[0].next_time_donated);
     const nextDonationDate = data[0].next_time_donated;
     const nextDonationDateDateFormat = new Date(data[0].next_time_donated);
-    // console.log(parseDateToFrontend(nextDonationDate));
     const currentDate = new Date();
 
     setNextTimeDonated(
@@ -58,43 +50,23 @@ export default function TabOneScreen() {
   return (
     <View style={styles.container}>
       {activeNotification && <Notificaiton />}
-      <BigContainer>
-        <View style={styles.row}>
-          <MaterialCommunityIcons
-            name="arrow-right-drop-circle-outline"
-            size={18}
-            color="white"
-          />
-          <Text style={styles.whiteText}>Next time you can donate</Text>
-        </View>
-        <Text style={[styles.bigText, styles.whiteText]}>
-          {nextTimeDonated}
-        </Text>
+
+      <BigContainer text="Next time you can donate">
+        {nextTimeDonated}
       </BigContainer>
+
       {!lastDonation.includes("1900") && (
         <SmallContainer label="Last time you donated" icon="history">
-          {/* <View style={styles.row}>
-            <MaterialCommunityIcons name="history" size={18} color="black" />
-            <Text>Last time you donated</Text>
-          </View> */}
-          <Text style={styles.smallText}>{lastDonation}</Text>
+          {lastDonation}
         </SmallContainer>
       )}
-
-      <Text>{user}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  row: {
-    backgroundColor: "transparent",
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-  },
   whiteText: {
-    color: "white",
+    color: "#fff",
   },
   container: {
     paddingTop: 32,
@@ -102,10 +74,5 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
     paddingRight: 16,
     flex: 1,
-  },
-  bigText: {
-    marginTop: 24,
-    fontSize: 44,
-    color: "white",
   },
 });

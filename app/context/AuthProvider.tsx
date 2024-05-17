@@ -55,9 +55,7 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
 
   return (
     <AuthContext.Provider value={{ session, loading }}>
-      {/* value usvari šaljemo consumeru */}
       {children}
-      {/* svhi childreni će imati accces cart contextu*/}
     </AuthContext.Provider>
   );
 };

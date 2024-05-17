@@ -7,8 +7,6 @@ import { supabase } from "@/lib/supabase";
 
 import { useAuth } from "./context/AuthProvider";
 
-import { useFetch } from "./Hooks/useFetch";
-
 import Button from "../components/Button";
 import { LinearGradient } from "expo-linear-gradient";
 import { ActivityIndicator } from "react-native-paper";
@@ -43,9 +41,8 @@ async function sendPushNotification(expoPushToken: string) {
 }
 
 const index = () => {
-  const { data } = useFetch();
   const { session, loading } = useAuth();
-  const [userData, setUserData] = useState([
+  const [userData, setUserData] = useState<any>([
     {
       first_name: "",
       last_name: "",
@@ -54,8 +51,8 @@ const index = () => {
       gender: "",
     },
   ]);
-
   const [loadingUserData, setLoadingUserData] = useState(false);
+  const [error, setError] = useState<any>("");
 
   useEffect(() => {
     if (session) {
@@ -71,17 +68,13 @@ const index = () => {
             .eq("id", session?.user.id);
 
           if (error) {
-            console.log("imas ovjde error " + error);
+            setError(error.message);
           }
 
-          console.log(data);
           setUserData(data);
-        } catch (error) {
-          console.log("Error fetching user data:");
-          Alert.alert(error + "");
-          console.error(error);
+        } catch (err) {
+          setError(err);
         } finally {
-          // console.log("muhamed");
           setLoadingUserData(false);
         }
       };
@@ -89,14 +82,10 @@ const index = () => {
     }
   }, [session, supabase, loading]);
 
-  if (loading) {
-    return <ActivityIndicator />;
-  }
+  if (loading) return <ActivityIndicator />;
 
   if (session) {
-    if (loadingUserData || userData.length === 0) {
-      return <ActivityIndicator />;
-    }
+    if (loadingUserData || userData.length === 0) return <ActivityIndicator />;
 
     if (!userData[0].first_name || !userData[0].last_name)
       return <Redirect href="./sign-up/name-surname" />;
@@ -114,8 +103,6 @@ const index = () => {
 
     return <Redirect href="/(user)/home" />;
   }
-  // return <Redirect href="/(user)/home" />;
-  // }
 
   return (
     <LinearGradient
@@ -128,7 +115,9 @@ const index = () => {
         source={require("../assets/images/DonoInitial.png")}
         style={styles.image}
       />
+
       <Text style={styles.heading}>DONO</Text>
+
       <View style={styles.formContainer}>
         <Link href={"/log-in"} asChild>
           <Button
@@ -140,6 +129,7 @@ const index = () => {
             textColor="#D61D23"
           />
         </Link>
+
         <Link href={"/sign-up/"} asChild>
           <Button
             text="Sign Up"
@@ -182,10 +172,6 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     marginBottom: 64,
     letterSpacing: -1,
-  },
-  button: {
-    backgroundColor: "#fff",
-    marginBottom: 16,
   },
   footer: {
     marginTop: "auto",

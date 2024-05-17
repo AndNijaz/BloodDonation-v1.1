@@ -1,8 +1,15 @@
 import { PropsWithChildren } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-export default function BigContainer({ children }: PropsWithChildren) {
+export default function BigContainer({
+  children,
+  text,
+}: {
+  children: any;
+  text: String;
+}) {
   return (
     <LinearGradient
       colors={["#D61D23", "#EB7C83"]}
@@ -10,7 +17,17 @@ export default function BigContainer({ children }: PropsWithChildren) {
       end={{ x: 0.5, y: 1 }}
       style={[styles.bigContainer, styles.marginBottomSm]}
     >
-      {children}
+      <View style={styles.row}>
+        <MaterialCommunityIcons
+          name="arrow-right-drop-circle-outline"
+          size={18}
+          color="white"
+        />
+        <Text style={styles.whiteText}>Last time you donated</Text>
+      </View>
+
+      <Text style={[styles.bigText, styles.whiteText]}>{children}</Text>
+      {/* {children} */}
     </LinearGradient>
   );
 }
@@ -26,5 +43,19 @@ const styles = StyleSheet.create({
   },
   marginBottomSm: {
     marginBottom: 16,
+  },
+  whiteText: {
+    color: "white",
+  },
+  bigText: {
+    marginTop: 24,
+    fontSize: 44,
+    color: "white",
+  },
+  row: {
+    backgroundColor: "transparent",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
   },
 });
