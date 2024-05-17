@@ -72,11 +72,11 @@ export default function TabOneScreen() {
         </Text>
       </BigContainer>
       {!lastDonation.includes("1900") && (
-        <SmallContainer>
-          <View style={styles.row}>
+        <SmallContainer label="Last time you donated" icon="history">
+          {/* <View style={styles.row}>
             <MaterialCommunityIcons name="history" size={18} color="black" />
             <Text>Last time you donated</Text>
-          </View>
+          </View> */}
           <Text style={styles.smallText}>{lastDonation}</Text>
         </SmallContainer>
       )}
@@ -107,9 +107,5 @@ const styles = StyleSheet.create({
     marginTop: 24,
     fontSize: 44,
     color: "white",
-  },
-  smallText: {
-    marginTop: 8,
-    fontSize: 24,
   },
 });

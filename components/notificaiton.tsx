@@ -1,7 +1,6 @@
-import { StyleSheet, Text, View } from "react-native";
 import React from "react";
+import { StyleSheet, Text, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import Button from "./Button";
 
 export default function Notificaiton() {
   return (
@@ -31,11 +30,7 @@ export default function Notificaiton() {
 
 const styles = StyleSheet.create({
   notificationContainer: {
-    paddingTop: 16,
-    paddingBottom: 16,
-    paddingLeft: 16,
-    paddingRight: 16,
-    // backgroundColor: "#D9D9D9",
+    padding: 16,
     borderWidth: 1,
     borderColor: "#D61D23",
     borderRadius: 12,
@@ -47,8 +42,6 @@ const styles = StyleSheet.create({
     gap: 8,
     paddingBottom: 8,
     marginBottom: 8,
-    // color:
-
     borderBottomWidth: 1,
     borderBottomColor: "#D61D23",
   },

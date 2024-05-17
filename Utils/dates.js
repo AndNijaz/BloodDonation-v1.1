@@ -1,4 +1,6 @@
-var months = [
+const date = new Date();
+
+const months = [
   "January",
   "February",
   "March",
@@ -30,15 +32,12 @@ export function calculateNextTimeDonate(currentDate, month) {
 }
 
 export function checkCanDonatedNow(dateCanDonate, months) {
-  const currentDate = new Date();
-
   return (
-    currentDate.getFullYear() === dateCanDonate.getFullYear() ||
-    Math.abs(currentDate.getMonth() - dateCanDonate.getMonth()) > months
+    date.getFullYear() === dateCanDonate.getFullYear() ||
+    Math.abs(date.getMonth() - dateCanDonate.getMonth()) > months
   );
 }
 
 export function parseDateToFrontend(date) {
-  // console.log("OVO JE DATUM  " + date);
   return date.split("-").reverse().join("/");
 }

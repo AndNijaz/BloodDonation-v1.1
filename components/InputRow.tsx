@@ -1,14 +1,6 @@
-import { StyleSheet, View } from "react-native";
 import React, { useState } from "react";
+import { StyleSheet, View, TextInput } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { TextInput } from "react-native";
-
-const shadow = {
-  shadowColor: "#000",
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.25,
-  shadowRadius: 4,
-};
 
 export default function InputRow({
   value,
@@ -27,35 +19,35 @@ export default function InputRow({
     setValue(e);
   }
 
+  function handleOnFocus() {
+    setInputFocused(true);
+  }
+
+  function handleOnBlur() {
+    setInputFocused(false);
+  }
+
   const [inputFocused, setInputFocused] = useState(false);
 
   return (
     <View
       style={[
         styles.inputBlock,
-        {
-          shadowColor: inputFocused ? "#000" : "",
-          shadowOffset: inputFocused
-            ? { width: 0, height: 2 }
-            : { width: 0, height: 0 },
-          shadowOpacity: inputFocused ? 0.25 : 0,
-          shadowRadius: inputFocused ? 4 : 0,
-          elevation: inputFocused ? 5 : 0,
-          marginTop: inputFocused ? -5 : 0,
-        },
+        inputFocused ? styles.focusedInputBlock : null,
       ]}
     >
       <View style={styles.iconContainer}>
         <MaterialCommunityIcons name={icon} size={24} color="#D93F33" />
       </View>
+
       <TextInput
         style={[styles.input, error && styles.errorInput]}
         placeholder={placeholder}
         value={value}
         onChangeText={(e) => handleChange(e)}
         placeholderTextColor="gray"
-        onFocus={() => setInputFocused(true)}
-        onBlur={() => setInputFocused(false)}
+        onFocus={handleOnFocus}
+        onBlur={handleOnBlur}
       />
     </View>
   );
@@ -68,6 +60,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 10,
     marginBottom: 16,
+    shadowColor: "",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0,
+    shadowRadius: 0,
+    elevation: 0,
+    marginTop: 0,
+  },
+  focusedInputBlock: {
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    marginTop: -5,
   },
   input: {
     flex: 1,
@@ -91,7 +97,6 @@ const styles = StyleSheet.create({
     width: "15%",
     borderTopLeftRadius: 20,
     borderBottomLeftRadius: 20,
-    // elevation: 5,
     backgroundColor: "white",
   },
 });

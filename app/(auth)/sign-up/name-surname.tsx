@@ -11,7 +11,7 @@ import { useFetch } from "@/app/Hooks/useFetch";
 
 import RedHeader from "@/components/RedHeader";
 import InputRow from "@/components/InputRow";
-import NewButton from "@/components/NewButton";
+import Button from "@/components/Button";
 import Subheader from "@/components/Subheader";
 
 import { isEmpty } from "../../../Utils/checkEmpty";
@@ -119,7 +119,7 @@ export default function inputNameSurname() {
         )}
       </View>
 
-      <NewButton onSubmit={handleContinue}>Continue</NewButton>
+      <Button onPress={handleContinue} text="Continue" />
     </View>
   );
 }

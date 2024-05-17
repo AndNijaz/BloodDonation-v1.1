@@ -11,12 +11,12 @@ import { useFetch } from "@/app/Hooks/useFetch";
 
 import { Picker } from "@react-native-picker/picker";
 import RedHeader from "@/components/RedHeader";
-import NewButton from "@/components/NewButton";
 import Subheader from "@/components/Subheader";
 
 import { BLOODTYPES } from "../../../constants/Constats";
 
 import { isEmpty } from "../../../Utils/checkEmpty";
+import Button from "@/components/Button";
 
 export default function ChooseBloodtype() {
   // const { data } = useFetch();
@@ -103,7 +103,7 @@ export default function ChooseBloodtype() {
         </View>
       </View>
 
-      <NewButton onSubmit={handleContinue}>Continue</NewButton>
+      <Button onPress={handleContinue} text="Continue" />
     </View>
   );
 }
@@ -128,6 +128,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingStart: 48,
     paddingRight: 48,
+    marginBottom: 16,
   },
   pickerContainer: {
     borderWidth: 2,

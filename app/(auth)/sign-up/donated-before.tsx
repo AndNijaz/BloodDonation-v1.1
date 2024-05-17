@@ -12,11 +12,11 @@ import { useFetch } from "@/app/Hooks/useFetch";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import RedHeader from "@/components/RedHeader";
 import Subheader from "@/components/Subheader";
-import NewButton from "@/components/NewButton";
 import DatePicker from "@/components/DatePicker";
 import BinaryButtons from "@/components/BinaryButtons";
 
 import { parseDateToDatabase } from "../../../Utils/dates";
+import Button from "@/components/Button";
 
 const DonationHistory = ({}) => {
   // const { data } = useFetch();
@@ -139,7 +139,7 @@ const DonationHistory = ({}) => {
       </View>
 
       {error && <Text style={styles.errorText}>{error}</Text>}
-      <NewButton onSubmit={handleProceed}>Proceed</NewButton>
+      <Button onPress={handleProceed} text="Proceed" />
     </View>
   );
 };

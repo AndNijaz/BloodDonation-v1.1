@@ -5,10 +5,10 @@ import { supabase } from "@/lib/supabase";
 import RedHeader from "@/components/RedHeader";
 import InputRow from "@/components/InputRow";
 import Subheader from "@/components/Subheader";
-import NewButton from "@/components/NewButton";
 import AlreadyHaveLabelLink from "@/components/AlreadyHaveLabelLink";
 import { useRouter } from "expo-router";
 import { useSignUp } from "../context/sign-up-context";
+import Button from "@/components/Button";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -77,7 +77,7 @@ const LoginScreen = () => {
         )}
       </View>
 
-      <NewButton onSubmit={handleLogin}>Login</NewButton>
+      <Button onPress={handleLogin} text="Login" />
 
       <AlreadyHaveLabelLink path="sign-up" linkText="Sign Up">
         Don't have an account?

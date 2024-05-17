@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { useFetch } from "../Hooks/useFetch";
 
 import { parseDateToFrontend } from "@/Utils/dates";
+import { validatePathConfig } from "@react-navigation/native";
 
 export default function TabTwoScreen() {
   // const { data } = useFetch();
@@ -27,12 +28,16 @@ export default function TabTwoScreen() {
           .select("*")
           .eq("donator", session?.user.id);
 
-        console.log(session?.user.id);
+        // console.log(session?.user.id);
 
-        console.log("gazenje po mrvama " + donationDates);
+        // console.log("gazenje po mrvama " + donationDates);
+
+        console.log("aaaa");
         console.log(donationDates);
+        console.log("bbbb");
+
         if (donationDates?.length === 0) return;
-        console.log("gazenje po kurcu " + donationDates);
+        // console.log("gazenje po kurcu " + donationDates);
 
         setDonationHistory(donationDates);
 
@@ -66,14 +71,8 @@ export default function TabTwoScreen() {
       <FlatList
         data={donationHistory.slice(1)}
         renderItem={({ item }) => (
-          <SmallContainer>
-            <View style={styles.row}>
-              <MaterialCommunityIcons name="history" size={18} color="black" />
-              <Text>Donated at</Text>
-            </View>
-            <Text style={styles.smallText}>
-              {/* {parseDateToFrontend(item.donation_date) || ""} */}
-            </Text>
+          <SmallContainer icon="history" label="Donated at">
+            {parseDateToFrontend(item.donation_date) || ""}
           </SmallContainer>
         )}
         keyExtractor={(item, index) => index.toString()} // Add a key extractor

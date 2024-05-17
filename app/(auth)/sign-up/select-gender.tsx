@@ -18,7 +18,7 @@ import { useAuth } from "@/app/context/AuthProvider";
 
 import { Picker } from "@react-native-picker/picker";
 import RedHeader from "@/components/RedHeader";
-import NewButton from "@/components/NewButton";
+import Button from "@/components/Button";
 import Subheader from "@/components/Subheader";
 
 import { GENDER } from "../../../constants/Constats";
@@ -218,7 +218,7 @@ export default function SelectGender() {
         )}
       </View>
 
-      <NewButton onSubmit={handleFinish}>Finish</NewButton>
+      <Button onPress={handleFinish} text="Finish" />
     </ScrollView>
   );
 }

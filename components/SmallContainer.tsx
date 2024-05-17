@@ -1,20 +1,43 @@
-import { PropsWithChildren } from "react";
-import { StyleSheet } from "react-native";
-import { View } from "./Themed";
+import { View, Text } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-export default function SmallContainer({ children }: PropsWithChildren) {
-  return <View style={styles.smallContainer}>{children}</View>;
+import { StyleSheet } from "react-native";
+
+export default function SmallContainer({
+  icon,
+  label,
+  children,
+}: {
+  icon: any;
+  label?: String;
+  children: any;
+}) {
+  return (
+    <View style={styles.smallContainer}>
+      <View style={styles.row}>
+        <MaterialCommunityIcons name={icon} size={18} color="black" />
+        <Text>{label}</Text>
+      </View>
+      <Text style={styles.smallText}>{children}</Text>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
   smallContainer: {
-    paddingTop: 16,
-    paddingBottom: 16,
-    paddingLeft: 16,
-    paddingRight: 16,
-    // backgroundColor: "#D9D9D9",
+    padding: 16,
     borderWidth: 1,
     borderColor: "#D2D2D2",
     borderRadius: 12,
+  },
+  row: {
+    backgroundColor: "transparent",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+  },
+  smallText: {
+    marginTop: 8,
+    fontSize: 24,
   },
 });

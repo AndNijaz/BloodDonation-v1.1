@@ -6,9 +6,9 @@ import Subheader from "@/components/Subheader";
 import InputRow from "@/components/InputRow";
 import { useRouter } from "expo-router";
 import { useSignUp } from "@/app/context/sign-up-context";
-import NewButton from "@/components/NewButton";
 import AlreadyHaveLabelLink from "@/components/AlreadyHaveLabelLink";
 import { supabase } from "@/lib/supabase";
+import Button from "@/components/Button";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -115,7 +115,7 @@ export default function SignUp() {
         {supabaseError && <Text style={styles.errorText}>{supabaseError}</Text>}
       </View>
 
-      <NewButton onSubmit={handleSignUp}>Sign Up</NewButton>
+      <Button onPress={handleSignUp} text="Sign Up" />
       <AlreadyHaveLabelLink path="log-in" linkText="Login">
         Already have an account?
       </AlreadyHaveLabelLink>

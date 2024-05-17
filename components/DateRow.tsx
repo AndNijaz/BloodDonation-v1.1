@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet, StyleProp, ViewStyle } from "react-native";
 import React from "react";
 import DatePart from "./DatePart";
 
@@ -8,19 +8,23 @@ export default function DateRow({
   isFocused,
   children,
 }: any) {
-  let classes = [styles.dateRow];
+  const classes: StyleProp<ViewStyle>[] = [styles.dateRow];
 
-  if (position === "top") {
-    classes.push(styles.grayedDateRowTop);
-    // classes = [...classes, styles.grayedDateRowTop, styles.grayedDateRowTopTop];
-  } else if (position === "topTop") {
-    classes.push(styles.grayedDateRowTopTop);
-  } else if (position === "bottom") {
-    classes.push(styles.grayedDateRowBottom);
-  } else if (position === "bottomBottom") {
-    classes.push(styles.grayedDateRowBottomBottom);
+  switch (position) {
+    case "top":
+      classes.push(styles.grayedDateRowTop);
+      break;
+    case "topTop":
+      classes.push(styles.grayedDateRowTopTop);
+      break;
+    case "bottom":
+      classes.push(styles.grayedDateRowBottom);
+      break;
+    case "bottomBottom":
+      classes.push(styles.grayedDateRowBottomBottom);
+      break;
   }
-  // console.log(...children);
+
   return (
     <View style={[styles.dateRow, ...classes]}>
       {/* {dateArr.map((date: any) => (
