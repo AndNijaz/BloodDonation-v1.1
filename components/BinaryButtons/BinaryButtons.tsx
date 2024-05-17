@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, Pressable } from "react-native";
 import React from "react";
+import { StyleSheet, View } from "react-native";
 
 import BinaryButton from "./BinaryButton";
 

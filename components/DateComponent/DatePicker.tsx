@@ -1,8 +1,9 @@
-import { Text, StyleSheet, View } from "react-native";
-import React, { Component } from "react";
+import React from "react";
+import { StyleSheet, Pressable } from "react-native";
+
 import DateRow from "./DateRow";
-import { month } from "../Utils/dates";
-import { Pressable } from "react-native";
+
+import { month } from "../../Utils/dates";
 
 export default function DatePicker({
   onClick,

@@ -1,8 +1,8 @@
 import { Pressable, StyleSheet } from "react-native";
 
 import { Text, View } from "../../components/Themed";
-import BigContainer from "../../components/BigContainer";
-import SmallContainer from "../../components/SmallContainer";
+import BigContainer from "../../components/Containers/BigContainer";
+import SmallContainer from "../../components/Containers/SmallContainer";
 
 import { useEffect } from "react";
 import { supabase } from "@/lib/supabase";

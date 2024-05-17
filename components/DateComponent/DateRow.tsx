@@ -1,13 +1,17 @@
-import { View, StyleSheet, StyleProp, ViewStyle } from "react-native";
 import React from "react";
+import { View, StyleSheet, StyleProp, ViewStyle } from "react-native";
+
 import DatePart from "./DatePart";
 
 export default function DateRow({
-  dateArr,
   position,
   isFocused,
   children,
-}: any) {
+}: {
+  position?: string;
+  isFocused: boolean;
+  children: any;
+}) {
   const classes: StyleProp<ViewStyle>[] = [styles.dateRow];
 
   switch (position) {
@@ -27,11 +31,6 @@ export default function DateRow({
 
   return (
     <View style={[styles.dateRow, ...classes]}>
-      {/* {dateArr.map((date: any) => (
-        <DatePart isFocused={isFocused} key={date}>
-          {date}
-        </DatePart>
-      ))} */}
       {children.map((date: any) => (
         <DatePart isFocused={isFocused} key={date}>
           {date}

@@ -6,6 +6,8 @@ export const useFetch = () => {
   const { session } = useAuth();
 
   const [data, setData] = useState<any>();
+  const [error, setError] = useState<any>();
+  const [isLoading, setIsLoading] = useState<any>();
 
   useEffect(() => {
     const fetchUserData = async () => {

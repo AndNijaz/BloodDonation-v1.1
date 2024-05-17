@@ -1,14 +1,18 @@
-import { View, Text, Platform, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
-import Button from "../components/Button";
+import { View, Text, Alert, StyleSheet } from "react-native";
 import { Link, Redirect } from "expo-router";
-import { useAuth } from "./context/AuthProvider";
-import { ActivityIndicator } from "react-native-paper";
 import * as Notifications from "expo-notifications";
-import { StyleSheet } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import { Image } from "react-native-elements";
+
 import { supabase } from "@/lib/supabase";
+
+import { useAuth } from "./context/AuthProvider";
+
+import { useFetch } from "./Hooks/useFetch";
+
+import Button from "../components/Button";
+import { LinearGradient } from "expo-linear-gradient";
+import { ActivityIndicator } from "react-native-paper";
+import { Image } from "react-native-elements";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -39,6 +43,7 @@ async function sendPushNotification(expoPushToken: string) {
 }
 
 const index = () => {
+  const { data } = useFetch();
   const { session, loading } = useAuth();
   const [userData, setUserData] = useState([
     {
@@ -55,9 +60,6 @@ const index = () => {
   useEffect(() => {
     if (session) {
       setLoadingUserData(true);
-      console.log("'__________'");
-      console.log(session.user);
-      console.log("'__________'");
 
       // supabase.auth.signOut();
 

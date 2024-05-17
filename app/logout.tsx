@@ -1,35 +1,24 @@
-import { View, Text } from "@/components/Themed";
-import { Link, Stack } from "expo-router";
-import { Platform } from "react-native";
-import { StatusBar } from "expo-status-bar";
-import Colors from "@/constants/Colors";
+import { View, Text } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
+
 import { supabase } from "@/lib/supabase";
-import Button from "@/components/Button";
-import { StyleSheet } from "react-native";
-import { Pressable } from "react-native";
+
 import { useRouter } from "expo-router";
 
 export default function Logout() {
   const router = useRouter();
 
+  function handlePress() {
+    supabase.auth.signOut();
+    router.back();
+  }
+
   return (
     <View style={styles.container}>
-      {/* ?!!! figure out logout */}
       <Text style={styles.heading}>Are you sure you want to log out?</Text>
-      <Pressable
-        style={styles.button}
-        onPressIn={() => {
-          supabase.auth.signOut();
-          router.back();
-        }}
-        // text="Sign Out"
-      >
+      <Pressable style={styles.button} onPressIn={handlePress}>
         <Text style={[{ color: "#fff" }]}>Sign Out</Text>
       </Pressable>
-
-      {/* <Text>logout</Text> */}
-
-      <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
     </View>
   );
 }
@@ -39,7 +28,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    // paddingTop: 24,
   },
   heading: {
     textAlign: "center",

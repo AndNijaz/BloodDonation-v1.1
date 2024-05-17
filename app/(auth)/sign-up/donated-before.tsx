@@ -12,8 +12,8 @@ import { useFetch } from "@/app/Hooks/useFetch";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import RedHeader from "@/components/RedHeader";
 import Subheader from "@/components/Subheader";
-import DatePicker from "@/components/DatePicker";
-import BinaryButtons from "@/components/BinaryButtons";
+import DatePicker from "@/components/DateComponent/DatePicker";
+import BinaryButtons from "@/components/BinaryButtons/BinaryButtons";
 
 import { parseDateToDatabase } from "../../../Utils/dates";
 import Button from "@/components/Button";

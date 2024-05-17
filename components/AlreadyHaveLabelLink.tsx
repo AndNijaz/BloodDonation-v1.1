@@ -1,5 +1,5 @@
+import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import React, { PropsWithChildren } from "react";
 import { Link } from "expo-router";
 
 export default function AlreadyHaveLabelLink({
