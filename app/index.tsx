@@ -12,33 +12,34 @@ import { LinearGradient } from "expo-linear-gradient";
 import { ActivityIndicator } from "react-native-paper";
 import { Image } from "react-native-elements";
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
-});
+import Push from "../components/Push";
+// Notifications.setNotificationHandler({
+//   handleNotification: async () => ({
+//     shouldShowAlert: true,
+//     shouldPlaySound: false,
+//     shouldSetBadge: false,
+//   }),
+// });
 
-async function sendPushNotification(expoPushToken: string) {
-  const message = {
-    to: expoPushToken,
-    sound: "default",
-    title: "Original Title",
-    body: "And here is the body!",
-    data: { someData: "goes here" },
-  };
+// async function sendPushNotification(expoPushToken: string) {
+//   const message = {
+//     to: expoPushToken,
+//     sound: "default",
+//     title: "Original Title",
+//     body: "And here is the body!",
+//     data: { someData: "goes here" },
+//   };
 
-  await fetch("https://exp.host/--/api/v2/push/send", {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Accept-encoding": "gzip, deflate",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(message),
-  });
-}
+//   await fetch("https://exp.host/--/api/v2/push/send", {
+//     method: "POST",
+//     headers: {
+//       Accept: "application/json",
+//       "Accept-encoding": "gzip, deflate",
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify(message),
+//   });
+// }
 
 const index = () => {
   const { session, loading } = useAuth();

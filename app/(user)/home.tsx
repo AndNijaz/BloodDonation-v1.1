@@ -14,6 +14,8 @@ import SmallContainer from "../../components/Containers/SmallContainer";
 
 import { parseDateToFrontend } from "../../Utils/dates";
 
+import Push from "../../components/Push";
+
 export default function TabOneScreen() {
   const { data } = useFetch();
 
@@ -60,6 +62,7 @@ export default function TabOneScreen() {
           {lastDonation}
         </SmallContainer>
       )}
+      <Push />
     </View>
   );
 }
