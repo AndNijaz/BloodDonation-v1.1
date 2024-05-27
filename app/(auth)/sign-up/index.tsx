@@ -16,6 +16,7 @@ export default function SignUp() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const [passwordCriteriaError, setPasswordCriteriaError] = useState(false);
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(true);
 
@@ -36,16 +37,34 @@ export default function SignUp() {
     setConfirmPasswordError(confirmPassword.trim() === "");
   };
 
+  const validatePassword = (password: string) => {
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    return (
+      password.length >= minLength &&
+      hasUpperCase &&
+      hasLowerCase &&
+      hasNumber &&
+      hasSpecialChar
+    );
+  };
+
   function validateRegisterForm() {
     checkPasswordMatch();
     checkIsEmpty();
+    setPasswordCriteriaError(!validatePassword(password));
   }
 
   function setErrorsFalse() {
     setEmailError(false);
-    setConfirmPasswordError(false);
+    setPasswordError(false);
     setConfirmPasswordError(false);
     setPasswordMatch(true);
+    setPasswordCriteriaError(false);
     setSupabaseError(false);
   }
 
@@ -54,10 +73,10 @@ export default function SignUp() {
     setErrorsFalse();
     validateRegisterForm();
 
-    if (emailError && passwordError && confirmPasswordError && !passwordMatch)
+    if (emailError || passwordError || confirmPasswordError || !passwordMatch || passwordCriteriaError)
       return;
 
-    // updateEmailPassword(email, password); //contex
+    // updateEmailPassword(email, password); // context
     const { error } = await supabase.auth.signUp({ email, password });
     setLoading(false);
 
@@ -92,11 +111,16 @@ export default function SignUp() {
           value={password}
           setValue={setPassword}
           placeholder="Password"
-          error={passwordError}
+          error={passwordError || passwordCriteriaError}
           icon="lock-outline"
         />
         {passwordError && (
           <Text style={styles.errorText}>Password is required</Text>
+        )}
+        {passwordCriteriaError && (
+          <Text style={styles.errorText}>
+            Password must be at least 8 characters long, contain upper and lower case letters, numbers, and special characters.
+          </Text>
         )}
 
         <InputRow
