@@ -62,6 +62,7 @@ export default function TabOneScreen() {
           {lastDonation}
         </SmallContainer>
       )}
+
       <Push />
     </View>
   );

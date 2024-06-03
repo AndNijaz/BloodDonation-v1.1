@@ -61,6 +61,7 @@ async function registerForPushNotificationsAsync() {
       );
       return;
     }
+
     const projectId =
       Constants?.expoConfig?.extra?.eas?.projectId ??
       Constants?.easConfig?.projectId;
