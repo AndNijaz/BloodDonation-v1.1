@@ -63,7 +63,7 @@ export default function TabOneScreen() {
         </SmallContainer>
       )}
 
-      <Push />
+      <Push session={session} />
     </View>
   );
 }

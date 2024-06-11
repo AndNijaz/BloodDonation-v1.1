@@ -1,8 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import { Text, View, Button, Platform } from "react-native";
+import { Text, View, Button, Platform, Alert } from "react-native";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
+
+import { Session } from "@supabase/supabase-js";
+import { supabase } from "@/lib/supabase";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -84,7 +87,7 @@ async function registerForPushNotificationsAsync() {
   }
 }
 
-export default function App() {
+export default function Push({ session }: { session: Session }) {
   const [expoPushToken, setExpoPushToken] = useState("");
   const [notification, setNotification] = useState<
     Notifications.Notification | undefined
@@ -94,7 +97,15 @@ export default function App() {
 
   useEffect(() => {
     registerForPushNotificationsAsync()
-      .then((token) => setExpoPushToken(token ?? ""))
+      .then(async (token) => {
+        setExpoPushToken(token ?? "");
+        alert(token);
+        await supabase
+          .from("profiles")
+          .update({ expo_push_token: token })
+          .eq("id", session?.user.id)
+          .single();
+      })
       .catch((error: any) => setExpoPushToken(`${error}`));
 
     notificationListener.current =
@@ -117,27 +128,32 @@ export default function App() {
     };
   }, []);
 
-  return (
-    <View
-      style={{ flex: 1, alignItems: "center", justifyContent: "space-around" }}
-    >
-      <Text>Your Expo push token: {expoPushToken}</Text>
-      <View style={{ alignItems: "center", justifyContent: "center" }}>
-        <Text>
-          Title: {notification && notification.request.content.title}{" "}
-        </Text>
-        <Text>Body: {notification && notification.request.content.body}</Text>
-        <Text>
-          Data:{" "}
-          {notification && JSON.stringify(notification.request.content.data)}
-        </Text>
-      </View>
-      <Button
-        title="Press to Send Notification"
-        onPress={async () => {
-          await sendPushNotification(expoPushToken);
-        }}
-      />
-    </View>
-  );
+  // Alert.alert(responseListener);
+  console.log(responseListener);
+
+  return <View></View>;
+
+  // return (
+  //   <View
+  //     style={{ flex: 1, alignItems: "center", justifyContent: "space-around" }}
+  //   >
+  //     <Text>Your Expo push token: {expoPushToken}</Text>
+  //     <View style={{ alignItems: "center", justifyContent: "center" }}>
+  //       <Text>
+  //         Title: {notification && notification.request.content.title}{" "}
+  //       </Text>
+  //       <Text>Body: {notification && notification.request.content.body}</Text>
+  //       <Text>
+  //         Data:{" "}
+  //         {notification && JSON.stringify(notification.request.content.data)}
+  //       </Text>
+  //     </View>
+  //     <Button
+  //       title="Press to Send Notification"
+  //       onPress={async () => {
+  //         await sendPushNotification(expoPushToken);
+  //       }}
+  //     />
+  //   </View>
+  // );
 }

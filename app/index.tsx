@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Alert, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { Link, Redirect } from "expo-router";
-import * as Notifications from "expo-notifications";
 
 import { supabase } from "@/lib/supabase";
 
@@ -12,48 +11,19 @@ import { LinearGradient } from "expo-linear-gradient";
 import { ActivityIndicator } from "react-native-paper";
 import { Image } from "react-native-elements";
 
-import Push from "../components/Push";
-// Notifications.setNotificationHandler({
-//   handleNotification: async () => ({
-//     shouldShowAlert: true,
-//     shouldPlaySound: false,
-//     shouldSetBadge: false,
-//   }),
-// });
-
-// async function sendPushNotification(expoPushToken: string) {
-//   const message = {
-//     to: expoPushToken,
-//     sound: "default",
-//     title: "Original Title",
-//     body: "And here is the body!",
-//     data: { someData: "goes here" },
-//   };
-
-//   await fetch("https://exp.host/--/api/v2/push/send", {
-//     method: "POST",
-//     headers: {
-//       Accept: "application/json",
-//       "Accept-encoding": "gzip, deflate",
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify(message),
-//   });
-// }
+interface UserData {
+  first_name: string;
+  last_name: string;
+  blood_type: string;
+  last_time_donated: string;
+  gender: string;
+}
 
 const index = () => {
   const { session, loading } = useAuth();
-  const [userData, setUserData] = useState<any>([
-    {
-      first_name: "",
-      last_name: "",
-      blood_type: "",
-      last_time_donated: "",
-      gender: "",
-    },
-  ]);
+  const [userData, setUserData] = useState<UserData | null>(null);
   const [loadingUserData, setLoadingUserData] = useState(false);
-  const [error, setError] = useState<any>("");
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     if (session) {
