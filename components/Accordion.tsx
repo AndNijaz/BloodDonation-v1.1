@@ -1,27 +1,29 @@
-import { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { View, Text, StyleSheet, Pressable } from "react-native";
+
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-const Accordion = ({ title, content }: { title: String; content: String }) => {
+interface AccordionProps {
+  title: string;
+  content: string;
+}
+
+const Accordion: React.FC<AccordionProps> = ({ title, content }) => {
   const [expanded, setExpanded] = useState(false);
 
-  function toggleAccordion() {
-    setExpanded(!expanded);
-  }
+  const toggleAccordion = useCallback(() => {
+    setExpanded((prev) => !prev);
+  }, []);
 
   return (
-    <View
-      style={[styles.container, expanded ? styles.accordionExpanded : null]}
-    >
+    <View style={[styles.container, expanded && styles.accordionExpanded]}>
       <Pressable style={styles.titleContainer} onPress={toggleAccordion}>
         <Text style={styles.title}>{title}</Text>
-
-        {!expanded && (
-          <MaterialCommunityIcons name="chevron-right" size={24} color="#555" />
-        )}
-        {expanded && (
-          <MaterialCommunityIcons name="chevron-up" size={24} color="#D61D23" />
-        )}
+        <MaterialCommunityIcons
+          name={expanded ? "chevron-up" : "chevron-right"}
+          size={24}
+          color={expanded ? "#D61D23" : "#555"}
+        />
       </Pressable>
 
       {expanded && <Text style={styles.content}>{content}</Text>}
@@ -52,9 +54,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     width: "90%",
   },
-  icon: {
-    fontSize: 18,
-  },
   content: {
     padding: 18,
     textAlign: "justify",
@@ -62,7 +61,10 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     fontWeight: "500",
   },
-  accordionExpanded: { borderBottomWidth: 0, borderRadius: 24 },
+  accordionExpanded: {
+    borderBottomWidth: 0,
+    borderRadius: 24,
+  },
 });
 
 export default Accordion;

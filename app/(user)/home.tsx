@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import { Redirect } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
@@ -17,37 +17,34 @@ import { parseDateToFrontend } from "../../Utils/dates";
 import Push from "../../components/Push";
 
 export default function TabOneScreen() {
-  const { data } = useFetch();
-
-  const [user, setUser] = useState();
-  const [lastDonation, setLastDonation] = useState("");
-  const [nextTimeDonated, setNextTimeDonated] = useState("");
-  const [activeNotification, setActiveNotification] = useState(false);
+  const { data, isLoading, error } = useFetch();
+  const [lastDonation, setLastDonation] = useState<string>("");
+  const [nextTimeDonated, setNextTimeDonated] = useState<string>("");
+  const [activeNotification, setActiveNotification] = useState<boolean>(false);
 
   const { session } = useAuth();
 
+  useEffect(() => {
+    if (data && data[0]) {
+      const donationData = data[0];
+      setActiveNotification(!!donationData.activeNotification);
+      setLastDonation(parseDateToFrontend(donationData.last_time_donated));
+
+      const nextDonationDate = new Date(donationData.next_time_donated);
+      const currentDate = new Date();
+
+      setNextTimeDonated(
+        nextDonationDate <= currentDate
+          ? "Today"
+          : parseDateToFrontend(donationData.next_time_donated)
+      );
+    }
+  }, [data]);
+
   if (!session) return <Redirect href="/" />;
 
-  useEffect(() => {
-    if (!data) return;
-    if (!data[0]) return;
-
-    if (data[0].activeNotification) setActiveNotification(true);
-
-    setLastDonation(parseDateToFrontend(data[0].last_time_donated));
-
-    const nextDonationDate = data[0].next_time_donated;
-    const nextDonationDateDateFormat = new Date(data[0].next_time_donated);
-    const currentDate = new Date();
-
-    setNextTimeDonated(
-      nextDonationDateDateFormat.getFullYear() <= currentDate.getFullYear() &&
-        nextDonationDateDateFormat.getMonth() <= currentDate.getMonth() &&
-        nextDonationDateDateFormat.getDate() <= currentDate.getDate()
-        ? "Today"
-        : parseDateToFrontend(nextDonationDate)
-    );
-  }, [data]);
+  if (isLoading) return <Text>Loading...</Text>;
+  if (error) return <Text>Error loading data</Text>;
 
   return (
     <View style={styles.container}>
@@ -69,9 +66,6 @@ export default function TabOneScreen() {
 }
 
 const styles = StyleSheet.create({
-  whiteText: {
-    color: "#fff",
-  },
   container: {
     paddingTop: 32,
     paddingBottom: 32,

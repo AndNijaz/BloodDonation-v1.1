@@ -4,7 +4,6 @@ import { Stack } from "expo-router";
 
 import { supabase } from "@/lib/supabase";
 
-import { useSignUp } from "../context/sign-up-context";
 import { useRouter } from "expo-router";
 
 import RedHeader from "@/components/RedHeader";
@@ -26,8 +25,6 @@ const LoginScreen = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const router = useRouter();
-
-  const { signUpData, updateEmailPassword }: any = useSignUp();
 
   const handleLogin = async () => {
     const isEmailEmpty = email.trim() === "";

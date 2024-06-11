@@ -99,7 +99,7 @@ export default function Push({ session }: { session: Session }) {
     registerForPushNotificationsAsync()
       .then(async (token) => {
         setExpoPushToken(token ?? "");
-        alert(token);
+        // alert(token);
         await supabase
           .from("profiles")
           .update({ expo_push_token: token })

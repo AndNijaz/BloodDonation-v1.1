@@ -1,71 +1,80 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import RedHeader from "@/components/RedHeader";
 import { Stack } from "expo-router";
+
+import { useRouter } from "expo-router";
+
+import { supabase } from "@/lib/supabase";
+
+import RedHeader from "@/components/RedHeader";
 import Subheader from "@/components/Subheader";
 import InputRow from "@/components/InputRow";
-import { useRouter } from "expo-router";
 import AlreadyHaveLabelLink from "@/components/AlreadyHaveLabelLink";
-import { supabase } from "@/lib/supabase";
 import Button from "@/components/Button";
 
 export default function SignUp() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [emailError, setEmailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
-  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
-  const [passwordMatch, setPasswordMatch] = useState(true);
-
-  const [supabaseError, setSupabaseError] = useState<boolean | string>(false);
-  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [errors, setErrors] = useState<{
+    email: boolean;
+    password: boolean;
+    confirmPassword: boolean;
+    passwordMatch: boolean;
+  }>({
+    email: false,
+    password: false,
+    confirmPassword: false,
+    passwordMatch: true,
+  });
+  const [supabaseError, setSupabaseError] = useState<string | boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const router = useRouter();
 
-  const checkPasswordMatch = () => {
-    setPasswordMatch(password === confirmPassword);
+  useEffect(() => {
+    setErrors((prev) => ({
+      ...prev,
+      passwordMatch: password === confirmPassword,
+    }));
+  }, [password, confirmPassword]);
+
+  const validateForm = () => {
+    const emailError = email.trim() === "";
+    const passwordError = password.trim() === "";
+    const confirmPasswordError = confirmPassword.trim() === "";
+    const passwordMatch = password === confirmPassword;
+
+    setErrors({
+      email: emailError,
+      password: passwordError,
+      confirmPassword: confirmPasswordError,
+      passwordMatch,
+    });
+
+    return !(
+      emailError ||
+      passwordError ||
+      confirmPasswordError ||
+      !passwordMatch
+    );
   };
 
-  const checkIsEmpty = () => {
-    setEmailError(email.trim() === "");
-    setPasswordError(password.trim() === "");
-    setConfirmPasswordError(confirmPassword.trim() === "");
-  };
+  const handleSignUp = async () => {
+    if (!validateForm()) return;
 
-  function validateRegisterForm() {
-    checkPasswordMatch();
-    checkIsEmpty();
-  }
-
-  function setErrorsFalse() {
-    setEmailError(false);
-    setConfirmPasswordError(false);
-    setConfirmPasswordError(false);
-    setPasswordMatch(true);
-    setSupabaseError(false);
-  }
-
-  async function handleSignUp() {
     setLoading(true);
-    setErrorsFalse();
-    validateRegisterForm();
 
-    if (emailError && passwordError && confirmPasswordError && !passwordMatch)
-      return;
-
-    // updateEmailPassword(email, password); //contex
     const { error } = await supabase.auth.signUp({ email, password });
+
     setLoading(false);
 
     if (error) {
       setSupabaseError(error.message);
-      console.log(error);
-      return;
+    } else {
+      router.push("/(auth)/sign-up/name-surname");
     }
-
-    router.push("/(auth)/sign-up/name-surname");
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -80,19 +89,21 @@ export default function SignUp() {
           value={email}
           setValue={setEmail}
           placeholder="E-mail"
-          error={emailError}
+          error={errors.email}
           icon="at"
         />
-        {emailError && <Text style={styles.errorText}>Email is required</Text>}
+        {errors.email && (
+          <Text style={styles.errorText}>Email is required</Text>
+        )}
 
         <InputRow
           value={password}
           setValue={setPassword}
           placeholder="Password"
-          error={passwordError}
+          error={errors.password}
           icon="lock-outline"
         />
-        {passwordError && (
+        {errors.password && (
           <Text style={styles.errorText}>Password is required</Text>
         )}
 
@@ -100,14 +111,14 @@ export default function SignUp() {
           value={confirmPassword}
           setValue={setConfirmPassword}
           placeholder="Confirm Password"
-          error={confirmPasswordError}
+          error={errors.confirmPassword}
           icon="lock-outline"
         />
-        {!passwordMatch && (
-          <Text style={styles.errorText}>Passwords must match</Text>
-        )}
-        {confirmPasswordError && (
+        {errors.confirmPassword && (
           <Text style={styles.errorText}>Confirm Password is required</Text>
+        )}
+        {!errors.passwordMatch && (
+          <Text style={styles.errorText}>Passwords must match</Text>
         )}
         {supabaseError && <Text style={styles.errorText}>{supabaseError}</Text>}
       </View>

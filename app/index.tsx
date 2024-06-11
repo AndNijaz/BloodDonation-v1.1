@@ -48,6 +48,7 @@ const index = () => {
     fetchUserData();
   }, [session]);
 
+  // supabase.auth.signOut();
   if (loading) return <ActivityIndicator />;
 
   if (session) {

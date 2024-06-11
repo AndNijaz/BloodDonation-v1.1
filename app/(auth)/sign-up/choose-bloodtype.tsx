@@ -95,8 +95,6 @@ const styles = StyleSheet.create({
   containerIOS: {
     borderWidth: 0,
     width: "100%",
-    // padding: 0,
-    // backgroundColor: "black",
   },
   container: {
     flex: 1,

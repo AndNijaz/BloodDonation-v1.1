@@ -1,15 +1,19 @@
+import React from "react";
 import { FlatList, StyleSheet } from "react-native";
-import { useAuth } from "../context/AuthProvider";
 import { Redirect } from "expo-router";
+
+import { useAuth } from "../context/AuthProvider";
+
 import Accordion from "@/components/Accordion";
 import { FAQ } from "../../constants/Constats";
 
-export default function Faq() {
+const Faq: React.FC = () => {
   const { session } = useAuth();
 
   if (!session) {
     return <Redirect href="/" />;
   }
+
   return (
     <FlatList
       style={styles.container}
@@ -17,9 +21,10 @@ export default function Faq() {
       renderItem={({ item }) => (
         <Accordion title={item.title} content={item.description} />
       )}
+      keyExtractor={(item) => item.title}
     />
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -27,3 +32,5 @@ const styles = StyleSheet.create({
     padding: 32,
   },
 });
+
+export default Faq;
