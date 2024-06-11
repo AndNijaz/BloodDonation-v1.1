@@ -4,37 +4,29 @@ import { Stack, useRouter } from "expo-router";
 
 import { supabase } from "@/lib/supabase";
 
-import { useSignUp } from "@/app/context/sign-up-context";
 import { useAuth } from "@/app/context/AuthProvider";
-
-import { useFetch } from "@/app/Hooks/useFetch";
 
 import DateTimePicker from "@react-native-community/datetimepicker";
 import RedHeader from "@/components/RedHeader";
 import Subheader from "@/components/Subheader";
 import DatePicker from "@/components/DateComponent/DatePicker";
 import BinaryButtons from "@/components/BinaryButtons/BinaryButtons";
+import SafeArea from "@/components/SafeArea";
 
 import { parseDateToDatabase } from "../../../Utils/dates";
 import Button from "@/components/Button";
 
 const DonationHistory = ({}) => {
-  // const { data } = useFetch();
-
   const { session, loading } = useAuth();
-
-  // const { signUpData, updateLastTimeDonated }: any = useSignUp();
-
   const router = useRouter();
 
-  const [donated, setDonated] = useState(false);
-  const [error, setError] = useState("");
-  const [date, setDate] = useState(new Date());
-  const [show, setShow] = useState(false);
+  const [donated, setDonated] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+  const [date, setDate] = useState<Date>(new Date());
+  const [show, setShow] = useState<boolean>(false);
 
-  const handleChangeDate = (event: any, selectedDate: any) => {
-    // console.log(selectedDate);
-    setDate(selectedDate);
+  const handleChangeDate = (event: any, selectedDate: Date | undefined) => {
+    if (selectedDate) setDate(selectedDate);
     setShow(false);
   };
 
@@ -48,27 +40,20 @@ const DonationHistory = ({}) => {
     setDonated(false);
   };
 
-  const handleProceed = () => {
+  const handleProceed = async () => {
     setError("");
 
     const initialDate = new Date(1900, 0, 1);
 
-    let toDatabaseDate: any;
-    if (!donated) toDatabaseDate = parseDateToDatabase(initialDate);
-    else toDatabaseDate = parseDateToDatabase(date);
+    const toDatabaseDate = donated
+      ? parseDateToDatabase(date)
+      : parseDateToDatabase(initialDate);
 
-    // updateLastTimeDonated(toDatabaseDate);
-    // if (!donated) updateLastTimeDonated(parseDateToDatabase(initialDate));
-    // else updateLastTimeDonated(parseDateToDatabase(date));
-
-    async function updateBloodType() {
-      if (session) {
-        // Update profile
+    if (session) {
+      try {
         const { data, error } = await supabase
           .from("profiles")
-          .update({
-            last_time_donated: toDatabaseDate,
-          })
+          .update({ last_time_donated: toDatabaseDate })
           .eq("id", session.user.id)
           .single();
 
@@ -76,14 +61,12 @@ const DonationHistory = ({}) => {
           console.log("Error updating profile:", error.message);
         } else {
           console.log("Profile updated successfully:", data);
-          // Alert.alert("Profile updated successfully:", data);
+          router.push("/(auth)/sign-up/select-gender");
         }
+      } catch (error) {
+        console.error("Error updating profile:", error);
       }
     }
-
-    updateBloodType();
-
-    router.push("/(auth)/sign-up/select-gender");
   };
 
   return (
@@ -94,6 +77,8 @@ const DonationHistory = ({}) => {
           title: "Donated Before",
         }}
       />
+
+      <SafeArea />
 
       <RedHeader hasBack={true}>Step 4/5</RedHeader>
 
@@ -128,12 +113,13 @@ const DonationHistory = ({}) => {
             onChange={handleChangeDate}
             display="spinner"
             style={{ borderRadius: 12 }}
+            maximumDate={new Date()}
           />
         )}
 
         {donated && (
           <Subheader marginBottom={32}>
-            (Provide at least month and year)
+            Provide at least correct month and year
           </Subheader>
         )}
       </View>

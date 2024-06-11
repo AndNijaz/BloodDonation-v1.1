@@ -31,11 +31,12 @@ export function calculateNextTimeDonate(currentDate, month) {
   );
 }
 
-export function checkCanDonatedNow(dateCanDonate, months) {
-  return (
-    date.getFullYear() === dateCanDonate.getFullYear() ||
-    Math.abs(date.getMonth() - dateCanDonate.getMonth()) > months
-  );
+export function checkCanDonatedNow(lastDonationDate, months) {
+  const today = new Date();
+  const nextEligibleDate = new Date(lastDonationDate);
+  nextEligibleDate.setMonth(nextEligibleDate.getMonth() + months);
+
+  return today >= nextEligibleDate;
 }
 
 export function parseDateToFrontend(date) {

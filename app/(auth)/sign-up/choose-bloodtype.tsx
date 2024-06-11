@@ -1,13 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { useRouter, Stack } from "expo-router";
 
 import { supabase } from "@/lib/supabase";
 
 import { useAuth } from "@/app/context/AuthProvider";
-import { useSignUp } from "@/app/context/sign-up-context";
-
-import { useFetch } from "@/app/Hooks/useFetch";
 
 import { Picker } from "@react-native-picker/picker";
 import RedHeader from "@/components/RedHeader";
@@ -15,37 +12,21 @@ import Subheader from "@/components/Subheader";
 
 import { BLOODTYPES } from "../../../constants/Constats";
 
-import { isEmpty } from "../../../Utils/checkEmpty";
 import Button from "@/components/Button";
+import SafeArea from "@/components/SafeArea";
 
 export default function ChooseBloodtype() {
-  // const { data } = useFetch();
-
   const { session, loading } = useAuth();
-
-  // const { signUpData, updateBloodType } = useSignUp();
-
   const router = useRouter();
 
-  const [bloodType, setBloodType] = useState(BLOODTYPES[0].value);
+  const [bloodType, setBloodType] = useState<string>(BLOODTYPES[0].value);
 
-  // useEffect(() => {
-  //   if (data && data.length > 0 && !isEmpty(data[0].blood_type))
-  //     setBloodType(data[0].blood_type);
-  // }, [data]);
-
-  const handleContinue = () => {
-    // updateBloodType(bloodType);
-
-    async function updateBloodType() {
-      console.log(bloodType);
-      if (session) {
-        // Update profile
+  const handleContinue = async () => {
+    if (session) {
+      try {
         const { data, error } = await supabase
           .from("profiles")
-          .update({
-            blood_type: bloodType,
-          })
+          .update({ blood_type: bloodType })
           .eq("id", session.user.id)
           .single();
 
@@ -53,17 +34,13 @@ export default function ChooseBloodtype() {
           console.log("Error updating profile:", error.message);
         } else {
           console.log("Profile updated successfully:", data);
-          // Alert.alert("Profile updated successfully:", data);
+          router.push("/(auth)/sign-up/donated-before");
         }
+      } catch (error) {
+        console.error("Error updating profile:", error);
       }
     }
-
-    updateBloodType();
-
-    router.push("/(auth)/sign-up/donated-before");
   };
-
-  // console.log(signUpData);
 
   return (
     <View style={styles.container}>
@@ -73,6 +50,8 @@ export default function ChooseBloodtype() {
           title: "Bloodtype",
         }}
       />
+
+      <SafeArea />
 
       <RedHeader hasBack={true}>Step 3/5:</RedHeader>
 
@@ -89,9 +68,9 @@ export default function ChooseBloodtype() {
         >
           <Picker
             selectedValue={bloodType}
-            onValueChange={(itemValue, itemIndex) => setBloodType(itemValue)}
-            // {Platform.OS === "ios" ? mode=}
+            onValueChange={(itemValue) => setBloodType(itemValue)}
           >
+            <Picker.Item label="Select Blood Type" value="" enabled={false} />
             {BLOODTYPES.map((bloodtype) => (
               <Picker.Item
                 label={bloodtype.label}

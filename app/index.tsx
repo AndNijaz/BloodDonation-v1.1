@@ -26,51 +26,43 @@ const index = () => {
   const [error, setError] = useState<string>("");
 
   useEffect(() => {
-    if (session) {
+    const fetchUserData = async () => {
+      if (!session) return;
+
       setLoadingUserData(true);
+      try {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", session.user.id);
 
-      // supabase.auth.signOut();
+        if (error) throw new Error(error.message);
+        setUserData(data[0]);
+      } catch (err: any) {
+        setError(err.message || err.toString());
+      } finally {
+        setLoadingUserData(false);
+      }
+    };
 
-      const fetchUserData = async () => {
-        try {
-          const { data, error } = await supabase
-            .from("profiles")
-            .select("*")
-            .eq("id", session?.user.id);
-
-          if (error) {
-            setError(error.message);
-          }
-
-          setUserData(data);
-        } catch (err) {
-          setError(err);
-        } finally {
-          setLoadingUserData(false);
-        }
-      };
-      fetchUserData();
-    }
-  }, [session, supabase, loading]);
+    fetchUserData();
+  }, [session]);
 
   if (loading) return <ActivityIndicator />;
 
   if (session) {
-    if (loadingUserData || userData.length === 0) return <ActivityIndicator />;
+    if (loadingUserData || !userData) return <ActivityIndicator />;
 
-    if (!userData[0].first_name || !userData[0].last_name)
+    if (!userData.first_name || !userData.last_name)
       return <Redirect href="./sign-up/name-surname" />;
 
-    if (!userData[0].last_name)
-      return <Redirect href="./sign-up/name-surname" />;
-
-    if (!userData[0].blood_type)
+    if (!userData.blood_type)
       return <Redirect href="./sign-up/choose-bloodtype" />;
 
-    if (!userData[0].last_time_donated)
+    if (!userData.last_time_donated)
       return <Redirect href="./sign-up/donated-before" />;
 
-    if (!userData[0].gender) return <Redirect href="./sign-up/select-gender" />;
+    if (!userData.gender) return <Redirect href="./sign-up/select-gender" />;
 
     return <Redirect href="/(user)/home" />;
   }
@@ -91,25 +83,11 @@ const index = () => {
 
       <View style={styles.formContainer}>
         <Link href={"/log-in"} asChild>
-          <Button
-            text="Log In"
-            style={{
-              marginBottom: 16,
-              backgroundColor: "#fff",
-            }}
-            textColor="#D61D23"
-          />
+          <Button text="Log In" style={styles.button} textColor="#D61D23" />
         </Link>
 
         <Link href={"/sign-up/"} asChild>
-          <Button
-            text="Sign Up"
-            style={{
-              marginBottom: 16,
-              backgroundColor: "#fff",
-            }}
-            textColor="#D61D23"
-          />
+          <Button text="Sign Up" style={styles.button} textColor="#D61D23" />
         </Link>
       </View>
 
@@ -149,5 +127,9 @@ const styles = StyleSheet.create({
     color: "#fff",
     textAlign: "center",
     marginBottom: 24,
+  },
+  button: {
+    marginBottom: 16,
+    backgroundColor: "#fff",
   },
 });

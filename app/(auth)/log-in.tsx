@@ -1,52 +1,70 @@
-import { View, Text, TextInput, StyleSheet, Alert } from "react-native";
 import React, { useState } from "react";
+import { View, Text, StyleSheet } from "react-native";
 import { Stack } from "expo-router";
+
 import { supabase } from "@/lib/supabase";
+
+import { useSignUp } from "../context/sign-up-context";
+import { useRouter } from "expo-router";
+
 import RedHeader from "@/components/RedHeader";
 import InputRow from "@/components/InputRow";
 import Subheader from "@/components/Subheader";
 import AlreadyHaveLabelLink from "@/components/AlreadyHaveLabelLink";
-import { useRouter } from "expo-router";
-import { useSignUp } from "../context/sign-up-context";
 import Button from "@/components/Button";
+import SafeArea from "@/components/SafeArea";
+import { Alert } from "react-native";
 
 const LoginScreen = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [emailError, setEmailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [credentialsError, setCredentialsError] = useState(false);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [errors, setErrors] = useState<{
+    email: boolean;
+    password: boolean;
+    credentials: boolean;
+  }>({ email: false, password: false, credentials: false });
+  const [loading, setLoading] = useState<boolean>(false);
 
   const router = useRouter();
 
   const { signUpData, updateEmailPassword }: any = useSignUp();
 
-  async function handleLogin() {
+  const handleLogin = async () => {
     const isEmailEmpty = email.trim() === "";
     const isPasswordEmpty = password.trim() === "";
 
-    setEmailError(isEmailEmpty);
-    setPasswordError(isPasswordEmpty);
-
-    // updateEmailPassword(email, password); //context
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
+    setErrors({
+      email: isEmailEmpty,
+      password: isPasswordEmpty,
+      credentials: false,
     });
 
-    setLoading(false);
-    setCredentialsError(true);
+    if (isEmailEmpty || isPasswordEmpty) return;
 
-    console.log("erorrrrrrrr " + error);
-    if (error) return;
-    // if (credentialsError) return;
-    router.push("/");
-    // if (error) Alert.alert(error.message);
-  }
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        setErrors((prevErrors) => ({ ...prevErrors, credentials: true }));
+        Alert.alert("Login Failed", error.message);
+      } else {
+        router.push("/");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      setErrors((prevErrors) => ({ ...prevErrors, credentials: true }));
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <View style={styles.container}>
+      <SafeArea />
       <Stack.Screen options={{ headerShown: false }}></Stack.Screen>
       <RedHeader hasBack={true}>Welcome Back!</RedHeader>
       <View style={styles.formContainer}>
@@ -56,28 +74,32 @@ const LoginScreen = () => {
           value={email}
           setValue={setEmail}
           placeholder="E-mail"
-          error={emailError}
+          error={errors.email}
           icon="at"
         />
-        {emailError && <Text style={styles.errorText}>Email is required</Text>}
+        {errors.email && (
+          <Text style={styles.errorText}>Email is required</Text>
+        )}
 
         <InputRow
           value={password}
           setValue={setPassword}
           placeholder="Password"
-          error={passwordError}
+          error={errors.password}
           icon="lock-outline"
         />
-        {passwordError && (
+        {errors.password && (
           <Text style={styles.errorText}>Password is required</Text>
         )}
 
-        {credentialsError && (
+        {errors.credentials && (
           <Text style={styles.errorText}>Invalid Email or Password</Text>
         )}
       </View>
 
+      {/* Loading funkcionalnost ne zaboraviti {NE ZABORAVITI} */}
       <Button onPress={handleLogin} text="Login" />
+      {/* Loading funkcionalnost ne zaboraviti {NE ZABORAVITI}*/}
 
       <AlreadyHaveLabelLink path="sign-up" linkText="Sign Up">
         Don't have an account?

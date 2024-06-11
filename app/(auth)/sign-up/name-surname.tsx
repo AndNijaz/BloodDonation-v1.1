@@ -1,13 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useCallback, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Stack, useRouter } from "expo-router";
 
 import { supabase } from "@/lib/supabase";
 
-// import { useSignUp } from "@/app/context/sign-up-context";
 import { useAuth } from "@/app/context/AuthProvider";
-
-import { useFetch } from "@/app/Hooks/useFetch";
 
 import RedHeader from "@/components/RedHeader";
 import InputRow from "@/components/InputRow";
@@ -17,72 +14,51 @@ import Subheader from "@/components/Subheader";
 import { isEmpty } from "../../../Utils/checkEmpty";
 
 export default function inputNameSurname() {
-  // const { data } = useFetch();
-
   const { session, loading } = useAuth();
-
-  // const { signUpData, updateFirstLastName }: any = useSignUp();
 
   const router = useRouter();
 
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
-  const [nameError, setNameError] = useState(false);
-  const [surnameError, setSurnameError] = useState(false);
+  const [errors, setErrors] = useState<{ name: boolean; surname: boolean }>({
+    name: false,
+    surname: false,
+  });
 
-  // useEffect(() => {
-  //   if (
-  //     data &&
-  //     data.length > 0 &&
-  //     !isEmpty(data[0].first_name) &&
-  //     !isEmpty(data[0].last_name)
-  //   ) {
-  //     setName(data[0].first_name);
-  //     setSurname(data[0].last_name);
-  //   }
-  // }, [data]);
+  const checkIsEmpty = () => {
+    setErrors({
+      name: isEmpty(name),
+      surname: isEmpty(surname),
+    });
+  };
 
-  function checkIsEmpty() {
-    if (isEmpty(name)) setNameError(true);
-    if (isEmpty(surname)) setSurnameError(true);
-  }
-
-  function resetErrors() {
-    setNameError(false);
-    setSurnameError(false);
-  }
-
-  const handleContinue = () => {
+  const handleContinue = useCallback(async () => {
     checkIsEmpty();
-    resetErrors();
 
-    // updateFirstLastName(name, surname);
-
-    async function updateNames() {
+    if (!isEmpty(name) && !isEmpty(surname)) {
       if (session) {
-        // Update profile
-        const { data, error } = await supabase
-          .from("profiles")
-          .update({
-            first_name: name,
-            last_name: surname,
-          })
-          .eq("id", session.user.id)
-          .single();
+        try {
+          const { data, error } = await supabase
+            .from("profiles")
+            .update({
+              first_name: name,
+              last_name: surname,
+            })
+            .eq("id", session.user.id)
+            .single();
 
-        if (error) {
-          console.log("Error updating profile:", error.message);
-        } else {
-          console.log("Profile updated successfully:", data);
-          // Alert.alert("Profile updated successfully:", data);
+          if (error) {
+            console.log("Error updating profile:", error.message);
+          } else {
+            console.log("Profile updated successfully:", data);
+          }
+        } catch (error) {
+          console.error("Error updating profile:", error);
         }
       }
+      router.push("/(auth)/sign-up/choose-bloodtype");
     }
-
-    updateNames();
-
-    router.push("/(auth)/sign-up/choose-bloodtype");
-  };
+  }, [name, surname, session, router]);
 
   return (
     <View style={styles.container}>
@@ -103,18 +79,18 @@ export default function inputNameSurname() {
           setValue={setName}
           placeholder="Name"
           icon="account-outline"
-          error={!!nameError}
+          error={errors.name}
         />
-        {nameError && <Text style={styles.errorText}>Name is required</Text>}
+        {errors.name && <Text style={styles.errorText}>Name is required</Text>}
 
         <InputRow
           value={surname}
           setValue={setSurname}
           placeholder="Last Name"
           icon="account-circle-outline"
-          error={!!surnameError}
+          error={errors.surname}
         />
-        {surnameError && (
+        {errors.surname && (
           <Text style={styles.errorText}>Surname is required</Text>
         )}
       </View>

@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Pressable,
   StyleSheet,
@@ -13,7 +13,6 @@ import { useFetch } from "@/app/Hooks/useFetch";
 
 import { supabase } from "@/lib/supabase";
 
-import { useSignUp } from "@/app/context/sign-up-context";
 import { useAuth } from "@/app/context/AuthProvider";
 
 import { Picker } from "@react-native-picker/picker";
@@ -27,141 +26,99 @@ import { IMPEDIMENTS } from "../../../constants/Constats";
 import { parseDateToDatabase } from "../../../Utils/dates";
 import { calculateNextTimeDonate } from "../../../Utils/dates";
 import { checkCanDonatedNow } from "../../../Utils/dates";
+import SafeArea from "@/components/SafeArea";
 
-export default function SelectGender() {
+const SelectGender: React.FC = () => {
   const { data } = useFetch();
-
-  const [gender, setGender] = useState("");
-  const [lastDonationDate, setLastDonationDate] = useState("");
-
-  const [impedimentsList, setImpedimentsList] = useState(IMPEDIMENTS);
-  const [selectedImpediments, setSelectedImpediments] = useState<any>([]);
-
   const { session } = useAuth();
-
-  const { signUpData, updateLastTimeDonated }: any = useSignUp();
-
   const router = useRouter();
 
+  const [gender, setGender] = useState<string>("");
+  const [lastDonationDate, setLastDonationDate] = useState<string>("");
+  const [impedimentsList, setImpedimentsList] = useState(IMPEDIMENTS);
+  const [selectedImpediments, setSelectedImpediments] = useState<string[]>([]);
+
   useEffect(() => {
-    // console.log(data[0].last_time_donated);
-    setLastDonationDate(data ? data[0].last_time_donated : "");
-    // console.log(data.last_time_donated);
+    if (data && data[0].last_time_donated)
+      setLastDonationDate(data[0].last_time_donated);
   }, [data]);
-  // console.log(lastDonationDate);
-  // console.log(signUpData["last_time_donated"]);
+
   async function handleFinish() {
-    // updateGender(gender);
-    // console.log(lastDonationDate);
+    const today = new Date();
+    const lastDonation = new Date(lastDonationDate);
+    const monthsDifference = gender === "Female" ? 2 : 3;
 
-    let currentDate = new Date();
-    let next_time_donated: any = new Date(lastDonationDate);
+    let nextTimeDonated;
 
-    // console.log(
-    //   currentDate.getFullYear() === next_time_donated.getFullYear() ||
-    //     Math.abs(currentDate.getMonth() - next_time_donated.getMonth()) > 3
-    // );
-
-    if (checkCanDonatedNow(next_time_donated, gender === "Female" ? 3 : 2)) {
-      next_time_donated = parseDateToDatabase(new Date());
+    if (checkCanDonatedNow(lastDonation, monthsDifference)) {
+      nextTimeDonated = today;
     } else {
-      if (gender === "Female")
-        next_time_donated = parseDateToDatabase(
-          calculateNextTimeDonate(next_time_donated, 3)
-        );
-      else
-        next_time_donated = parseDateToDatabase(
-          calculateNextTimeDonate(next_time_donated, 2)
-        );
+      nextTimeDonated = calculateNextTimeDonate(lastDonation, monthsDifference);
     }
-
-    // console.log(next_time_donated);
-
-    // if (next_time_donated.getMonth())
-    // if()
-    // return;
 
     if (session) {
-      // Update profile
-      const { data, error } = await supabase
-        .from("profiles")
-        .update({
-          gender: gender,
-          next_time_donated: next_time_donated,
-        })
-        .eq("id", session.user.id)
-        .single();
+      try {
+        const { data, error } = await supabase
+          .from("profiles")
+          .update({
+            gender: gender,
+            next_time_donated: parseDateToDatabase(nextTimeDonated),
+          })
+          .eq("id", session.user.id)
+          .single();
 
-      if (error) {
-        // Alert.alert("Error updating profile:", error.message);
-      } else {
-        // console.log("Profile updated successfully:", data);
-        // Alert.alert("Profile updated successfully:", data);
+        if (error) {
+          console.error("Error updating profile:", error.message);
+        } else {
+          console.log("Profile updated successfully:", data);
+          router.push("/(user)/home");
+        }
+      } catch (error) {
+        console.error("Error updating profile:", error);
       }
     }
-
-    router.push("/(user)/home");
   }
 
-  function handleSetGender(gender: any) {
-    setGender(gender);
-  }
+  const handleSetGender = (selectedGender: string) => {
+    setGender(selectedGender);
+  };
 
-  function handleSetImpediment(impediment: any) {
-    // console.log(impedimentsList[0].value === impediment);
+  const handleSetImpediment = (impediment: string) => {
     setImpedimentsList((list) =>
       list.filter((imp) => imp.value !== impediment)
     );
-    // console.log(impedimentsList);
-    setSelectedImpediments((imp: any) => [...imp, impediment]);
-  }
+    setSelectedImpediments((imp) => [...imp, impediment]);
+  };
 
-  function handleRemoveImpediment(impediment: any) {
-    setSelectedImpediments((imp: any) =>
-      imp.filter((imped: any) => imped !== impediment)
-    );
-
+  const handleRemoveImpediment = (impediment: string) => {
+    setSelectedImpediments((imp) => imp.filter((i) => i !== impediment));
     setImpedimentsList((list) => [
       ...list,
-      IMPEDIMENTS.filter((imp: any) => imp.value === impediment)[0],
+      IMPEDIMENTS.find((imp) => imp.value === impediment)!,
     ]);
-  }
+  };
 
   return (
     <ScrollView style={styles.container}>
-      <Stack.Screen
-        options={{
-          headerShown: false,
-          title: "",
-        }}
-      />
+      <SafeArea />
 
-      <RedHeader hasBack={true} path={"/sign-up/donated-before"}>
-        Step 5/5:
-      </RedHeader>
+      <Stack.Screen options={{ headerShown: false, title: "" }} />
+      <RedHeader hasBack={true}>Step 5/5:</RedHeader>
 
       <View style={styles.formContainer}>
         <Subheader marginBottom={Platform.OS === "ios" ? 8 : 16}>
           Select Gender
         </Subheader>
-
         <View
           style={[
             styles.pickerContainer,
             Platform.OS === "ios" && styles.containerIOS,
           ]}
         >
-          <Picker
-            selectedValue={gender}
-            onValueChange={(itemValue, itemIndex) => handleSetGender(itemValue)}
-          >
+          <Picker selectedValue={gender} onValueChange={handleSetGender}>
             <Picker.Item value="" label="Gender" enabled={false} />
-            {GENDER.map((gender) => (
-              <Picker.Item
-                label={gender.label}
-                value={gender.value}
-                key={gender.value}
-              />
+            {GENDER.map((g) => (
+              <Picker.Item label={g.label} value={g.value} key={g.value} />
             ))}
           </Picker>
         </View>
@@ -171,57 +128,51 @@ export default function SelectGender() {
             <Subheader marginBottom={16} textAlign={"center"}>
               Do any of these apply in the last six months
             </Subheader>
-
             <View style={styles.pickerContainer}>
-              <Picker
-                selectedValue={gender}
-                onValueChange={(itemValue, itemIndex) =>
-                  handleSetImpediment(itemValue)
-                }
-              >
+              <Picker selectedValue="" onValueChange={handleSetImpediment}>
                 <Picker.Item
                   value=""
                   label="Choose Which Applies"
                   enabled={false}
                 />
-                {impedimentsList.map((gender) => (
+                {impedimentsList.map((imp) => (
                   <Picker.Item
-                    label={gender.label}
-                    value={gender.value}
-                    key={gender.value}
+                    label={imp.label}
+                    value={imp.value}
+                    key={imp.value}
                   />
                 ))}
               </Picker>
             </View>
           </>
         )}
-        {selectedImpediments.length > 0 && (
-          <>
-            <View style={styles.impedimentContainer}>
-              <View style={styles.impedimentHeader}>
-                <Text>Applies:</Text>
-              </View>
 
-              {selectedImpediments.map((impediment: any) => (
-                <View style={styles.impedimentRow} key={impediment}>
-                  <Text>{impediment}</Text>
-                  <Pressable
-                    onPress={() => handleRemoveImpediment(impediment)}
-                    style={styles.removeButton}
-                  >
-                    <Text style={{ color: "#fff" }}>Remove</Text>
-                  </Pressable>
-                </View>
-              ))}
+        {selectedImpediments.length > 0 && (
+          <View style={styles.impedimentContainer}>
+            <View style={styles.impedimentHeader}>
+              <Text>Applies:</Text>
             </View>
-          </>
+            {selectedImpediments.map((impediment) => (
+              <View style={styles.impedimentRow} key={impediment}>
+                <Text>{impediment}</Text>
+                <Pressable
+                  onPress={() => handleRemoveImpediment(impediment)}
+                  style={styles.removeButton}
+                >
+                  <Text style={{ color: "#fff" }}>Remove</Text>
+                </Pressable>
+              </View>
+            ))}
+          </View>
         )}
       </View>
 
       <Button onPress={handleFinish} text="Finish" />
     </ScrollView>
   );
-}
+};
+
+export default SelectGender;
 
 const styles = StyleSheet.create({
   containerIOS: {
@@ -267,7 +218,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingBottom: 48,
     marginBottom: 48,
-    // paddingBottom: 48,
   },
 
   formContainer: {

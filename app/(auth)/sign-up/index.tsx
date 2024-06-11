@@ -5,7 +5,6 @@ import { Stack } from "expo-router";
 import Subheader from "@/components/Subheader";
 import InputRow from "@/components/InputRow";
 import { useRouter } from "expo-router";
-import { useSignUp } from "@/app/context/sign-up-context";
 import AlreadyHaveLabelLink from "@/components/AlreadyHaveLabelLink";
 import { supabase } from "@/lib/supabase";
 import Button from "@/components/Button";
@@ -23,8 +22,6 @@ export default function SignUp() {
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
-
-  const { signUpData, updateEmailPassword }: any = useSignUp();
 
   const checkPasswordMatch = () => {
     setPasswordMatch(password === confirmPassword);
