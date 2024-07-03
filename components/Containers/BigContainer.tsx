@@ -23,7 +23,7 @@ export default function BigContainer({
           size={18}
           color="white"
         />
-        <Text style={styles.whiteText}>Last time you donated</Text>
+        <Text style={styles.whiteText}>{text}</Text>
       </View>
 
       <Text style={[styles.bigText, styles.whiteText]}>{children}</Text>

@@ -3,6 +3,7 @@ import { Alert, StyleSheet, Text, View } from "react-native";
 import { Redirect } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
+import { supabase } from "@/lib/supabase";
 import { useAuth } from "../context/AuthProvider";
 
 import Notificaiton from "@/components/notificaiton";
@@ -20,14 +21,35 @@ export default function TabOneScreen() {
   const { data, isLoading, error } = useFetch();
   const [lastDonation, setLastDonation] = useState<string>("");
   const [nextTimeDonated, setNextTimeDonated] = useState<string>("");
-  const [activeNotification, setActiveNotification] = useState<boolean>(false);
+  const [notificationData, setNotificationData] = useState<any>(null);
 
   const { session } = useAuth();
+
+  //
+  const fetchNotificationByUserId = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from("notifications")
+        .select("*")
+        .eq("user", userId)
+        .order("notification_start", { ascending: false })
+        .limit(1)
+        .single();
+
+      if (error) throw error;
+      console.log("mufljuz");
+      setNotificationData(data);
+    } catch (err) {
+      // console.error("Error fetching notification:", err);
+      console.log("mudaaaa");
+      setNotificationData(false);
+    }
+  };
 
   useEffect(() => {
     if (data && data[0]) {
       const donationData = data[0];
-      setActiveNotification(!!donationData.activeNotification);
+
       setLastDonation(parseDateToFrontend(donationData.last_time_donated));
 
       const nextDonationDate = new Date(donationData.next_time_donated);
@@ -38,6 +60,10 @@ export default function TabOneScreen() {
           ? "Today"
           : parseDateToFrontend(donationData.next_time_donated)
       );
+
+      if (donationData.id) {
+        fetchNotificationByUserId(donationData.id);
+      }
     }
   }, [data]);
 
@@ -48,18 +74,15 @@ export default function TabOneScreen() {
 
   return (
     <View style={styles.container}>
-      {activeNotification && <Notificaiton />}
-
+      {/* {!notificationData?.notification_end && <Notificaiton />} */}
       <BigContainer text="Next time you can donate">
         {nextTimeDonated}
       </BigContainer>
-
       {!lastDonation.includes("1900") && (
         <SmallContainer label="Last time you donated" icon="history">
           {lastDonation}
         </SmallContainer>
       )}
-
       <Push session={session} />
     </View>
   );

@@ -9,7 +9,12 @@ export default function Notificaiton() {
         <MaterialCommunityIcons name="bell-outline" size={24} color="#D61D23" />
         <Text style={styles.text}>Attention</Text>
       </View>
-      <Text style={[styles.text, styles.heading]}>Time to donate!</Text>
+      <Text style={[styles.text, styles.heading]}>
+        Urgent: <Text style={[styles.urgent]}>0+</Text> Blood Type Needed
+      </Text>
+      {/* <Text style={[styles.text, styles.heading]}> */}
+      {/* URGENT REQUEST FOR <Text style={[styles.urgent]}>0+</Text>! */}
+      {/* </Text> */}
       {/* <View style={styles.buttons}>
         <Button
           text={"Accept"}
@@ -49,11 +54,16 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: 42,
     textAlign: "center",
-    letterSpacing: 3,
     marginBottom: 16,
+    letterSpacing: 0,
   },
   buttons: {
     flexDirection: "row",
     justifyContent: "center",
+  },
+  urgent: {
+    fontWeight: "700",
+    fontSize: 56,
+    color: "#333",
   },
 });
