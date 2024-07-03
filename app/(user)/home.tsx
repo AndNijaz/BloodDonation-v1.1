@@ -74,7 +74,7 @@ export default function TabOneScreen() {
 
   return (
     <View style={styles.container}>
-      {/* {!notificationData?.notification_end && <Notificaiton />} */}
+      {!notificationData?.notification_end && <Notificaiton />}
       <BigContainer text="Next time you can donate">
         {nextTimeDonated}
       </BigContainer>
