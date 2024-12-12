@@ -20,39 +20,8 @@ Blood Donation v1.1 is a web application designed to streamline and manage blood
 - **HTML5**: For structuring the application.
 - **CSS3**: For styling and layout.
 - **JavaScript**: For interactivity and dynamic functionality.
-- **Backend Framework**: (Specify if available, e.g., Node.js, PHP).
-- **Database**: (Specify if available, e.g., MySQL, MongoDB).
-
----
-
-## Setup Instructions
-To run this project locally, follow these steps:
-
-1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/AndNijaz/BloodDonation-v1.1.git
-   ```
-
-2. Navigate to the project directory:
-
-   ```bash
-   cd BloodDonation-v1.1
-   ```
-
-3. Install dependencies (if applicable):
-
-   ```bash
-   npm install
-   ```
-
-4. Start the development server (if applicable):
-
-   ```bash
-   npm start
-   ```
-
-5. Open `http://localhost:3000` in your browser to view the project.
+- **Backend Framework**: Supabase
+- **Database**: Supabase
 
 ---
 
