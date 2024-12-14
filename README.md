@@ -37,7 +37,6 @@ The system is designed for:
 
 ## Project Status
 This project is currently in the **beta phase**. Future updates may include:
-- Adding user authentication and role management.
 - Integrating location-based search for donors.
 - Expanding analytics and reporting capabilities for blood banks.
 
