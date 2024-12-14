@@ -19,7 +19,9 @@ Blood Donation v1.1 is a web application designed to streamline and manage blood
 ## Technologies Used
 - **HTML5**: For structuring the application.
 - **CSS3**: For styling and layout.
-- **JavaScript**: For interactivity and dynamic functionality.
+- **React**: For the web part:
+- **React Native** For the mobile part.
+- **Typescript**: For interactivity and dynamic functionality.
 - **Backend Framework**: Supabase
 - **Database**: Supabase
 
